@@ -1,0 +1,102 @@
+# PROJECTS.yaml — 每個來源 repo 的機器可讀登錄
+# 盤點時間：2026-09-25。source_of_truth_path 是「相對於該 repo 根目錄」的路徑。
+# status 欄位一律引用來源文件的原文用詞，不做本 repo 自己的判斷。
+
+projects:
+  - id: aeris-core
+    repo: Space653000/0_JN1_AERIS
+    display_name: AERIS Core (Blueprint)
+    purpose: "聲學工程領域「一位人類主管 + 100 個聲學專業能力席位」AI 工程師系統的設計藍圖與治理"
+    domain: acoustic-engineering
+    status: "A–D NOT VERIFIED; E NOT_STARTED (HANDOFF.md)"
+    canonical_tag: v0.7.0-blueprint.1
+    tag_meaning: "設計凍結（governance frozen），不是產品完成證明"
+    source_of_truth_path: "docs/AERIS_BLUEPRINT_ZH_TW.md"
+    governance_path: "constitution.md"
+    main_machine: UNKNOWN
+    excluded: false
+
+  - id: aeris-local-impl
+    repo: Space653000/0_JN1_AERIS_Local-computer-implementation
+    display_name: AERIS Local Implementation
+    purpose: "AERIS 藍圖的本機執行實作（HOW），aeris_runtime Python 套件"
+    domain: acoustic-engineering
+    status: UNKNOWN
+    source_of_truth_path: "AGENTS.md"
+    main_machine: UNKNOWN
+    local_root: "C:\\0_JN1_AERIS"
+    excluded: false
+
+  - id: aeris-supervision
+    repo: Space653000/0_JN1_AERIS_Supervision
+    display_name: AERIS Supervision
+    purpose: "AERIS 發布監督：SHA-256 驗證的三檔案 bundle 發布為不可變快照"
+    domain: acoustic-engineering-publication
+    status: "mechanism exists; scope = AERIS-only"
+    source_of_truth_path: "SUPERVISION_CONTRACT.md"
+    main_machine: UNKNOWN
+    visibility: private
+    excluded: false
+
+  - id: voice-agent
+    repo: Space653000/Offline-Local-Voice-Agent
+    display_name: Offline-Local-Voice-Agent
+    purpose: "完全離線的中文語音代理人，語音控制 Windows 電腦"
+    domain: voice-desktop-automation
+    status: "P0-P2 done; P3 ~90%; P4 ~95%; P5 partial; P6 ~55% (.ai/STATUS.md)"
+    source_of_truth_path: ".ai/BLUEPRINT.md"
+    status_path: ".ai/STATUS.md"
+    main_machine: "RTX Spark (hardware model, NOT confirmed to be SPARK-AGAVE-3/4)"
+    local_root: "C:\\0_JN1_Offline-Local-Voice-Agent"
+    known_integration: "ORDER.md file format with aeris-core"
+    excluded: false
+
+  - id: megis
+    repo: Space653000/0_JN1_MEGIS
+    display_name: MEGIS
+    purpose: "機械工程生成式智慧系統，Gate-driven generative engineering"
+    domain: mechanical-engineering
+    status: "G0 done (11/11); G1 mostly done (pending G1-REQ-001/REV-001/ACC-001); G2 partial; G3-G9 not started"
+    source_of_truth_path: "MEGIS_Blueprint/MEGIS_Mechanical Engineering Generative Intelligence System — v3.0-claude-code.md"
+    status_path: "execution/PROJECT_STATE.md"
+    main_machine: UNKNOWN
+    local_root: "C:\\0_JN1_MEGIS"
+    isolation_note: "README explicitly states it must not share environment or depend on C:\\0_JN1_AERIS or C:\\0_JN1_Offline-Local-Voice-Agent"
+    excluded: false
+
+  - id: aiecp
+    repo: Space653000/0_JN1_AIECP
+    display_name: "AIECP (internally self-named AECP)"
+    purpose: "Windows-first 本機工程控制平面，ChatGPT Web 陪同的 Mission/Task/Workspace/Queue/Policy/Git/CI/Evidence/Approval"
+    domain: generic-engineering-control-plane
+    status: "control plane core IMPLEMENTED+TESTED+CI; 10 ENVIRONMENT gates + 4 OWNER-EXTERNAL gates open"
+    package_version: "v0.3.0 Preview"
+    blueprint_stage_name: "V3.0 Multi-Worker (blueprint stage, not a shipped 3.0.0)"
+    source_of_truth_path: ".ai/BLUEPRINT.md"
+    status_path: ".ai/STATUS.md"
+    acceptance_path: ".ai/ACCEPTANCE.md"
+    main_machine: UNKNOWN
+    known_integration: []
+    naming_conflict: "repo name says AIECP; all internal docs say AECP — see Audit/CONFLICT_ANALYSIS.md C-03"
+    excluded: false
+
+  - id: superbrain
+    repo: Space653000/0_JN1_2AGAVE128-1MAERA64
+    display_name: "SuperBrain (2AGAVE128-1MAERA64)"
+    purpose: "語音多機調度的混合式 AI 系統：ULTRA-MAERA-2 (gateway/control) + SPARK-AGAVE-3 (FAST) + SPARK-AGAVE-4 (DEEP)"
+    domain: generic-multi-machine-orchestration
+    status: "研究與規劃已完成，施工尚未開始（P0 未開始）"
+    source_of_truth_path: ".ai/BLUEPRINT.md"
+    status_path: ".ai/STATUS.md"
+    acceptance_path: ".ai/ACCEPTANCE.md"
+    defines_machine_names: true
+    known_integration: []
+    excluded: false
+
+  - id: robotcar
+    repo: Space653000/0_JN1_Robotcar
+    display_name: Robotcar
+    purpose: UNKNOWN
+    status: EXCLUDED_BY_USER
+    excluded: true
+    note: "使用者明確要求排除，本輪未 clone、未分析"

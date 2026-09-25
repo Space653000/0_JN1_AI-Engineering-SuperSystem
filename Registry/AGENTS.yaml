@@ -1,0 +1,60 @@
+# AGENTS.yaml — 抽象角色 + 目前供應商對應
+# 抽象角色詞彙沿用 AIECP Blueprint/21_AGENT_ROLES_AND_HANDOFF_PROTOCOL.md 的九角色模型，
+# 因為那是本次盤點中唯一明確做出「角色 vs 供應商解耦」設計的來源。
+# 「不要把 vendor 寫死進架構」是使用者的明確要求；provider 欄位只反映目前現實，不代表架構鎖定。
+
+abstract_roles:
+  - role: Supervisor
+    responsibility: "Goal, priority, approval — 人類本人"
+    may_write_code: false
+    current_providers: ["Human (Stephen)"]
+
+  - role: Planner
+    responsibility: "Architecture and task decomposition"
+    may_write_code: false
+    current_providers: ["Claude Code"]
+    source: "AIECP Blueprint/00_MASTER_BLUEPRINT.md §11: Claude Code is the preferred Planner/Reviewer adapter"
+
+  - role: Researcher
+    responsibility: "Evidence gathering"
+    may_write_code: false
+    current_providers: ["Gemini (Antigravity CLI, best-effort only)", "Claude Code"]
+    source: "SuperBrain BLUEPRINT.md §5.2: Gemini 用於長上下文閱讀、網路資訊查證"
+
+  - role: Builder
+    responsibility: "Implementation, isolated worktree only"
+    may_write_code: true
+    current_providers: ["Codex CLI (OFFICIAL)", "Codex CLI (PEGA endpoint)", "Codex (via ChatGPT Plus, SuperBrain context)"]
+    source: "AIECP Blueprint/00_MASTER_BLUEPRINT.md §11A Multi-Worker; SuperBrain BLUEPRINT.md §5.2"
+
+  - role: Reviewer
+    responsibility: "Diff/architecture/quality review"
+    may_write_code: false
+    current_providers: ["Claude Code"]
+    source: "AIECP .ai/STATUS.md: Claude Code Review 多次驗收 Work Order"
+
+  - role: Verifier
+    responsibility: "Deterministic tests, sole completion authority"
+    may_write_code: false
+    current_providers: ["deterministic test suites (npm test / pytest / verifier scripts)", "SPARK-AGAVE-4 DEEP node (per user's target architecture, NOT yet implemented)"]
+    note: "AIECP 鐵律：'A model response is never sufficient proof'"
+
+  - role: Maintainer
+    responsibility: "Cleanup/refactoring, isolated"
+    may_write_code: true
+    current_providers: ["Codex CLI"]
+
+  - role: Local Compute
+    responsibility: "indexing/OCR/RAG/log reduction, scoped"
+    may_write_code: false
+    current_providers: ["Ollama", "LM Studio", "llama.cpp (SuperBrain Spark nodes, planned)", "whisper.cpp / llama.cpp (Voice Agent, already running)"]
+
+  - role: Harness
+    responsibility: "dispatch/state/policy — not model-driven"
+    may_write_code: false
+    current_providers: ["AIECP Harness (implemented)", "SuperBrain sb CLI + Router (planned, not yet implemented)"]
+
+known_gaps:
+  - "SPARK-AGAVE-4 作為獨立 Verifier 對 SPARK-AGAVE-3 的具體協議尚未定義（見 Audit/GAP_ANALYSIS.md）。"
+  - "Voice Agent 自己的 CLAUDE_REVIEWER / CODEX_WORKER 角色定義與這份抽象角色表尚未對齊，只是精神一致。"
+  - "MEGIS 的 Gate REV/ACC 角色與這份表格的對應關係 UNKNOWN（本輪未深入比對）。"

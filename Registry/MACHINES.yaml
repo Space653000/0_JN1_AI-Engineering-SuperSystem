@@ -1,0 +1,40 @@
+# MACHINES.yaml
+# 機器命名唯一確認來源：Space653000/0_JN1_2AGAVE128-1MAERA64 .ai/STATUS.md（2026-09-25 決策紀錄）。
+# 「target_hosts」欄位是使用者本次任務描述的目標架構（TO-BE），不是任何 repo 目前已實作的內容（AS-IS）。
+# 見 Blueprint/03_MACHINE_ARCHITECTURE.md 與 Audit/CONFLICT_ANALYSIS.md C-01。
+
+machines:
+  - id: ULTRA-MAERA-2
+    hardware: "Surface Laptop Ultra (ARM64, 64GB unified memory, ~38.1GB OS-visible RAM, RTX Spark N1X GPU 24512MiB)"
+    source_repo_role: "SuperBrain: Control Plane / Gateway / 語音與視覺 I/O / 雲端代理 / SFTP 收件"
+    network: "唯一連網節點 (Wi-Fi 7 + 隔離 LAN)"
+    as_is_hosted_services: []   # 目前沒有任何來源 repo 證實這台機器實際跑了 AIECP/AERIS/MEGIS/Voice Agent
+    target_hosts_per_user_architecture:
+      - Voice Agent (human entry, STT/Intent/HMI)
+      - AIECP (mission/task/workspace/queue orchestration)
+      - AERIS (acoustic engineering domain authority)
+      - MEGIS (mechanical engineering domain authority)
+    verification_status: NOT_VERIFIED
+    note: "SuperBrain 藍圖只定義了這台機器的通用角色，未提及任何領域專案名稱"
+
+  - id: SPARK-AGAVE-3
+    hardware: "Surface RTX Spark Dev Box (Windows 11 Pro + WSL2, 128GB unified memory)"
+    source_repo_role: "SuperBrain FAST：批次處理、RAG、嵌入、VLM、便宜推論、本地 ASR（大模型版）"
+    network: "無出網路徑，僅隔離 LAN (10.77.0.11)"
+    role_per_user_architecture: "FAST worker，local LLM，batch/high-token low-risk work，由 AIECP/SuperBrain 派工"
+    verification_status: "P0 盤點尚未完成 (.ai/STATUS.md)"
+    possible_overlap: "Offline-Local-Voice-Agent 的 ASR/LLM 也跑在一台型號為 RTX Spark 的機器上，但 repo 未證實是同一台實體機；見 Audit/CONFLICT_ANALYSIS.md C-02"
+
+  - id: SPARK-AGAVE-4
+    hardware: "Surface RTX Spark Dev Box (同上規格，第二台)"
+    source_repo_role: "SuperBrain DEEP：大模型推理、審查、Verifier、長上下文；夜間批次、模型評測"
+    network: "無出網路徑，僅隔離 LAN (10.77.0.12)"
+    role_per_user_architecture: "Supervision/verification/evidence/DEEP node — reviewer、獨立驗證、red-team、audit、quality gate"
+    verification_status: "P0 盤點尚未完成 (.ai/STATUS.md)"
+    independent_verification_protocol: UNKNOWN
+    note: "使用者問題23（SPARK-AGAVE-4 如何獨立驗證 SPARK-AGAVE-3）目前沒有任何 repo 定義具體協議，見 Audit/GAP_ANALYSIS.md"
+
+superbrain_definition:
+  per_user_architecture: "SuperBrain = ULTRA-MAERA-2 + SPARK-AGAVE-3 + SPARK-AGAVE-4 三機整體"
+  per_repo_2agave128-1maera64: "repo 自稱 SuperBrain，且確實描述三機協同——這一點與使用者定義一致"
+  discrepancy: "repo 內定義的 SuperBrain 是一個獨立於 AIECP/AERIS/MEGIS 的通用個人任務調度系統（語音助理 + 多機批次運算），並未涵蓋『承載 AERIS/MEGIS/AIECP 領域服務』這件事。因此雖然機器命名一致，SuperBrain 的職責範圍是否等於使用者設想的『整個 compute fabric』仍待釐清，見 Blueprint/09。"

@@ -1,0 +1,61 @@
+# PROVIDERS.yaml — 目前實際在用/被規劃使用的模型與運算供應商
+# 這是「目前現實」的清單，不是架構鎖定；架構本身以角色為穩定抽象（見 AGENTS.yaml）。
+
+providers:
+  - id: claude-code
+    kind: cloud-agent-cli
+    used_by: ["AIECP (Planner/Reviewer adapter)", "SuperBrain (architecture review, second opinion)", "MEGIS (primary construction agent)"]
+    subscription: "Claude Pro (per SuperBrain BLUEPRINT.md cost model, US$20/mo, shared with Claude Code)"
+    caveat: "SuperBrain BLUEPRINT.md 明確警告：需確認系統沒有 ANTHROPIC_API_KEY 環境變數，否則會改走 API 計費"
+
+  - id: codex-cli-official
+    kind: cloud-agent-cli
+    used_by: ["AIECP (Builder worker: codex-official)", "SuperBrain (codex exec, ChatGPT Plus)"]
+    subscription: "ChatGPT Plus (Codex included)"
+    isolation: "AIECP: dedicated CODEX_HOME per worker"
+
+  - id: codex-cli-pega
+    kind: cloud-agent-cli
+    used_by: ["AIECP (Builder worker: codex-pega)"]
+    endpoint: "https://aiapi.t-cyber.com/v1"
+    status: "IMPLEMENTED+TESTED; real endpoint ENVIRONMENT evidence still pending"
+    isolation: "AIECP: dedicated CODEX_HOME, credentials injected via process env only, never written to config"
+
+  - id: gemini-antigravity
+    kind: cloud-agent-cli
+    used_by: ["SuperBrain (Researcher role, long-context reading, web research)"]
+    access_method: "Antigravity CLI (agy -p), free Starter tier"
+    caveat: "个人 Google 登入的 Gemini CLI 已於 2026-06-18 停止；免費層節流很重，只能 best-effort，不得列入關鍵路徑"
+
+  - id: chatgpt-web
+    kind: cloud-conversational-supervisor
+    used_by: ["AIECP (primary supervisor via Web Safe Bridge / aecp.task/v1 Command Card)", "SuperBrain (Phase A voice front-end via ChatGPT desktop Voice)"]
+    boundary: "AIECP 明確承諾不碰 DOM/cookie/session，不逆向工程；SuperBrain 同樣只用官方桌面 Voice 功能"
+
+  - id: local-llm-ollama-lmstudio
+    kind: local-model
+    used_by: ["ULTRA-MAERA-2 (SuperBrain, planned small-model quick path)"]
+    status: "已安裝但未整合進 sb CLI（P0 階段）"
+
+  - id: local-llm-spark-fast
+    kind: local-model
+    used_by: ["SPARK-AGAVE-3 (planned)"]
+    candidates: ["Qwen3.6-35B-A3B", "Qwen3.8-27B", "GPT-OSS-20B"]
+    engine: "llama.cpp (priority), vLLM (secondary)"
+    status: "candidate only, no benchmark run yet"
+
+  - id: local-llm-spark-deep
+    kind: local-model
+    used_by: ["SPARK-AGAVE-4 (planned)"]
+    candidates: ["GPT-OSS-120B", "Nemotron-3-Super-120B", "Qwen large MoE"]
+    status: "candidate only, no benchmark run yet"
+
+  - id: whisper-cpp-llama-cpp-voice-agent
+    kind: local-model
+    used_by: ["Offline-Local-Voice-Agent (already running, on an RTX Spark-model machine)"]
+    status: "IMPLEMENTED + VERIFIED (97.9% 中文辨識率)"
+    note: "與 local-llm-spark-fast/deep 是否共用同一台實體機器 UNKNOWN，見 Audit/CONFLICT_ANALYSIS.md C-02"
+
+future_or_unstated:
+  - "Gemini API (非 Antigravity CLI)"
+  - "其他未來 provider — 架構本身不得寫死任何特定供應商（使用者明確要求）"

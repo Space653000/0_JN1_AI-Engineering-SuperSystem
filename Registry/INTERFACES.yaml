@@ -1,0 +1,76 @@
+# INTERFACES.yaml — 已知的跨專案介面，以及使用者目標架構要求、但目前不存在的介面
+# contract_status: EXISTS | MISSING | PARTIAL
+
+interfaces:
+  - id: voice-agent-to-aeris
+    from: Offline-Local-Voice-Agent
+    to: aeris-core
+    mechanism: "ORDER.md 檔案格式"
+    contract_status: EXISTS
+    source: "Offline-Local-Voice-Agent/docs/05_AERIS_Integration_Split.md"
+    note: "兩專案刻意保持獨立施工、不共用程式碼，僅透過此檔案格式互通"
+
+  - id: aeris-blueprint-to-aeris-impl
+    from: aeris-core
+    to: aeris-local-impl
+    mechanism: "Blueprint (WHAT) → Implementation (HOW)，compatibility 由 aeris_runtime/blueprint_compatibility.py 檢查"
+    contract_status: PARTIAL
+    source: "aeris-core README.md; aeris-local-impl 目錄結構"
+    note: "AERIS 自己承認四方版本（Blueprint/Implementation/Local checkout/Running service）常常不同步"
+
+  - id: aeris-to-aeris-supervision
+    from: aeris-core / aeris-local-impl
+    to: aeris-supervision
+    mechanism: "SHA-256 驗證的三檔案 ISI V6 bundle，人工觸發 Publisher"
+    contract_status: EXISTS
+    source: "aeris-supervision/SUPERVISION_CONTRACT.md"
+    note: "唯讀單向：Supervision 只發布快照，規則5明文禁止反向修改 Blueprint/Implementation"
+
+  - id: voice-agent-to-aiecp
+    from: Offline-Local-Voice-Agent
+    to: aiecp
+    mechanism: MISSING
+    contract_status: MISSING
+    note: "使用者目標架構要求的核心介面之一，目前兩個 repo 互不知道對方存在，見 Audit/CONFLICT_ANALYSIS.md C-02"
+
+  - id: aiecp-to-aeris
+    from: aiecp
+    to: aeris-core
+    mechanism: MISSING
+    contract_status: MISSING
+    note: "AIECP 的 aecp.task/v1 schema 目前是通用的（inspect-workspace/git-status），沒有聲學工程專屬欄位或路由"
+
+  - id: aiecp-to-megis
+    from: aiecp
+    to: megis
+    mechanism: MISSING
+    contract_status: MISSING
+    note: "同上，且 MEGIS README 明確聲明不與其他專案共用環境"
+
+  - id: aiecp-to-superbrain
+    from: aiecp
+    to: superbrain
+    mechanism: MISSING
+    contract_status: MISSING
+    note: "兩者都有自己的 Provider Router / Worker 概念，沒有互相呼叫的 API，見 Audit/CONFLICT_ANALYSIS.md C-04"
+
+  - id: spark-agave-4-verifies-spark-agave-3
+    from: SPARK-AGAVE-4
+    to: SPARK-AGAVE-3
+    mechanism: MISSING
+    contract_status: MISSING
+    note: "使用者原始問題23；SuperBrain 藍圖只定義兩者角色分工（FAST/DEEP），沒有具體的『DEEP 驗證 FAST』協議，見 Audit/GAP_ANALYSIS.md"
+
+  - id: public-portal-projection
+    from: "(future) SuperSystem services"
+    to: "Public Portal"
+    mechanism: MISSING
+    contract_status: MISSING
+    note: "本輪未規劃實作，只在 Blueprint/15 留設計方向；必須與現有 aeris.space653000.workers.dev（AERIS-only，不可觸碰）明確區隔"
+
+  - id: aeris-web-portal-existing
+    from: aeris-core
+    to: "aeris.space653000.workers.dev"
+    mechanism: "既有獨立網站（本輪未深入盤點其程式碼來源，屬 AERIS 自己的資產）"
+    contract_status: EXISTS
+    note: "使用者明確要求：這個既有網站保持 AERIS-only，不得被本 SuperSystem 或未來 Public Portal 觸碰或合併"
