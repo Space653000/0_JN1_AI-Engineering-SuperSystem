@@ -24,5 +24,5 @@
 
 最值得注意的兩個模式：
 
-1. **AIECP 與 SuperBrain 幾乎是同一種東西的兩份獨立藍圖**——都是「通用控制平面：Queue + Scheduler + Router + Worker + Evidence + Approval」，只是 AIECP 面向「ChatGPT Web + Git 工程任務」，SuperBrain 面向「語音指令 + 多機（含雲端多供應商）調度」。如果使用者的目標架構最終要讓兩者共存於 ULTRA-MAERA-2，需要先決定兩者的分工邊界（見 [CONFLICT_ANALYSIS.md](CONFLICT_ANALYSIS.md) C-04 與 [Blueprint/09](../Blueprint/09_SUPERBRAIN_COMPUTE_FABRIC.md)）。
+1. **AIECP 與 SuperBrain 幾乎是同一種東西的兩份獨立藍圖**——都是「通用控制平面：Queue + Scheduler + Router + Worker + Evidence + Approval」，只是 AIECP 面向「ChatGPT Web + Git 工程任務」，SuperBrain 面向「語音指令 + 多機（含雲端多供應商）調度」。**2026-09-25 Stephen 已裁決分工邊界**：這組控制平面原語唯一歸 AIECP，SuperBrain 不重建，改往上提升為跨機統籌規劃層（見 [Blueprint/18](../Blueprint/18_DECISION_LOG.md)、[Blueprint/09](../Blueprint/09_SUPERBRAIN_COMPUTE_FABRIC.md)）。
 2. **Voice Agent 已經做出來的離線語音能力，與 SuperBrain 規劃中的 Phase C 語音能力高度重疊**，但 SuperBrain 的藍圖完全沒有提到 Voice Agent 這個既有專案。這是本次盤點發現的最大「重複造輪子」風險，也是最容易在文件層面先做整合建議的地方。

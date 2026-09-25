@@ -22,6 +22,15 @@
 - Spark 節點完全網路隔離，只能透過 Laptop（ULTRA-MAERA-2）向雲端求援（NEEDS_ESCALATION 流程）。
 - 施工階段 P0-P12，目前卡在 **P0（三台機器盤點）尚未完成**。
 
+## Stephen 已裁決的分工邊界（2026-09-25，見 [Blueprint/18](18_DECISION_LOG.md)）
+
+為避免 C-04 / D-01 所述「AIECP 與 SuperBrain 重工」風險，Stephen 裁定：
+
+- **Queue、Router、Worker、Evidence、Approval 這組控制平面原語唯一歸屬 AIECP**。SuperBrain 不建置、也不維護第二套同性質的佇列/排程/供應商路由/證據/核准機制。
+- **SuperBrain 的定位提升為跨機資源調度與統籌規劃層**：負責「這個任務該去 ULTRA-MAERA-2 的本機工具、SPARK-AGAVE-3、還是 Cloud Worker」這類機器層級的資源決策與統籌，而不是重造 AIECP 已有的排程/佇列/核准機制。實務上應理解為 SuperBrain 消費 AIECP 的 Queue/Router 輸出、在其上做跨機分派，而不是自己另開一條平行的任務生命週期。
+- 這是**決策方向**，尚未回頭修改 `0_JN1_AIECP` 或 `0_JN1_2AGAVE128-1MAERA64` 任一來源 repo；實際程式碼落地由兩個專案各自的治理流程執行。
+- **G-04（SPARK-AGAVE-4 獨立驗證 SPARK-AGAVE-3 的協議）Stephen 已認領，後續自行設計**，本 repo 暫不代為設計，僅追蹤於 Roadmap。
+
 ## 建議的職責擴展方向（僅供參考，未被 repo 採納）
 
 若要讓 SuperBrain 真正成為「整個 SuperSystem 的 compute fabric」，需要：
