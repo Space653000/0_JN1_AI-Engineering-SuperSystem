@@ -1,6 +1,24 @@
 # Repository Inventory
 
-盤點時間：2026-09-25。每張卡片的欄位都盡量附上來源檔案；查無來源或來源矛盾的欄位標記 `UNKNOWN`。
+盤點時間：2026-09-25（第一輪）。每張卡片的欄位都盡量附上來源檔案；查無來源或來源矛盾的欄位標記 `UNKNOWN`。
+
+**第二輪重新驗證（同日，2026-09-25）已完成，逐專案差異見下方「第二輪重新驗證」章節與 [Blueprint/19_MASTER_PROGRESS_TRACKER.md](../Blueprint/19_MASTER_PROGRESS_TRACKER.md)。下方 1–7 號卡片內容維持第一輪盤點時的原始寫法（保留歷史記錄），若與第二輪有出入，一律以第二輪與 Blueprint/19 的內容為準。**
+
+---
+
+## 第二輪重新驗證（2026-09-25，同日第二次重新 clone/pull）
+
+本輪重新 clone/pull 全部 7 個來源 repo（6 個公開匿名 clone、1 個私有 repo 沿用既有 read 存取），確認當前 HEAD 並與上方第一輪盤點結果逐一比對。完整差異表見 [Blueprint/19_MASTER_PROGRESS_TRACKER.md](../Blueprint/19_MASTER_PROGRESS_TRACKER.md) 的「本輪（第二輪）重新盤點 vs 第一輪盤點：逐專案差異」章節。摘要：
+
+| Repo | 第一輪 HEAD | 第二輪 HEAD | 有無實質變化 |
+|---|---|---|---|
+| 0_JN1_AERIS | `64576bd`（隱含，tag `v0.7.0-blueprint.1`） | `64576bd`（2026-09-08） | 無 |
+| 0_JN1_AERIS_Local-computer-implementation | 未記錄具體 SHA | `44c0e50`（2026-09-10） | 無 |
+| 0_JN1_AERIS_Supervision | 未記錄具體 SHA | `d99b64f`（2026-09-10），最新快照 `S0005` | 無 |
+| Offline-Local-Voice-Agent | `86ff7fd` | `4628e30`（2026-09-24） | HEAD 前進但 STATUS.md 完成度數字未變 |
+| 0_JN1_MEGIS | G0 done/G1 near/G2 partial/G3-9 not started | `2d74b37`（2026-09-22），**G0-G3 全部 closed，G4 已啟動** | **✅ 有實質推進** |
+| 0_JN1_AIECP | npm test 290/290，10 ENVIRONMENT+4 OWNER-EXTERNAL gate | `71dea25`（2026-09-24），PR #7 OPEN，npm test 290/290，gate 數量不變 | 無實質變化（倉庫內證據持續累積） |
+| 0_JN1_2AGAVE128-1MAERA64 | 研究規劃完成，P0 未開始，2026-09-25 機器命名定案 | `c4e0f75`（2026-09-25 20:05），內容一致 | 無實質變化 |
 
 ---
 

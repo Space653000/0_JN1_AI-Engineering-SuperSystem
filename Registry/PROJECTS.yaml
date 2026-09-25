@@ -1,6 +1,8 @@
 # PROJECTS.yaml — 每個來源 repo 的機器可讀登錄
-# 盤點時間：2026-09-25。source_of_truth_path 是「相對於該 repo 根目錄」的路徑。
+# 盤點時間：2026-09-25（第二輪，重新 clone/pull 全部來源 repo 確認當前 HEAD）。source_of_truth_path 是「相對於該 repo 根目錄」的路徑。
 # status 欄位一律引用來源文件的原文用詞，不做本 repo 自己的判斷。
+# progress 欄位是第二輪盤點新增的機器可讀欄位，格式：{as_of_commit, as_of_date, changed_since_first_pass}。
+# 完整敘述與跨專案總表見 Blueprint/19_MASTER_PROGRESS_TRACKER.md（人類可讀主表）。
 
 projects:
   - id: aeris-core
@@ -14,6 +16,11 @@ projects:
     source_of_truth_path: "docs/AERIS_BLUEPRINT_ZH_TW.md"
     governance_path: "constitution.md"
     main_machine: UNKNOWN
+    local_root: "C:\\0_JN1_AERIS"
+    progress:
+      as_of_commit: "64576bd"
+      as_of_date: "2026-09-08"
+      changed_since_first_pass: false
     excluded: false
 
   - id: aeris-local-impl
@@ -25,6 +32,10 @@ projects:
     source_of_truth_path: "AGENTS.md"
     main_machine: UNKNOWN
     local_root: "C:\\0_JN1_AERIS"
+    progress:
+      as_of_commit: "44c0e50"
+      as_of_date: "2026-09-10"
+      changed_since_first_pass: false
     excluded: false
 
   - id: aeris-supervision
@@ -36,6 +47,11 @@ projects:
     source_of_truth_path: "SUPERVISION_CONTRACT.md"
     main_machine: UNKNOWN
     visibility: private
+    progress:
+      as_of_commit: "d99b64f"
+      as_of_date: "2026-09-10"
+      latest_snapshot: "S0005 (published 2026-09-09, LATEST.json)"
+      changed_since_first_pass: false
     excluded: false
 
   - id: voice-agent
@@ -49,6 +65,10 @@ projects:
     main_machine: "RTX Spark (hardware model, NOT confirmed to be SPARK-AGAVE-3/4)"
     local_root: "C:\\0_JN1_Offline-Local-Voice-Agent"
     known_integration: "ORDER.md file format with aeris-core"
+    progress:
+      as_of_commit: "4628e30"
+      as_of_date: "2026-09-24"
+      changed_since_first_pass: "HEAD advanced from 86ff7fd (Codex workflow + P5 Segment 2 advisory fallback added), completion percentages unchanged"
     excluded: false
 
   - id: megis
@@ -56,12 +76,16 @@ projects:
     display_name: MEGIS
     purpose: "機械工程生成式智慧系統，Gate-driven generative engineering"
     domain: mechanical-engineering
-    status: "G0 done (11/11); G1 mostly done (pending G1-REQ-001/REV-001/ACC-001); G2 partial; G3-G9 not started"
+    status: "G0-G3 closed/accepted (SO-0002/SO-0003/SO-0004); G4 active (G4-MOD-001, G4-GRF-001 done; G4-MOD-002 in_progress; G4-IMP-001/REV-001/ACC-001 planned)"
     source_of_truth_path: "MEGIS_Blueprint/MEGIS_Mechanical Engineering Generative Intelligence System — v3.0-claude-code.md"
     status_path: "execution/PROJECT_STATE.md"
     main_machine: UNKNOWN
     local_root: "C:\\0_JN1_MEGIS"
     isolation_note: "README explicitly states it must not share environment or depend on C:\\0_JN1_AERIS or C:\\0_JN1_Offline-Local-Voice-Agent"
+    progress:
+      as_of_commit: "2d74b37"
+      as_of_date: "2026-09-22"
+      changed_since_first_pass: "MAJOR ADVANCE vs first pass (was: G0 done, G1 near-done, G2 partial, G3-G9 not started). Now G0-G3 fully closed/accepted, G4 active."
     excluded: false
 
   - id: aiecp
@@ -76,8 +100,14 @@ projects:
     status_path: ".ai/STATUS.md"
     acceptance_path: ".ai/ACCEPTANCE.md"
     main_machine: UNKNOWN
+    local_root: "C:\\0_JN1_AIECP"
     known_integration: []
     naming_conflict: "repo name says AIECP; all internal docs say AECP — see Audit/CONFLICT_ANALYSIS.md C-03"
+    progress:
+      as_of_commit: "71dea25"
+      as_of_date: "2026-09-24"
+      open_pr: "#7 feat/control-plane-complete-loop (OPEN, not merged)"
+      changed_since_first_pass: "Work orders 0001-0005 all closed in-repo (npm test 290/290 unchanged), but ENVIRONMENT (10) + OWNER-EXTERNAL (4) gate counts unchanged from first pass"
     excluded: false
 
   - id: superbrain
@@ -90,7 +120,12 @@ projects:
     status_path: ".ai/STATUS.md"
     acceptance_path: ".ai/ACCEPTANCE.md"
     defines_machine_names: true
+    local_root: "C:\\SuperBrain"
     known_integration: []
+    progress:
+      as_of_commit: "c4e0f75"
+      as_of_date: "2026-09-25"
+      changed_since_first_pass: "HEAD advanced (PR #2 merged, same day), content consistent with first-pass 2026-09-25 machine-naming decision; P0 completion unchanged (still not started)"
     excluded: false
 
   - id: robotcar

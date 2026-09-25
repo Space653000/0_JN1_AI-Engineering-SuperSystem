@@ -14,6 +14,8 @@
 | 2026-09-25 | **Stephen 裁定 C-04 / D-01（AIECP vs SuperBrain 重疊）分工邊界**：Queue / Router / Worker / Evidence / Approval 這組「控制平面原語」歸 AIECP 所有；SuperBrain **不得**另建一套同性質的 Queue/Router/Worker/Evidence/Approval，SuperBrain 的定位往上提升為**跨機資源調度與統籌規劃層**（決定「哪個任務該去哪台機器」的上層決策，而非重造 AIECP 已有的排程/佇列機制）。此為 Stephen 本人對本 SuperSystem 分工方向的決策，尚未回頭修改任一來源 repo，屬於本 repo 記錄的「建議分工方向」，實際落地仍需 AIECP / SuperBrain 各自專案採納 | 避免 D-01 所述「兩套控制邏輯各自演化、未來分裂成不相容真相」的風險重複；使用者明確裁示不想重工 |
 | 2026-09-25 | G-04（SPARK-AGAVE-4 獨立驗證 SPARK-AGAVE-3 的協議）Stephen 認領，列為「使用者後續自行設計」，本輪不代為設計 | 避免本 SuperSystem repo 越權替來源專案做架構決策（house rule #5） |
 | 2026-09-25 | 依 Stephen 要求，檢索 2026 年公開業界資料，佐證上述 C-04/D-01 分工裁決與 G-04 的可能參考模式，寫入 [Audit/EXTERNAL_RESEARCH.md](../Audit/EXTERNAL_RESEARCH.md)（Agent Orchestration vs Control Plane 分層、Verifier Pattern / Maker-Checker 職責分離、System-of-Systems 自治框架） | 業界慣例可作為決策佐證與後續設計輸入，但不取代 Stephen 或各專案自己的判斷 |
+| 2026-09-25（第二輪） | 依 Stephen 要求重新盤點：新增 `Blueprint/19_MASTER_PROGRESS_TRACKER.md` 作為跨專案總覽儀表板。編號延續既有 00–18 的順序（19 為下一個號碼），不另開命名系統，符合 house rule #6「沿用既有命名方式」的精神——這是一份既有 00–18 號文件都沒有涵蓋的新性質產物（可供 Stephen 自行勾選更新的活體追蹤表），因此判斷為新增檔案而非塞進既有文件 | 使用者明確要求「一個總表」，且要求以後可以自己回來更新進度；既有 Blueprint 文件都是一次性分析產出，沒有一份是設計給使用者手動編輯的活體追蹤介面 |
+| 2026-09-25（第二輪） | 重新 clone/pull 全部 7 個來源 repo 的當前 HEAD（而非沿用第一輪 clone 的快照），逐一比對是否有實質進度變化 | 使用者要求「re-confirm 各自進度」，且明確提到「以後我只要完成各自功能就會回來跟這個藍圖回報」，代表這份 tracker 之後會被反覆信任為現況依據，必須先確認自己不是憑第一輪的舊資料 |
 
 ## 尚待 Stephen 決策的事項（本 repo 整理，不代為決定）
 

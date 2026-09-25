@@ -1,6 +1,8 @@
 # STATUS — SuperSystem 建置階段追蹤
 
-盤點時間：2026-09-25。盤點者：Claude（Sonnet 5），Claude Code Remote session。
+盤點時間：2026-09-25（第二輪，含重新 clone/pull 全部 7 個來源 repo 的當前 HEAD）。盤點者：Claude（Sonnet 5），Claude Code Remote session。
+
+**想快速看「現在各專案做到哪」？直接看 [Blueprint/19_MASTER_PROGRESS_TRACKER.md](Blueprint/19_MASTER_PROGRESS_TRACKER.md)——這是主要的一目瞭然狀態視圖，也是 Stephen 之後回報進度要編輯的地方。**下面的 Phase 表記錄的是本 SuperSystem repo 自己的建置階段，不是各來源專案的工程進度。
 
 | Phase | 內容 | 狀態 |
 |---|---|---|
@@ -10,6 +12,7 @@
 | Phase 3 | Machine Architecture — ULTRA-MAERA-2 / SPARK-AGAVE-3 / SPARK-AGAVE-4 三機角色與現實落差 | ✅ 完成，見 [Blueprint/03](Blueprint/03_MACHINE_ARCHITECTURE.md) |
 | Phase 4 | Authority / Source-of-Truth Matrix — 每個專案的真相來源與治理權威 | ✅ 完成，見 [Blueprint/05](Blueprint/05_SOURCE_OF_TRUTH_AND_AUTHORITY.md) |
 | Phase 5 | Master Blueprint v0.1 — 回答使用者的 25 個問題 | ✅ 完成，見 [Blueprint/00_MASTER_BLUEPRINT.md](Blueprint/00_MASTER_BLUEPRINT.md) |
+| Phase 6 | **Living Progress Tracker 建立** — 重新 clone/pull 全部 7 個來源 repo 確認當前 HEAD、重新核對重疊解決狀態、完成三機本機資料夾盤點（可驗證的部分）、產出 Stephen 可自行勾選更新的活體追蹤表 | ✅ 完成，見 [Blueprint/19_MASTER_PROGRESS_TRACKER.md](Blueprint/19_MASTER_PROGRESS_TRACKER.md) |
 
 ## 本輪盤點的重要限制（誠實揭露）
 
