@@ -29,7 +29,9 @@
 - **Queue、Router、Worker、Evidence、Approval 這組控制平面原語唯一歸屬 AIECP**。SuperBrain 不建置、也不維護第二套同性質的佇列/排程/供應商路由/證據/核准機制。
 - **SuperBrain 的定位提升為跨機資源調度與統籌規劃層**：負責「這個任務該去 ULTRA-MAERA-2 的本機工具、SPARK-AGAVE-3、還是 Cloud Worker」這類機器層級的資源決策與統籌，而不是重造 AIECP 已有的排程/佇列/核准機制。實務上應理解為 SuperBrain 消費 AIECP 的 Queue/Router 輸出、在其上做跨機分派，而不是自己另開一條平行的任務生命週期。
 - 這是**決策方向**，尚未回頭修改 `0_JN1_AIECP` 或 `0_JN1_2AGAVE128-1MAERA64` 任一來源 repo；實際程式碼落地由兩個專案各自的治理流程執行。
-- **G-04（SPARK-AGAVE-4 獨立驗證 SPARK-AGAVE-3 的協議）Stephen 已認領，後續自行設計**，本 repo 暫不代為設計，僅追蹤於 Roadmap。
+- **G-04（SPARK-AGAVE-4 獨立驗證 SPARK-AGAVE-3 的協議）Stephen 已認領，後續自行設計**，本 repo 暫不代為設計，僅追蹤於 Roadmap。2026 年業界「Verifier Pattern / Maker-Checker」的公開參考模式已整理於 [Audit/EXTERNAL_RESEARCH.md](../Audit/EXTERNAL_RESEARCH.md) §2，供設計時參考（非強制採用）。
+
+外部業界對「Control Plane vs Orchestration」的分層描述，與上述分工裁決方向一致，詳見 [Audit/EXTERNAL_RESEARCH.md](../Audit/EXTERNAL_RESEARCH.md) §1。
 
 ## 建議的職責擴展方向（僅供參考，未被 repo 採納）
 

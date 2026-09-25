@@ -12,7 +12,7 @@
 | G-01 | Gap | Voice Agent ↔ AIECP 介面契約完全缺失 | 高 | Audit/GAP_ANALYSIS.md §1 |
 | G-02 | Gap | AIECP ↔ AERIS/MEGIS 派工介面完全缺失 | 高 | Audit/GAP_ANALYSIS.md §1 |
 | G-03 | Gap | AIECP ↔ SuperBrain 呼叫介面完全缺失 | 中高 | Audit/GAP_ANALYSIS.md §1 |
-| G-04 | Gap — **已認領** | SPARK-AGAVE-4 獨立驗證 SPARK-AGAVE-3 的協議完全未定義（使用者原始問題23）。**2026-09-25 Stephen 表示將自行設計**，本 repo 不代為設計，暫緩處理 | 高 → owner 已認領，非阻塞本輪 | Audit/GAP_ANALYSIS.md §1；Blueprint/11；Blueprint/18 決策記錄 |
+| G-04 | Gap — **已認領** | SPARK-AGAVE-4 獨立驗證 SPARK-AGAVE-3 的協議完全未定義（使用者原始問題23）。**2026-09-25 Stephen 表示將自行設計**，本 repo 不代為設計，暫緩處理。已附上業界 Verifier Pattern 參考（Audit/EXTERNAL_RESEARCH.md §2）供設計輸入 | 高 → owner 已認領，非阻塞本輪 | Audit/GAP_ANALYSIS.md §1；Blueprint/11；Blueprint/18 決策記錄；Audit/EXTERNAL_RESEARCH.md |
 | G-05 | Gap | Public Portal 資料投影契約未定義 | 低 — 使用者已標示為未來項目 | Audit/GAP_ANALYSIS.md §1 |
 | G-06 | Gap | 跨專案 GitHub/CI 擁有權未定義（每個 repo 各自為政） | 中 | Audit/GAP_ANALYSIS.md §2 |
 | G-07 | Gap | 跨專案統一核准佇列不存在，Stephen 需要在多個系統分別核准 | 中 | Audit/GAP_ANALYSIS.md §2 |
