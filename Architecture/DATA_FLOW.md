@@ -75,3 +75,38 @@
 | 5b. SPARK-AGAVE-3 執行 | 路徑 D 顯示 SuperBrain 仍在 P0，SPARK-AGAVE-3 尚未有任何真實任務跑過 | 需完成 P0-P5 才有真實執行證據 |
 | 6a. SPARK-AGAVE-4 驗證 SPARK-AGAVE-3 | 完全沒有實作，也沒有協議設計 | 見 Audit/GAP_ANALYSIS.md |
 | 9. GitHub/Release | 路徑 C 的 AIECP 自己的 GitHub delivery 已經很成熟（exact-HEAD CI、簽章 webhook） | 這部分反而是目前最接近目標的一段，但只服務 AIECP 自己的 repo，不服務 AERIS/MEGIS 的發布（AERIS 有自己獨立的 Supervision 發布機制） |
+
+## G-01／G-02 建議草案之間的資料/證據流（Mermaid）
+
+> 對照 [Blueprint/20](../Blueprint/20_PROPOSED_INTERFACE_CONTRACTS.md) 的 G-01（Voice Agent↔AIECP）與 G-02（AIECP↔AERIS/MEGIS）草案，畫出建議中的 payload 與證據回填路徑。**全部節點與連線都是 DRAFT，未經任何來源 repo 採用**，只是把 Blueprint/20 的文字描述可視化。
+
+```mermaid
+sequenceDiagram
+    participant VA as Voice Agent<br/>(Front Desk S0-S8)
+    participant HO1 as handoff:<br/>voice-tasks/inbox
+    participant AIECP as AIECP<br/>(Planner/Router)
+    participant HO2 as handoff:<br/>AERIS orders/
+    participant AERIS as AERIS<br/>(Order Validator + Gate)
+    participant HO3 as MEGIS<br/>external_requests/aiecp
+    participant MEGIS as MEGIS<br/>(WORK_QUEUE + Gate)
+
+    Note over VA,AIECP: G-01（建議草案，MISSING）
+    VA->>HO1: aecp.task/v1 Command Card<br/>+ voiceMeta{riskLevel, confirmedByUser}
+    HO1->>AIECP: AIECP watcher 讀取、驗證 schema
+    AIECP-->>HO1: aecp.result/v1 Result Capsule（outbox）
+    HO1-->>VA: 讀到後 TTS 播報 summary
+
+    Note over AIECP,AERIS: G-02a（建議草案，MISSING）
+    AIECP->>HO2: aecp.task/v1（action.type=domain-dispatch,<br/>domain=aeris-acoustic）+ ORDER.md body
+    HO2->>AERIS: Order Validator 驗證 + Capability Contract 比對
+    AERIS-->>HO2: Results.xlsx/Report.pptx + Gate 驗收狀態
+    HO2-->>AIECP: aecp.result/v1（evidenceRef 指向 Results.xlsx）
+
+    Note over AIECP,MEGIS: G-02b（建議草案，MISSING）
+    AIECP->>HO3: aecp.task/v1（domain=megis-mechanical,<br/>gateRef=G4-MOD-002）
+    HO3->>MEGIS: MEGIS 自行決定是否轉入 execution/WORK_QUEUE.yaml
+    MEGIS-->>HO3: artifacts/<gate>-<item>/verification.json
+    HO3-->>AIECP: aecp.result/v1（evidenceRef 指向 verification.json）
+```
+
+**關鍵設計原則（沿用 Blueprint/20）**：兩條 G-02 路徑都堅持「檔案交接、不共用 runtime」，因為 MEGIS 明文禁止與 AERIS/Voice Agent 共用環境（`0_JN1_MEGIS/execution/PROJECT_STATE.md` 第80行），AERIS 與 Voice Agent 的既有整合模式也是同一種哲學（`ORDER.md`）。AIECP 在兩條路徑上都只回填 `evidenceRef`，不強迫 AERIS/MEGIS 改用 AIECP 自己的五級證據格式，證據等級對照只是概念層級（見 Blueprint/20 G-02 章節）。

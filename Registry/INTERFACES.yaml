@@ -1,5 +1,7 @@
 # INTERFACES.yaml — 已知的跨專案介面，以及使用者目標架構要求、但目前不存在的介面
 # contract_status: EXISTS | MISSING | PARTIAL
+# proposed_contract: 本 SuperSystem repo 對 MISSING 介面提出的建議草案（DRAFT），非任何來源 repo 已採用的事實。
+#   完整敘事版見 Blueprint/20_PROPOSED_INTERFACE_CONTRACTS.md；欄位 precedent 引用「repo + 檔案路徑」佐證草案依據。
 
 interfaces:
   - id: voice-agent-to-aeris
@@ -32,6 +34,15 @@ interfaces:
     mechanism: MISSING
     contract_status: MISSING
     note: "使用者目標架構要求的核心介面之一，目前兩個 repo 互不知道對方存在，見 Audit/CONFLICT_ANALYSIS.md C-02"
+    proposed_contract:
+      status: "DRAFT（本 repo 建議，未經 Voice Agent 或 AIECP 專案採用）"
+      draft_ref: "Blueprint/20_PROPOSED_INTERFACE_CONTRACTS.md#g-01voice-agent-aiecp"
+      shape: "檔案掉落交接：Voice Agent Front Desk 收斂完成後，於 C:\\0_JN1_AIECP_HANDOFF\\voice-tasks\\inbox\\<task-uuid>.json 寫入一份 aecp.task/v1 Command Card（附加 voiceMeta.riskLevel/confirmedByUser 等非破壞性 metadata）；AIECP 完成後於 outbox 寫回 aecp.result/v1 Result Capsule，Voice Agent 用既有 TTS 播報 summary"
+      precedent:
+        - "Offline-Local-Voice-Agent/docs/05_AERIS_Integration_Split.md（ORDER.md 檔案交接、不共用程式碼的既有模式）"
+        - "Offline-Local-Voice-Agent/src/policy/risk_levels.py（L0-L3 風險分級）"
+        - "0_JN1_AIECP/Blueprint/11_TASK_PROTOCOL.md（aecp.task/v1 Command Card / aecp.result/v1 Result Capsule schema）"
+      constraints: "AIECP v0.1.0 僅支援 inspect-workspace/git-status 兩種唯讀動作，故草案初期僅涵蓋 Voice Agent 的 L0 唯讀請求；L1-L3 需 AIECP 先補上對應的異動 action schema 與 Policy 規則（見 0_JN1_AIECP/Blueprint/11_TASK_PROTOCOL.md 第52-61行 Future capability evolution）"
 
   - id: aiecp-to-aeris
     from: aiecp
@@ -39,6 +50,15 @@ interfaces:
     mechanism: MISSING
     contract_status: MISSING
     note: "AIECP 的 aecp.task/v1 schema 目前是通用的（inspect-workspace/git-status），沒有聲學工程專屬欄位或路由"
+    proposed_contract:
+      status: "DRAFT（本 repo 建議，未經 AIECP 或 AERIS 專案採用）"
+      draft_ref: "Blueprint/20_PROPOSED_INTERFACE_CONTRACTS.md#g-02aiecpaeris-aiecpmegis"
+      shape: "AIECP 派工時把 aecp.task/v1 的 action.type 擴充為 domain-dispatch（domain: aeris-acoustic, capabilityRef 對照 AERIS 的 Capability Contract 編號），沿用既有 ORDER.md 交接資料夾落地，JSON 信封與 ORDER.md body 並存；AERIS Gate 驗收結果（Results.xlsx/Report.pptx 路徑）回填進 aecp.result/v1 的 evidenceRef"
+      precedent:
+        - "0_JN1_AIECP/Blueprint/11_TASK_PROTOCOL.md（aecp.task/v1、aecp.result/v1 schema）"
+        - "0_JN1_AIECP/.ai/ACCEPTANCE.md（STATIC/TESTED/CI/ENVIRONMENT/OWNER-EXTERNAL 五級證據）"
+        - "Offline-Local-Voice-Agent/docs/05_AERIS_Integration_Split.md（AERIS 端 Order Validator/Capability Contract/G0-G10 Gate 的規劃性描述）"
+        - "0_JN1_AERIS/docs/governance/ASTRA_EXECUTION_GATE_V3.md（GATE-01~08）"
 
   - id: aiecp-to-megis
     from: aiecp
@@ -46,6 +66,14 @@ interfaces:
     mechanism: MISSING
     contract_status: MISSING
     note: "同上，且 MEGIS README 明確聲明不與其他專案共用環境"
+    proposed_contract:
+      status: "DRAFT（本 repo 建議，未經 AIECP 或 MEGIS 專案採用；MEGIS 是否接受外部請求收件匣的設計完全由 MEGIS 自己決定）"
+      draft_ref: "Blueprint/20_PROPOSED_INTERFACE_CONTRACTS.md#g-02aiecpaeris-aiecpmegis"
+      shape: "AIECP 派工寫入 MEGIS 自己擁有、獨立於主 execution 目錄的外部請求收件匣（例如 C:\\0_JN1_MEGIS\\external_requests\\aiecp\\<task-uuid>.json，需 MEGIS 自行決定是否採用此路徑），由 MEGIS 自己決定是否轉入 execution/WORK_QUEUE.yaml；MEGIS 工作項目關閉時既有的 artifacts/<gate>-<item>/verification.json 直接作為 aecp.result/v1 的 evidenceRef"
+      precedent:
+        - "0_JN1_AIECP/Blueprint/11_TASK_PROTOCOL.md（aecp.task/v1、aecp.result/v1 schema）"
+        - "0_JN1_MEGIS/execution/PROJECT_STATE.md（Gate 工作項目 + verify_g*_*.py + artifacts/<gate>-<item>/verification.json 的既有證據模式，第9-33、80行 Boundaries）"
+      constraints: "MEGIS execution/PROJECT_STATE.md 第80行明文『C:\\0_JN1_AERIS 與 C:\\0_JN1_Offline-Local-Voice-Agent 不得變更、共用或依賴』；本草案假設同一原則適用於 AIECP，故堅持純檔案交握、不共用 runtime"
 
   - id: aiecp-to-superbrain
     from: aiecp
@@ -53,6 +81,14 @@ interfaces:
     mechanism: MISSING
     contract_status: MISSING
     note: "兩者都有自己的 Provider Router / Worker 概念，沒有互相呼叫的 API，見 Audit/CONFLICT_ANALYSIS.md C-04"
+    proposed_contract:
+      status: "DRAFT（本 repo 建議，未經 AIECP 或 SuperBrain 專案採用；前提是 SuperBrain 完成 P0-P2，目前尚未成立）"
+      draft_ref: "Blueprint/20_PROPOSED_INTERFACE_CONTRACTS.md#g-03aiecpsuperbrain"
+      shape: "SuperBrain 作為 AIECP Provider Router 底下一個新的 local 類 Provider（id: superbrain-fabric），health() 映射自既有 `sb workers`，invoke() 等同呼叫 `sb submit --local-only`，cancel() 對應 `sb cancel`；AIECP 仍是唯一 Queue/Task/Approval 權威，符合 2026-09-25 Stephen 對 D-01/C-04 的裁決"
+      precedent:
+        - "0_JN1_AIECP/Blueprint/03_PROVIDER_ROUTER.md（Provider/Worker 分離、五狀態健康模型、ProviderAdapter 介面、既有 local Provider 類別）"
+        - "0_JN1_2AGAVE128-1MAERA64/.ai/BLUEPRINT.md（sb CLI：submit/status/workers/approve/cancel，第204-258行）"
+      constraints: "SuperBrain P0（三機硬體盤點）尚未完成，sb 系列 CLI 本身尚無真實跑通證據，本草案屬中長期建議，非目前可施工項目"
 
   - id: spark-agave-4-verifies-spark-agave-3
     from: SPARK-AGAVE-4

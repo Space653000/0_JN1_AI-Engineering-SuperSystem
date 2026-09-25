@@ -34,6 +34,11 @@
 
 **這份排序只是建議，不是任何專案已承諾的計畫，且完全不涉及本 repo 對其他 repo 的任何修改動作。**
 
+## 本輪新增的具體草案（作為下一步的輸入，2026-09-25 第三輪）
+
+- **G-01/G-02/G-03 的具體契約草案**：見 [20_PROPOSED_INTERFACE_CONTRACTS.md](20_PROPOSED_INTERFACE_CONTRACTS.md) 與 [Registry/INTERFACES.yaml](../Registry/INTERFACES.yaml) 各條目下新增的 `proposed_contract` 欄位。這些草案把上面第 3、4 步「設計 AIECP↔領域路由介面」「設計 Voice Agent→AIECP handoff」從抽象的待辦，落成具體的 schema/檔案交接/錯誤處理形狀，供 AIECP、AERIS、MEGIS、Voice Agent 各自的下一步設計參考——**是否採用完全由各專案自己決定**。
+- **D-02（Voice Agent × SuperBrain Phase C）的具體整合建議**：見 [21_VOICE_SUPERBRAIN_INTEGRATION_PROPOSAL.md](21_VOICE_SUPERBRAIN_INTEGRATION_PROPOSAL.md)，逐模組對照哪些可以重用、哪些需要改動、哪些要自建，並提出建議執行順序。這是對上面「若要推進使用者目標架構」清單之外、Stephen 尚待決策事項第1項（AERIS/MEGIS/SuperBrain 整合優先順序）的補充輸入。
+
 ## 驗收標準的統一鐵律（跨所有專案已自然收斂，值得明文延續）
 
 不論哪個專案、哪個層級的整合，都應該延續本輪盤點發現的共同文化：**證據優於自我宣稱，Blueprint 存在不等於 Runtime 完成，下層證據不能冒充上層證據**。這是 AIECP 講得最完整的一套語言（STATIC/TESTED/CI/ENVIRONMENT/OWNER-EXTERNAL），但精神在其他五個專案裡都能找到對應版本（見 [10](10_SUPERVISION_AND_EVIDENCE.md)）。

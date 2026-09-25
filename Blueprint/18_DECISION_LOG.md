@@ -16,6 +16,7 @@
 | 2026-09-25 | 依 Stephen 要求，檢索 2026 年公開業界資料，佐證上述 C-04/D-01 分工裁決與 G-04 的可能參考模式，寫入 [Audit/EXTERNAL_RESEARCH.md](../Audit/EXTERNAL_RESEARCH.md)（Agent Orchestration vs Control Plane 分層、Verifier Pattern / Maker-Checker 職責分離、System-of-Systems 自治框架） | 業界慣例可作為決策佐證與後續設計輸入，但不取代 Stephen 或各專案自己的判斷 |
 | 2026-09-25（第二輪） | 依 Stephen 要求重新盤點：新增 `Blueprint/19_MASTER_PROGRESS_TRACKER.md` 作為跨專案總覽儀表板。編號延續既有 00–18 的順序（19 為下一個號碼），不另開命名系統，符合 house rule #6「沿用既有命名方式」的精神——這是一份既有 00–18 號文件都沒有涵蓋的新性質產物（可供 Stephen 自行勾選更新的活體追蹤表），因此判斷為新增檔案而非塞進既有文件 | 使用者明確要求「一個總表」，且要求以後可以自己回來更新進度；既有 Blueprint 文件都是一次性分析產出，沒有一份是設計給使用者手動編輯的活體追蹤介面 |
 | 2026-09-25（第二輪） | 重新 clone/pull 全部 7 個來源 repo 的當前 HEAD（而非沿用第一輪 clone 的快照），逐一比對是否有實質進度變化 | 使用者要求「re-confirm 各自進度」，且明確提到「以後我只要完成各自功能就會回來跟這個藍圖回報」，代表這份 tracker 之後會被反覆信任為現況依據，必須先確認自己不是憑第一輪的舊資料 |
+| 2026-09-25（第三輪） | 新增 `Blueprint/20_PROPOSED_INTERFACE_CONTRACTS.md`（G-01/G-02/G-03 三個缺失介面的具體草案）與 `Blueprint/21_VOICE_SUPERBRAIN_INTEGRATION_PROPOSAL.md`（D-02 的具體整合建議），編號延續 19 之後的順序。同步擴充 `Registry/INTERFACES.yaml`，在既有 `MISSING` 條目下新增 `proposed_contract` 欄位（含 precedent 引用），並在 `Architecture/SYSTEM_MAP.md`、`MACHINE_MAP.md`、`DATA_FLOW.md` 補上 Mermaid 圖 | 使用者明確要求把 G-01/G-02/G-03 從「已知缺口」推進到「具體草案」，並把 D-02 從「重複風險」推進到「可執行的整合建議」；全文一律使用建議/草案語氣，不宣稱已被來源 repo 採用（house rule #2） |
 
 ## 尚待 Stephen 決策的事項（本 repo 整理，不代為決定）
 
