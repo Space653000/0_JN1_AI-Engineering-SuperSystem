@@ -29,6 +29,8 @@
 
 | 2026-09-26 | **重大雷達發現**：Stephen 提供 Microsoft Build 2026 中文報導線索，本 repo 查證確認 SPARK-AGAVE-3/4 對應的硬體是 **Microsoft Surface RTX Spark Dev Box**，正式上市日 **2026-10-07**，本文撰寫時尚未上市。已更新 [Blueprint/22 雷達#7](22_GLOBAL_TECH_RADAR.md)、[Blueprint/23 彙整報告](23_TECH_RADAR_SUMMARY_REPORT.md)、[Blueprint/03](03_MACHINE_ARCHITECTURE.md)。**推論**（未經 Stephen 確認）：SuperBrain P0 硬體盤點卡住，可能原因是硬體還沒上市，不是施工延遲 | 這是本輪雷達最重要的單一發現，直接影響 Roadmap 對 SuperBrain P0 進度的解讀方式 |
 
+| 2026-09-27 | Stephen 口頭補充三個專案的定位（記錄於 [Blueprint/26](26_VISION_DRIVEN_FRONTIER_RADAR.md)、[Blueprint/23](23_TECH_RADAR_SUMMARY_REPORT.md)）：AERIS＝聲學工程師全方位能力盤點、MEGIS＝機構工程師全方位能力盤點、AIECP＝跨領域協調MEGIS與AERIS（協調/溝通/接收指令/分配交付/銜接本地雲端）。三者現在做不到的能力項目，未來交給對應子藍圖與工程專案逐步達成。同時再次確認 AERIS Supervision 未來改名為監管全系統施工/監工/運作狀況（呼應既有 JN1-UOA 決策）| 這些是 Stephen 對各專案定位的補充說明，比來源 repo 現有文件更具體，本 repo 誠實標註來源為口頭確認、非 repo 文件引用，不代替各專案自行修改藍圖 |
+
 ## 尚待 Stephen 決策的事項（本 repo 整理，不代為決定）
 
 1. 是否要推進 AIECP ↔ AERIS/MEGIS ↔ SuperBrain 的整合，以及優先順序（見 [16](16_ROADMAP_AND_ACCEPTANCE.md)）。

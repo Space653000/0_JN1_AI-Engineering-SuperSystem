@@ -29,6 +29,8 @@
 
 **兩層願景**：(a) 聲學工程能力本身要做到「一人抵百人」的專業廣度與深度；(b) 支撐這個能力的治理機制（Evidence Before DONE、獨立審查、四方版本一致，見 `constitution.md` GATE-01~08）本身要做到讓 AI 產出的工程判斷「可信」。前沿檢索因此分兩軌：聲學技術本身、以及支撐可信度的驗證方法論。
 
+> **Stephen 補充定位（2026-09-27）**：AERIS 的目標是把「一個聲學工程師應該具備的全方位能力」完整盤點出來——不是只做現在 GATE 架構裡已經涵蓋的部分。現在盤點不出來、還做不到的能力項目，**未來會分別交給對應的子藍圖與工程專案去逐步達成**，不是 AERIS 自己一次做完。這代表本節「前沿還有多遠」的討論，除了現有兩軌，還要放進「AERIS 有沒有把能力範疇本身盤點完整」這個第三個問題——這是 Stephen 對 AERIS 定位的補充說明，不是來源 repo 文件裡目前寫出來的內容，本 repo 誠實標註來源為 Stephen 口頭確認，非 repo 文件引用。
+
 ### 前沿檢索（2026-09-26）
 
 **A. 聲學技術軌：生成式/物理知情揚聲器設計**
@@ -58,6 +60,8 @@ Sources: [Fifty Years of Specification Completeness: What Aviation Certification
 
 補充：v3.0 藍圖本身說明「本文件把 v1.0 的產品願景，經 v2.0 的 Gate 化，進一步精確化為可由 AI Agent 持續施工、由獨立 Agent 與具名工程師驗證、可中斷恢復、可稽核追溯的工程計畫」（`MEGIS_Blueprint/…v3.0-claude-code.md` 第 56 行）。**MEGIS 的願景核心不是「用 AI 畫圖」，而是「確定性 + 可驗證性優先於生成速度」**——LLM 明確被限定在意圖整理/提問/解釋角色，幾何核心與物理求解器不可被取代。
 
+> **Stephen 補充定位（2026-09-27）**：跟 AERIS 一樣，MEGIS 的目標是把「一個機構工程師應該具備的全方位能力」完整盤點出來，不是只做現有 Gate 架構已經涵蓋的部分。現在做不到的能力項目，**未來一樣交給對應的子藍圖與工程專案去逐步達成**。同上，這是 Stephen 口頭補充的定位說明，不是 `README.md`/v3.0 藍圖目前寫出來的文字，特此標註來源區別。
+
 ### 前沿檢索（2026-09-26）
 
 - **多尺度拓樸優化**：西北大學 2025 年專利提出 C-HiDeNN-TD（Convolution-Hierarchical Deep-learning Neural Network Tensor Decomposition），首次讓巨觀/微觀尺度拓樸問題可以同時求解，解決過去高保真多尺度優化被有限元分析算力卡住的瓶頸。
@@ -79,6 +83,8 @@ MEGIS 目前的 Gate 架構（G0-G9，見 v3.0 藍圖）本質上就是「確定
 > — `0_JN1_AIECP/.ai/BLUEPRINT.md` 第 11-27 行（摘自 `Blueprint/00_MASTER_BLUEPRINT.md`）
 
 **AIECP 的願景不綁定任何特定 vendor**——它是「Mission/Task/Queue/Evidence/Approval」這套治理理想本身，目的是讓「AI 對話」跟「使用者電腦上真實工程工作」之間有一層可證明、可恢復、人類仍掌權的操作層。
+
+> **Stephen 補充定位（2026-09-27）**：AIECP 的目標是**跨領域**協調機構工程師（MEGIS）與聲學工程師（AERIS）的全方位能力——負責協調、溝通、接收指令、分配交付、以及銜接本地與雲端資源協助。也就是說 AIECP 不只是「通用工程控制平面」，而是**專門橋接 MEGIS 與 AERIS 兩個工程領域**的協調層。現在做不到的部分，一樣交給對應的子藍圖與工程專案去逐步達成。這是 Stephen 口頭補充的定位說明，比 `.ai/BLUEPRINT.md` 現有的「通用不綁定領域」文字更具體地指向 MEGIS/AERIS 這兩個特定領域，特此標註來源區別，也呼應 [Blueprint/17](17_RISK_GAP_CONFLICT_REGISTER.md) G-02（AIECP↔AERIS/MEGIS 派工介面缺失）的目標方向。
 
 ### 前沿檢索（2026-09-26）
 
@@ -165,6 +171,8 @@ AERIS GATE-06 目前用「Blueprint SHA、Implementation SHA、Local checkout HE
 
 ### 前沿檢索
 不適用——沒有可驗證的願景基礎，無法做「對照願景」的前沿檢索。第 8 節（JN1-UOA）的前沿檢索是針對本 repo 自己提出的監管概念，跟這裡的 `NOT VERIFIED` 狀態是兩回事，不要混為一談。
+
+> **Stephen 補充定位（2026-09-27）**：`0_JN1_AERIS_Supervision` 未來會改名，變成監管**全系統的施工進度、監工、與運作狀況**——不再只是 AERIS 一個專案的發布快照監督。這跟 [Blueprint/10](10_SUPERVISION_AND_EVIDENCE.md)、[Blueprint/18 決策記錄](18_DECISION_LOG.md) 已經記錄的 JN1-UOA（JN1 Unified Oversight Authority）方向一致，這裡是 Stephen 再次口頭確認，非新決策，記錄下來以保持一致性。
 
 ---
 
