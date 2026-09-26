@@ -197,6 +197,83 @@ JN1-UOA 目前連提案都還只是命名選定（見 Blueprint/18），距離�
 
 ---
 
+## 9. AERIS 深挖：聲學工程師完整能力地圖對照
+
+### 願景摘要
+延續第 1 節已引用的兩份來源（`0_JN1_AERIS/README.md` 第 1 行「一人抵百人」、`docs/AERIS_BLUEPRINT_ZH_TW.md` 第 11-13 行），加上 Stephen 2026-09-27 的補充定位——「把一個聲學工程師應該具備的全方位能力完整盤點出來，不是只做現在 GATE 架構已經涵蓋的部分」（引用細節見第 1 節，此處不重複）。本節不重複那兩份引用，只針對這句補充定位本身，問一個新問題：**世界上有沒有一份「聲學工程師的完整能力地圖」可以拿來對照 AERIS 的 100 席位設計，看有沒有漏掉的能力範疇？**
+
+> **Stephen 補充澄清（本輪任務中途）**：AERIS 的聲學工程範疇明確**同時包含揚聲器與麥克風**，不是只有喇叭/驅動器設計。因此本節的前沿檢索與後面的落差評估，麥克風工程（換能器設計、MEMS 麥克風、陣列/波束成形、麥克風端心理聲學、麥克風校準/量測標準）必須跟揚聲器工程並列處理，不能只當附註帶過。
+
+### 前沿檢索（2026-09-26）
+
+- **沒有單一、官方、涵蓋全部的「聲學工程師能力地圖」——能力被拆在至少三個性質不同的專業組織裡**：(a) INCE-USA（Institute of Noise Control Engineering）的 Board Certification 專業考試，涵蓋範圍明確寫著「fundamental acoustics、mechanical dynamics、psycho-physiological properties of the ear」，再加上「instrumentation and measurements、hearing conservation、noise problems in buildings、transportation systems、community、industry」——這是一份以「噪音控制」為核心、但涵蓋心理聲學與量測的實務能力清單。(b) ASA（Acoustical Society of America）不辦單一能力考試，而是用 **14 個 Technical Committee** 劃分整個聲學領域：Acoustical Oceanography、Animal Bioacoustics、Architectural Acoustics、Biomedical Acoustics、Engineering Acoustics、Musical Acoustics、Noise、Physical Acoustics、Psychological and Physiological Acoustics、Signal Processing in Acoustics、Speech Communication、Structural Acoustics and Vibration、Underwater Acoustics 等——這張清單比 INCE 考試範圍廣得多，涵蓋生醫、水下、動物生物聲學這些 AERIS 願景語言完全沒提到的次領域。(c) AES（Audio Engineering Society）則專注在電聲/訊號鏈這一段：electroacoustic transducer（麥克風、揚聲器陣列、輻射阻抗、聲學中心）、現代揚聲器音箱設計、sound reinforcement（擴聲系統工程）。
+- **ABET 沒有把「聲學工程」當成獨立受認證學門**：查詢 ABET 2025-2026／2026-2027 工程認證準則，只在「ocean engineering」這個學門的準則裡明確要求涵蓋 underwater acoustics，沒有找到任何獨立的「Acoustical Engineering」認證準則——這代表**全世界高等教育體系本身也沒有把「聲學工程師」當成一個邊界清楚、有官方統一能力清單的獨立職業來認證**，聲學能力普遍被拆進機械/電機/建築工程系所裡當選修或次專業。
+- **麥克風工程本身也有一套獨立於揚聲器的成熟標準/能力範疇，容易被「聲學工程」這個籠統說法蓋過去**：量測級麥克風的校準與規格，由 IEC 61094 系列標準明確定義——IEC 61094-1（互易法初校）、IEC 61094-4（實驗室用工作標準麥克風規格）、IEC 61094-5（現場用工作標準麥克風、以已知靈敏度麥克風比對校準）；麥克風陣列/波束成形這一塊，前沿做法要求陣列裡每顆麥克風的靈敏度與相位響應要緊密匹配，2026 年的具體技術包括差分波束成形演算法（differential beamforming）與均勻圓形陣列（Uniform Circular Array）搭配 DAS/EF-DAS 演算法做全向覆蓋。**這代表「麥克風工程」至少要單獨盤點三塊能力：換能器/MEMS 麥克風設計、量測校準（IEC 61094 系列）、陣列與波束成形演算法**——如果只把麥克風當成揚聲器能力地圖的附屬品，很容易漏掉校準標準與陣列信號處理這兩塊揚聲器工程完全不涉及的獨立能力。
+- 綜合以上，「聲學工程師的完整能力地圖」這件事本身，在全世界的專業建制裡都是**碎片化、需要跨三個以上專業學會（外加麥克風領域自己的 IEC 標準體系）拼起來才勉強完整**的狀態，不存在一份 AERIS 可以直接拿來對照打勾的官方清單，而且這份清單必須明確拆出「揚聲器」與「麥克風」兩條平行的能力線，不能把麥克風當成揚聲器的附屬能力。
+
+Sources: [INCE-USA Board Certification — Requirements](https://www.inceusa.org/board-certification/requirements/) · [Institute of Noise Control Engineering](https://www.inceusa.org/) · [Acoustical Society of America — Technical Committees and Administrative Committees](https://acousticalsociety.org/technical-committees-and-administrative-committees/) · [Acoustical Society of America — Scopes of Technical Committees and Technical Specialty Groups](https://acousticalsociety.org/scopes-of-technical-committees-and-technical-specialty-groups/) · [AES — Acoustics and Sound Reinforcement](https://aes.org/aes-acoustics-and-sound-reinforcement/) · [ABET — Criteria for Accrediting Engineering Programs 2025-2026](https://www.abet.org/accreditation/accreditation-criteria/criteria-for-accrediting-engineering-programs-2025-2026/) · [Measurement Microphone Guide: Types, Specs & How to Choose (CRYSOUND)](https://www.crysound.com/blog/measurement-microphone-guide/) · [MEMS measurement microphone compatible to P48 amplifiers (PMC/NCBI)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11841207/) · [Beamforming using Digital Piezoelectric MEMS Microphone Array (arXiv 2111.10087)](https://arxiv.org/pdf/2111.10087) · [Microphone Array Beamforming with Optical MEMS Microphones (audioXpress)](https://audioxpress.com/article/microphone-array-beamforming-with-optical-mems-microphones)
+
+### 🟡 建議評估
+這輪檢索最重要的發現不是「找到一份 AERIS 該對照的能力清單」，而是**這份清單世界上根本不存在單一版本**——這對 AERIS「完整盤點聲學工程師全方位能力」的新定位是一個關鍵的方法論提醒：與其去找一份不存在的官方標準來對照打勾，不如**自己把 INCE（噪音控制/心理聲學/量測）＋ ASA 14 個技術委員會（涵蓋建築、電聲、結構振動、水下、生醫、音樂聲學等更廣的物理聲學範疇）＋ AES（電聲換能器/擴聲系統）＋ IEC 61094 麥克風校準/陣列標準體系，四份清單交集起來，自建一份 AERIS 專屬的能力地圖草稿**，再標註 AERIS 現有 100 席位設計對照到這份草稿的哪些格子、哪些格子目前是空的。可以立刻觀察到的三個明顯空格（僅供 Stephen 參考，`UNKNOWN`，因為本 repo 未取得 AERIS 100 席位清單本身的內容確認）：**ASA 的 Underwater Acoustics/Animal Bioacoustics/Acoustical Oceanography 這幾個次領域，幾乎確定不在 AERIS 消費性揚聲器/耳機/麥克風導向的願景範圍內，這應該是刻意排除而非疏漏；INCE 明確點名的 hearing conservation（職業聽力保護）與 noise problems in buildings/community（建築/社區噪音法規），如果 AERIS 願景以「消費性聲學產品的聲學工程」為主，這兩塊法規遵循能力有沒有被涵蓋值得核對；第三個空格是本輪因 Stephen 澄清才浮現的——**既然 AERIS 明確涵蓋麥克風，IEC 61094 麥克風校準/量測能力與陣列波束成形演算法這兩塊獨立於揚聲器的能力，AERIS 100 席位清單裡有沒有對應到專門的席位，而不是被籠統歸進「聲學模擬/量測」這種泛用分類裡，這是 Stephen 核對清單時值得特別留意的一格**。這是本節能提供最直接可執行的下一步，而不是繼續往外找更多論文。標記 🟡：能力地圖盤點方法已經找到（交集四份清單），但實際盤點結果需要 Stephen 對照 AERIS 自己的 100 席位清單才能完成，本 repo 無法代為判定。
+
+---
+
+## 10. AIECP 深挖：多學科設計優化（MDO）作為跨領域協調的前沿參照
+
+### 願景摘要
+延續第 3 節引用（`.ai/BLUEPRINT.md` 產品不可退讓原則）與 Stephen 2026-09-27 補充定位：AIECP 專門協調 MEGIS（機構工程）與 AERIS（聲學工程）兩個工程領域，負責「協調、溝通、接收指令、分配交付、銜接本地與雲端資源」（引用細節見第 3 節）。本節問：這個「兩個工程領域必須共用同一組設計變數、彼此的決定互相影響」的協調問題，航空/汽車產業有沒有現成的、跑了幾十年的方法論可以參照？
+
+### 前沿檢索（2026-09-26）
+
+- **MDO（Multidisciplinary Design Optimization，多學科設計優化）正是為這個問題而生的學門**：MDO 處理的正是「結構、氣動、聲學、熱管理等多個工程領域，不能各自關起門優化，因為某個領域改一個設計變數，其他領域的表現也會跟著變」這個結構性問題——這跟 AIECP 要協調 MEGIS（機構/結構面）與 AERIS（聲學面）、兩邊可能對同一個外殼/腔體幾何有不同要求，是同一種問題形狀。
+- **MDO 架構具體怎麼分工/協調共用設計變數**：文獻把 MDO 架構分成「單體式（monolithic）」跟「多層式（multi-level）」兩大類。單體式包含 All-At-Once（AAO）、Individual Discipline Feasible（IDF）、Multidisciplinary Feasible（MDF）、Simultaneous Analysis and Design（SAND）——特徵是「中央系統一次性同時最佳化所有領域的變數，協調力強但需要更緊的組織控制」。多層式包含 Concurrent Subspace Optimization（CSSO）、Collaborative Optimization（CO）、Bi-Level Integrated System Synthesis（BLISS）——特徵是**「先讓每個領域（子系統）在自己的子問題裡各自最佳化局部設計變數，系統層級再用一個協調機制去管理領域之間共用變數的一致性」**，BLISS 具體做法是把局部設計變數指派給各領域的子問題，系統層級只處理跨領域共用的耦合變數。文獻明確指出：**集中式做法（AAO/SAND）協調效率高但需要更緊的組織控制，分散式做法（IDF/CO）保留了各團隊的自主權，但協調成本（coordination overhead）更高**——這句話幾乎是直接說給 AIECP 聽的：AIECP 若選擇讓 MEGIS/AERIS 各自保有工程自治權（呼應 CLAUDE.md「保持各專案自治」的同一種精神），就必然要付出更高的協調成本，這是 MDO 領域已經量化過的一個明確架構取捨，不是 AIECP 自己遇到的新問題。
+- **AI/代理模型正在加速 MDO 的耦合計算，而不是取代協調架構本身**：2026 年 surrogate model（代理模型，例如 Kriging、Gaussian Process、神經網路）被用來取代昂貴的跨領域模擬呼叫，讓原本「每次跨領域迭代要跑好幾天高精度模擬」的瓶頸大幅縮短；2026 年一篇論文明確描述現代航太設計的特徵是「跨領域緊密耦合＋自動化設計空間探索＋大量使用代理模型、多精度策略與不確定性量化」。**這裡的關鍵洞察是：AI 在 MDO 裡扮演的角色是加速個別領域內的模擬/求解，協調架構（MDF/IDF/BLISS 這些）本身沒有被 AI 取代**——這對 AIECP 是一個具體提醒：AIECP 若想用 LLM/AI agent 讓 MEGIS↔AERIS 協調更快，AI 應該加速的是「MEGIS/AERIS 各自領域內部的模擬回饋」，而不是用 AI 去取代「誰的設計變數優先、怎麼收斂共用變數」這層協調邏輯本身——那層邏輯目前業界仍然是明確的數學架構（MDF/IDF/BLISS），不是靠 AI agent 對話「喬」出來的。
+- **確實存在扮演協調層角色的軟體**：NASA Glenn Research Center 主導開發的 OpenMDAO，是一個開源的 Python MDAO（Multidisciplinary Design Analysis and Optimization）框架，明確定位為「讓使用者把多個領域、多種精度層級的分析程式碼串接起來」的協調層，用 Newton 類演算法求解耦合系統，並用「模組化分析與統一微分（MAUD）」架構讓大型最佳化問題可以被拆解成各領域的小元件、各自獨立維護——這正是 AIECP 想扮演的「銜接 MEGIS 與 AERIS 兩個領域求解器」的軟體角色的一個已存在多年、跑在真實航太/風機/CubeSat 專案上的具體參照對象，雖然 OpenMDAO 是給數值最佳化用的，不是給 AI agent 派工用的，但它解決「兩個領域的求解器如何交換共用設計變數並保持系統層級一致」的資料流架構，是 AIECP 應該研究的具體範本，而不是只在「agent orchestration」框架（LangGraph/CrewAI 等，見既有雷達 [#28](22_GLOBAL_TECH_RADAR.md)）裡找答案。
+
+Sources: [Multidisciplinary Design Optimization: A Survey of Architectures (MIT)](https://fab.cba.mit.edu/classes/865.18/design/mdo/MDOSurvey.pdf) · [Solving Coordination Challenges — Multidisciplinary Design Optimization (MDO) Architectures (Block Science)](https://blog.block.science/multidisciplinary-design-optimization-architectures/) · [Extensions to the Design Structure Matrix for the Distributed IDF Architecture (Lambe & Martins, University of Michigan MDO Lab)](https://public.websites.umich.edu/~mdolaboratory/pdf/Lambe2012a.pdf) · [OpenMDAO: An open-source framework for multidisciplinary design, analysis, and optimization (Structural and Multidisciplinary Optimization, Springer)](https://link.springer.com/article/10.1007/s00158-019-02211-z) · [GitHub — nasa/OpenMDAO-Framework](https://github.com/nasa/OpenMDAO-Framework) · [OpenMDAO.org](https://openmdao.org/) · [A Machine Learning Enabled MDO for Bio-Inspired Autonomous Underwater Gliders (arXiv 2602.08508)](https://arxiv.org/pdf/2602.08508) · [Generative Artificial Intelligence in Aircraft Design Optimization (MDPI, 2026)](https://www.mdpi.com/2227-9717/14/4/719)
+
+### 🟢 建議評估
+這是本輪三條線裡**最值得 Stephen 認真看的一條**。AIECP 現在面對的「MEGIS 跟 AERIS 兩個工程領域，怎麼在同一個設計上協調、誰的變數優先、怎麼避免各做各的」這個問題，**不是一個全新問題，而是航太/汽車產業已經用 MDO 這套學門處理了三十年以上的標準問題**，而且已經有跑在真實專案上的開源協調框架（OpenMDAO）可以參照它的資料流設計，不用只在通用 AI agent 編排框架（LangGraph/CrewAI/AutoGen，見既有雷達 [#28](22_GLOBAL_TECH_RADAR.md)）裡找答案。具體建議：AIECP 不需要真的去裝 OpenMDAO（它是給連續型數值最佳化用的，AIECP 面對的是工程判斷/任務指派，不是逐次迭代求解），但**設計 AIECP 的 MEGIS↔AERIS 派工/協調介面時，可以直接借用 MDF vs IDF vs 分散式協調的架構取捨語言**：如果 AIECP 希望 MEGIS/AERIS 各自維持工程判斷自治權（呼應 CLAUDE.md「保持各專案自治」的精神，也呼應 Stephen 對兩專案自主治理的一貫要求），那麼分散式協調（類似 IDF/CO 的精神：各自在自己的子問題裡決策，只在系統層對齊共用變數）會比中央集權式（AAO）更符合 AIECP 現有的治理原則，但代價是協調成本更高、需要更明確的「共用設計變數」定義機制——這正好對應到既有風險登錄 [17_RISK_GAP_CONFLICT_REGISTER.md](17_RISK_GAP_CONFLICT_REGISTER.md) G-02（AIECP↔AERIS/MEGIS 派工介面缺失）：**MDO 架構理論給了一個現成的詞彙，可以拿來具體定義「共用設計變數是什麼、誰擁有它、怎麼收斂衝突」這幾個目前 G-02 還沒回答的問題**，這比從零發明一套協調協定效率高很多。
+
+---
+
+## 11. Voice Agent 深挖：雙向澄清對話的前沿
+
+### 願景摘要
+延續第 4 節引用（`README.md`「100% 離線」、`.ai/BLUEPRINT.md`「完全離線——正式運作階段禁止任何雲端 API」）與第 4 節已指出的落差：「雙向澄清對話」是 Voice Agent 目前規劃沒有涵蓋、但 2026 年輔助人機互動研究認為的下一個前沿。本節針對這一個落差本身往下挖，問兩個更具體的問題：(a) 2026 年「澄清式對話」的技術現況實際長什麼樣子（不只是「機器人應該要會問」這句話）；(b) 這件事有沒有可能在完全離線、不靠雲端 LLM 的情況下做到——這直接關係到 Voice Agent 自己「正式運作階段禁止任何雲端 API」的硬性限制。
+
+### 前沿檢索（2026-09-26）
+
+- **「澄清式對話」在 2026 年已經有具體的三段式技術路徑，不是抽象概念**：韓國高麗大學團隊的 CLARA（Classifying and Disambiguating User Commands for Reliable Interactive Robotic Agents，IEEE Robotics and Automation Letters 2024，持續被引用到 2026 年）提出一個具體流程：①用 LLM 的不確定性估計（uncertainty estimation）判斷一句指令是「清楚」還是「不確定」；②若不確定，再分類是「語意模糊（ambiguous）」還是「根本做不到（infeasible）」；③只有對「模糊」的指令才用 LLM 生成問題去反問使用者澄清——**這個分層設計本身就是重點：不是每一句聽不懂的話都要反問，要先判斷「聽不懂的原因」，只有語意模糊才值得花一輪對話去問，指令根本做不到就該直接回報做不到，而不是徒勞地反問**。
+- **2026 年最新研究把「澄清對話」跟具體場景綁得更緊**：PARAssist（2026-08）是針對「使用者請求本身就模糊」的個人化/適應性機器人協助框架；「Take That for Me」（2025-08）處理的是「使用者說『拿那個給我』但沒指到具體是哪個東西」這種**指示詞消解（exophora resolution）**問題，做法是機器人主動用多模態（視覺＋語言）反問來縮小範圍——這比 CLARA 更進一步，把「反問」跟「看得到什麼」綁在一起判斷，這對 Voice Agent 未來若要加 Vision fallback（藍圖 P5 階段）有直接參考價值。
+- **離線可行性是分岔的，關鍵在於「要不要用完整 LLM 做澄清判斷」**：2026 年的實務教學文章（非學術論文，但反映實際落地做法）明確指出，一套完全離線的語音助理現實配置是「Whisper（ASR）＋ 3B-4B 等級本地 LLM（如 Phi-4 Mini 或 Gemma 3 4B）＋ Piper（TTS）」，而且**明確提到「指示本地小型 LLM 在執行任何非簡單任務前先反問澄清問題」這個做法本身可行、且能改善小模型表現**——這代表「澄清對話」不是只有雲端大模型才做得到的能力，3B-4B 這個量級的本地小模型，只要用對的 prompt 策略（要求模型先判斷是否有缺漏參數、缺漏就先問），就有機會在完全離線的情況下做到 CLARA 論文描述的「不確定性判斷→分類→反問」這個流程的簡化版，不需要雲端等級的模型。
+- **但學術論文級的「不確定性估計」方法本身，大多還是驗證在雲端等級 LLM 上**：CLARA、PARAssist 這類論文的實驗，用的是能做細緻不確定性估計/zero-shot 情境推理的大型 LLM，還沒有看到專門驗證「3B-4B 本地模型做這套三段流程準確度有多少」的對照實驗——這代表「離線澄清對話」目前是**「工程上可行、但學術驗證的準確度數字大多來自更大的模型」這種誠實的落差**，Voice Agent 若要做，需要自己在本地小模型上重新驗證這套流程的可靠度，不能直接照搬論文數字。
+
+Sources: [CLARA: Classifying and Disambiguating User Commands for Reliable Interactive Robotic Agents (arXiv 2306.10376 / IEEE RA-L 2024)](https://arxiv.org/abs/2306.10376) · [CLARA project page](https://clararobot.github.io/) · [PARAssist: A Framework for Personalized and Adaptive Robotic Assistance from Ambiguous User Requests (arXiv 2608.24905)](https://arxiv.org/pdf/2608.24905) · [Take That for Me: Multimodal Exophora Resolution with Interactive Questioning for Ambiguous Out-of-View Instructions (arXiv 2508.16143)](https://arxiv.org/pdf/2508.16143) · [Local Voice Assistant Whisper + LLM Phone 2026 (PromptQuorum)](https://www.promptquorum.com/power-local-llm/voice-assistant-local-mobile-offline) · [Local LLMs perform so much better when you teach them to ask before they answer (XDA Developers, 2026)](https://www.xda-developers.com/local-llm-clarifying-questions-system-prompt/) · [Best Local Private Voice AI Assistant for PC in 2026 (InnerZero)](https://innerzero.com/blog/best-local-private-voice-ai-assistant-2026)
+
+### 🟢 建議評估
+這輪比第 4 節挖得更深的地方是：「雙向澄清對話」不再只是一個抽象的下一步方向，而是有 **CLARA 這套具體、可拆解實作的三段流程（判斷不確定→分類模糊/做不到→只對模糊的情況反問）**，而且有實務證據顯示**這套流程的簡化版，有機會在 Voice Agent 自己要求的完全離線、3B-4B 級本地小模型上執行**，不需要違反「正式運作階段禁止任何雲端 API」這條硬限制。誠實的落差是：CLARA/PARAssist 這類論文驗證用的模型量級比本地小模型大，「離線小模型做這套流程到底準不準」目前沒有現成的學術數字可以引用，需要 Voice Agent 自己做驗證。**具體建議：等 Voice Agent 完成 P0-P4（核心語音控制迴圈）之後，下一輪如果要評估雙向澄清對話，可以直接把 CLARA 的三段式判斷邏輯（而不是它的完整 LLM 實作）當作設計範本——用一個輕量的「必要參數是否齊全」規則判斷取代 CLARA 論文裡的 LLM 不確定性估計，只在真正缺參數時才觸發本地小模型生成一句反問**，這樣完全不需要引入更大的模型，也不違反離線限制，是一條務實、可以真正落地驗證的路徑，不是純理論方向。
+
+---
+
+## 12. MEGIS 深挖：機構工程師完整能力地圖對照
+
+### 願景摘要
+延續第 2 節已引用的來源（`0_JN1_MEGIS/README.md` 第 5 行「將機械、聲學與製造工程師的判斷轉化為可追溯、可驗證、可重現的引導式生成工程流程」、v3.0 藍圖第 56 行）與 Stephen 2026-09-27 的補充定位——「把一個機構工程師應該具備的全方位能力完整盤點出來，不是只做現在 Gate 架構已經涵蓋的部分」（引用細節見第 2 節，此處不重複）。與第 9 節（AERIS）用同一個問法，本節問：**世界上有沒有一份「機械工程師的完整能力地圖」可以拿來對照 MEGIS 現有的 G0-G9 Gate 架構，看有沒有漏掉的能力範疇？**
+
+### 前沿檢索（2026-09-26）
+
+- **機械工程跟聲學工程不同，它是 ABET 明確有獨立認證準則的主流學門**：ABET 對「Mechanical Engineering and Similarly Named Programs」有專屬的 Program Criteria，明確要求課程涵蓋「工程原理、基礎科學與數學（含多變量微積分與微分方程）；把這些原理應用到物理系統/元件/製程的建模、分析、設計與實現；同時涵蓋熱力系統與機械系統；並在熱力或機械系統其中一項做深入涵蓋」——這代表機械工程（不像聲學工程）**確實存在一份全球通用、有官方認證機構背書的最低能力範圍定義**，可以直接拿來當 MEGIS 能力地圖的骨架，而不需要像第 9 節那樣自己交叉拼湊。
+- **ASME Vision 2030：業界對機械工程畢業生能力落差的實證調查**：ASME 2008 年成立的 Vision 2030 Task Force，目的是定義「機械工程畢業生要在 21 世紀保持全球競爭力，應該具備哪些知識與技能」，並向超過 1,470 位業界專業人士收集意見，找出機械工程畢業生的優劣勢——調查點名的**關鍵弱點是「實務經驗、溝通能力、系統性思維（systems perspective）」**，而不是任何單一技術領域的知識缺口。這對 MEGIS 是一個特別值得注意的參照點：MEGIS 的 Gate 架構本身處理的正是「確定性工程資料＋受限幾何＋驗證證據」這種**強調可驗證、可重現的紮實工程實務**，某種程度上正好對應業界點名機械工程畢業生普遍缺乏的「實務經驗」這塊，但「系統性思維」（跨系統/跨子系統的整體判斷能力）是否被 MEGIS 的 G0-G9 涵蓋，`UNKNOWN`，需要 Stephen 核對。
+- **NSPE 的 Professional Engineering Body of Knowledge**：美國國家專業工程師學會（NSPE）發布的工程師專業能力知識體系文件，是另一份可以交叉比對的通用工程師能力框架，涵蓋範圍比 ABET 課程準則更偏向「執業能力」（例如工程倫理、公眾安全責任、簽證核可責任），這塊「專業執業責任」的能力範疇，跟 MEGIS 自己 Gate 架構裡「具名工程師驗證、可稽核追溯」的治理精神有直接對應，值得作為第二份骨架比對。
+
+Sources: [ABET — Criteria for Accrediting Engineering Programs 2025-2026（含 Mechanical Engineering and Similarly Named Programs 準則）](https://www.abet.org/accreditation/accreditation-criteria/criteria-for-accrediting-engineering-programs-2025-2026/) · [ABET — Criteria for Accrediting Engineering Programs 2026-2027](https://www.abet.org/accreditation/accreditation-criteria/criteria-for-accrediting-engineering-programs-2026-2027/) · [ASME Vision 2030: Helping to inform mechanical engineering education](https://www.researchgate.net/publication/254048600_ASME_vision_2030_Helping_to_inform_mechanical_engineering_education) · [Vision 2030 — Creating the Future of Mechanical Engineering Education (ASEE)](https://strategy.asee.org/vision-2030-creating-the-future-of-mechanical-engineering-education) · [NSPE — Professional Engineering Body of Knowledge (PDF)](https://www.nspe.org/sites/default/files/resources/nspe-body-of-knowledge.pdf) · [A Semantic-Web Oriented Competency Model for Engineering Programs (arXiv 2605.20401)](https://arxiv.org/pdf/2605.20401)
+
+### 🟢 建議評估
+跟第 9 節 AERIS 的處境不同，**機械工程的「完整能力地圖」全世界確實有一份相對權威、可直接拿來對照的骨架**：ABET 的 Mechanical Engineering Program Criteria（官方認證準則，涵蓋熱力＋機械系統雙軌）加上 ASME Vision 2030（業界實證調查出來的能力落差清單），兩者交叉起來，比第 9 節 AERIS 要拼湊三個學會清單容易得多、也更有公信力。**具體建議：MEGIS 下次盤點自己 Gate 架構（G0-G9）的能力覆蓋範圍時，可以直接用 ABET Mechanical Engineering Program Criteria 列出的「熱力系統／機械系統雙軌」當第一層骨架，檢查 G0-G9 目前驗證的幾何/治具/聲學薄切片，覆蓋的是機械系統這一軌還是也涉及熱力系統這一軌**（`UNKNOWN`，本 repo 未取得 v3.0 藍圖是否明確處理熱傳/熱應力分析的確認，這是 Stephen 核對時第一個該問的問題）；再用 ASME Vision 2030 點名的「系統性思維」缺口，檢查 Gate 架構裡有沒有一個 Gate 明確負責「跨子系統整合判斷」而不只是逐一驗證單一零件/幾何。標記 🟢：因為 ABET/ASME 這兩份骨架確實存在、公信力高，這比第 9 節 AERIS 的處境更有機會產出具體可執行的落差清單，值得 Stephen 優先安排下一輪盤點。
+
+---
+
 ## 交叉引用索引
 
 | 本節 | 對應既有雷達(#1-41) | 對應風險登錄 |
@@ -209,5 +286,9 @@ JN1-UOA 目前連提案都還只是命名選定（見 Blueprint/18），距離�
 | §6 AERIS Implementation | （繼承 §1） | — |
 | §7 AERIS Supervision | `NOT VERIFIED` | — |
 | §8 JN1-UOA/UOD | [#6](22_GLOBAL_TECH_RADAR.md)/[#33](22_GLOBAL_TECH_RADAR.md)（監管資料格式） | [10_SUPERVISION_AND_EVIDENCE.md](10_SUPERVISION_AND_EVIDENCE.md) |
+| §9 AERIS 深挖：聲學工程師完整能力地圖 | 無直接對應（全新能力盤點方法論問題） | — |
+| §10 AIECP 深挖：MDO 跨領域協調 | [#28](22_GLOBAL_TECH_RADAR.md)（Agent Harness 對照，層次不同） | [17_RISK_GAP_CONFLICT_REGISTER.md](17_RISK_GAP_CONFLICT_REGISTER.md) G-02 |
+| §11 Voice Agent 深挖：雙向澄清對話 | [#1](22_GLOBAL_TECH_RADAR.md)/[#8](22_GLOBAL_TECH_RADAR.md)（延續，非取代） | — |
+| §12 MEGIS 深挖：機械工程師完整能力地圖 | [#22](22_GLOBAL_TECH_RADAR.md)/[#23](22_GLOBAL_TECH_RADAR.md)（延續，非取代） | — |
 
 要跑哪個專案的更深一層前沿檢索，或針對某個 🟡 項目重新檢索確認是否已有落地產品，直接跟 Claude 說「跑願景雷達：XX」即可。
