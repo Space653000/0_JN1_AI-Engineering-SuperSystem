@@ -49,6 +49,8 @@
 | 2026-09-27 | Stephen 要求本 repo 之後自行判斷雷達批次是否有價值，不再逐批詢問確認，累積到有意義的段落再一次彙整回報。§20-21（AIECP solo開發者信任發布現實、Provider路由前沿不適用單人規模）由本 repo 自行評估後判定為有效發現，直接記錄採用 | 尊重使用者明確要求的工作節奏，避免無意義的逐批往返 |
 | 2026-09-27（最終彙整輪） | 依 Stephen 指示完成雷達系列的最終一次性彙整：①新增 [26](26_VISION_DRIVEN_FRONTIER_RADAR.md) §22（Zero-Trust Agent Identity 跨系統信任邊界），檢查 [13](13_SECURITY_PRIVACY_AND_TRUST.md)/[11](11_AI_AGENT_ROLE_ARCHITECTURE.md) 後判定：安全信任邊界確實有未覆蓋角度（新增§22），角色架構經查證後判定既有雷達已充分覆蓋、不製造低價值新條目；②新增 [27_FRONTIER_RADAR_MASTER_SYNTHESIS.md](27_FRONTIER_RADAR_MASTER_SYNTHESIS.md)，把 [22](22_GLOBAL_TECH_RADAR.md) 41條＋[26](26_VISION_DRIVEN_FRONTIER_RADAR.md) 22節共63條發現自我評分為🔴8條/🟡42條/⚪13條，並濃縮出16條精華清單；③更新 [23](23_TECH_RADAR_SUMMARY_REPORT.md) 頂部加上指向27號文件的導讀；④嘗試更新已發布的雷達儀表板 Artifact，結果見本文件下方 | 這是雷達系列任務的正式結案（closeout），不再有下一輪「還要不要繼續」的往返 |
 
+| 2026-09-27 | **Stephen 決定暫緩 AIECP Trusted Signing 申請**（個人開發考量，非技術原因），改為優先聚焦四件事：①AERIS能力地圖自查、②MEGIS能力地圖自查、③AIECP憑證管理對照、④SPARK硬體選型準備。已在 [Blueprint/27](27_FRONTIER_RADAR_MASTER_SYNTHESIS.md) 加上具體「去哪裡做/怎麼做/預期產出」執行說明並重新排序，並把選型checklist寫進 [Blueprint/24](24_SPARK_HARDWARE_READINESS.md)。同時在 [STATUS.md](../STATUS.md) 建立含日期的完整文件盤點總表 | Trusted Signing 資訊保留在案不會過期，Stephen 之後想處理隨時可以回頭看；四項聚焦是低成本、Stephen 現在就能動手的事 |
+
 ## 尚待 Stephen 決策的事項（本 repo 整理，不代為決定）
 
 1. 是否要推進 AIECP ↔ AERIS/MEGIS ↔ SuperBrain 的整合，以及優先順序（見 [16](16_ROADMAP_AND_ACCEPTANCE.md)）。

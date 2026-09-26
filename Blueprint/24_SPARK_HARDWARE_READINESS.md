@@ -34,6 +34,30 @@ GitHub 直連：https://github.com/Space653000/0_JN1_2AGAVE128-1MAERA64
 4. 回 SPARK-AGAVE-3 跑 `-KeyOnly`（停用密碼登入，這是 RED 動作，一定要等第3步驗證成功才做）。
 5. **穩定幾天後**，SPARK-AGAVE-4 重複第2-4步（IP 換成 `10.77.0.12`，電腦名稱 `spark-agave-4`）。**不要兩台同時暫時連網**（SuperBrain 自己的維護窗口規則）。
 
+## 到貨後第一天選型 Checklist（2026-09-27 新增，來源：[22_GLOBAL_TECH_RADAR.md](22_GLOBAL_TECH_RADAR.md) #2/#9/#19）
+
+> 這份 checklist 現在就寫好，硬體 2026-10-07 上市到貨那天直接照做，不用臨時再查。
+
+**Step 1 — 量化後容量硬性篩選（雷達#19）**
+- [ ] 任何候選模型，先查「4-bit 量化後實際磁碟/記憶體佔用」，不要只看官方標示的參數量。
+- [ ] 已知**塞不進 128GB 的地雷**：DeepSeek-V3.2、GLM-5.2（量化後仍超過128GB，直接排除，不用測）。
+- [ ] 已知**可行候選**：Qwen3 系列、Mistral Medium 3.5——這兩個系列優先列入測試名單。
+
+**Step 2 — 架構優先順序（雷達#2）**
+- [ ] 優先測 **MoE（Mixture-of-Experts）架構**模型，不是 dense 模型——SPARK 的 273GB/s 記憶體頻寬是瓶頸，dense 70B 等級會明顯偏慢。
+- [ ] 具體優先測試目標：**Qwen3-Coder-Next**（SWE-bench Verified 58.7%，256K context）、**Laguna S 2.1**（DGX Spark/多GPU等級最強開源 agentic coder）。
+- [ ] 用官方公開 benchmark 數字（雷達#7已查到）先估算，不用每個都從零 benchmark。
+
+**Step 3 — 跨機推理頻寬驗證（雷達#9，已知風險）**
+- [ ] 若要跨兩台 Spark 切分模型（超過單台128GB容量時），先測 **2.5GbE 隔離網路的實際頻寬**——已知業界建議門檻是10GbE，SuperBrain現有網路低於這個門檻，這是已知風險，不是新發現。
+- [ ] 候選框架：**EXO**（自動裝置探索＋OpenAI相容API，優先評估，跟 SuperBrain 想暴露相容API的方向一致）、**vLLM+Ray**（業界對2-4節點小型叢集的標準建議，備選）。
+- [ ] 若2.5GbE頻寬測試不理想：兩台Spark各自獨立跑（FAST/DEEP分工，SuperBrain現有設計）仍然是可退回的合理方案，不強求一定要做跨機切分。
+
+**Step 4 — 記錄結果**
+- [ ] 測試完成後，把實際 benchmark 數字回填進 [22_GLOBAL_TECH_RADAR.md](22_GLOBAL_TECH_RADAR.md) 雷達#2/#7/#9，把「官方規格推算」升級成「本地實測數字」。
+
+---
+
 ## 驗收清單（來源同上，抵達後自己勾）
 
 - [ ] 兩台 Spark 各自 SSH 連續 100 次成功

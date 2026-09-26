@@ -1,5 +1,7 @@
 # 27 — Frontier Radar Master Synthesis
 
+> **2026-09-27 更新**：Stephen 明確決定**暫緩 AIECP Trusted Signing 申請**（個人開發考量，不是技術問題），並指定**現在要聚焦做**的是另外四件事：AERIS 能力地圖自查、MEGIS 能力地圖自查、AIECP 憑證管理對照、SPARK 硬體選型準備。這四項已重新排序、加上「去哪裡做／怎麼做／預期產出」的具體執行說明，見下方新增的〈2026-09-27 聚焦執行清單〉。原本的精華清單與完整分級表保留在後面當完整記錄，未刪減內容，只是不再是首要閱讀順序。
+
 > **這是本 repo「雷達系列」的總結案（closeout）**，回應 Stephen 2026-09-27 的明確指示（見 [18_DECISION_LOG.md](18_DECISION_LOG.md)）：不要再逐批問「這批可以嗎」，改成自己評估價值、一次彙整回報。這份文件是那次彙整的產物，也是本輪任務的最終交付——之後不會再有第二輪、第三輪的「還要不要繼續」。
 >
 > 涵蓋範圍：[22_GLOBAL_TECH_RADAR.md](22_GLOBAL_TECH_RADAR.md)（41 條 bottom-up 工具對照）＋ [26_VISION_DRIVEN_FRONTIER_RADAR.md](26_VISION_DRIVEN_FRONTIER_RADAR.md)（22 節 top-down 願景對照，含本輪新增的 §22）——累計橫跨兩輪任務、約 100 個候選主題篩選檢索後，共 **63 條有實質檢索內容的發現**（`0_JN1_AERIS_Supervision` 因私有 repo 無法存取，標記 `NOT VERIFIED`，不計入 63 條）。每一條的原始出處、完整檢索來源、詳細建議，都留在 22/26 裡，這份文件**不重新引用新的外部來源**，只做「這 63 條裡，哪些真的值得你花時間」的自我評分與濃縮。
@@ -12,6 +14,62 @@
 
 ---
 
+## 2026-09-27 聚焦執行清單（Stephen 指定，取代原本的「先做§20」順序）
+
+> Stephen 決定：**AIECP Trusted Signing 暫緩**（個人開發，不想現在處理行政流程），改成優先做以下四件事。每件都附「去哪裡做／怎麼做／預期產出」，是可以直接照著執行的步驟，不是抽象建議。排序＝建議執行順序，理由是前兩項（AERIS/MEGIS 自查）互相獨立、隨時可做；第三項（AIECP憑證）需要先讀一次現有程式碼；第四項（SPARK選型）現在只能做「準備」，實測要等硬體到貨。
+
+### 第1優先｜AERIS 能力地圖自查（對應願景 [§9](26_VISION_DRIVEN_FRONTIER_RADAR.md)）
+
+**去哪裡做**：
+- 對照來源（外部，四份交集）：INCE（Institute of Noise Control Engineering）噪音控制工程師認證考照範圍、ASA（Acoustical Society of America）14個技術委員會清單（官網 Technical Committees 頁面）、AES（Audio Engineering Society）技術委員會範疇、IEC 61094 麥克風校準/陣列標準文件目錄。
+- 被檢查對象（本地）：`0_JN1_AERIS` repo 的 100 席位角色清單（`role_specs.py`、`role_acceptance.py`，見 AERIS Local Implementation 的 `aeris_runtime` 套件）+ `docs/AERIS_BLUEPRINT_ZH_TW.md` 對席位的描述段落。
+
+**怎麼做**：
+1. 先把 INCE/ASA/AES/IEC 61094 這四份清單的類別名稱抄成一份簡單的 Excel 或文字列表（不用查到很深，抓「大分類」層級即可，例如：噪音控制、心理聲學、揚聲器換能器設計、麥克風換能器設計、MEMS 麥克風、陣列波束成形、房間聲學、電聲量測、法規合規…）。
+2. 拿這份列表逐一去對照 AERIS 現有的 100 席位清單，每個大分類標記「有對應席位／沒有對應席位／不確定」。
+3. **特別檢查兩點**（Stephen 之前已確認 AERIS 範疇含揚聲器＋麥克風）：麥克風校準是不是有獨立席位，還是被籠統歸進「聲學量測」；陣列波束成形是不是有獨立席位，還是完全沒被涵蓋。
+
+**預期產出**：一份「AERIS 100席位 vs 四份業界清單」的缺口對照表。這個自查結果屬於 AERIS 自己專案的工作範圍，執行時建議直接在 `0_JN1_AERIS` repo（本 SuperSystem repo 不能代為修改），完成後可以回來這裡告訴 Claude，我幫你更新 [26 §9](26_VISION_DRIVEN_FRONTIER_RADAR.md) 記錄自查結果。
+
+### 第2優先｜MEGIS 能力地圖自查（對應願景 [§12](26_VISION_DRIVEN_FRONTIER_RADAR.md)）
+
+**去哪裡做**：
+- 對照來源（外部，比 AERIS 好找，是官方骨架不是拼湊）：ABET（Accreditation Board for Engineering and Technology）Engineering Accreditation Commission 的《Criteria for Accrediting Engineering Programs》裡 Mechanical Engineering Program Criteria 章節（ABET 官網 Accreditation → Accreditation Criteria 可下載當年度 PDF）；ASME《Vision 2030》報告（搜尋 "ASME Vision 2030" 即可找到 PDF，內容是訪談1,470位業界人士的調查結果）。
+- 被檢查對象（本地）：`0_JN1_MEGIS` repo 的 `execution/PROJECT_STATE.md`（G0-G9各Gate範圍描述）+ `MEGIS_Blueprint/…v3.0-claude-code.md`。
+
+**怎麼做**：
+1. 讀 ABET 準則裡 Mechanical Engineering 那段，確認它明確要求「熱力系統」（thermal systems）與「機械系統」（mechanical systems）兩軌都要涵蓋。
+2. 對照 MEGIS 現有 G0-G9：目前已知驗證範圍是治具幾何（G2）跟聲學/機器人薄切片（G7/G8）——**這些明顯屬於機械系統這軌，逐一確認有沒有任何 Gate 涵蓋熱力系統**（熱傳、流體、能量轉換這類）。
+3. 讀 ASME Vision 2030 的調查結論（畢業生缺「實務經驗、溝通能力、系統性思維」），對照 MEGIS 的 Gate 審查機制有沒有涵蓋「系統性思維」這種跨模組整合考量，還是只逐一驗證單一零件。
+
+**預期產出**：一份「MEGIS G0-G9 vs ABET雙軌+ASME調查」缺口清單，特別標出「有沒有熱力系統軌」這個具體是非題的答案。執行位置同樣是 `0_JN1_MEGIS` repo 自己的工作範圍，完成後回來這裡我幫你更新 [26 §12](26_VISION_DRIVEN_FRONTIER_RADAR.md)。
+
+### 第3優先｜AIECP 憑證管理對照（對應雷達 [#13](22_GLOBAL_TECH_RADAR.md)、[#32](22_GLOBAL_TECH_RADAR.md)）
+
+**去哪裡做**：
+- 被檢查對象：`0_JN1_AIECP` repo 裡 Codex OFFICIAL / Codex PEGA 兩個 worker 目前怎麼拿到 GitHub token、API key 的設定方式（通常會在 `.env`、環境變數設定腳本、或 CI 設定檔裡）。
+- 對照原則（已查過，見雷達#13/#32）：憑證應該**短效、限定任務範圍、由獨立的 broker 簽發、AI 推理引擎本身不直接持有原始憑證**。
+
+**怎麼做**：
+1. 找出 AIECP 現在憑證/token 儲存與取用的實際位置（跟著程式碼找 `os.environ`、`.env`、GitHub Secrets 設定）。
+2. 逐條對照上面四個原則：現在是不是長效憑證直接寫死？Codex worker 是不是直接讀到原始 token，而不是透過 broker 拿臨時憑證？
+3. 若想低成本先做 PoC：可以評估 **Infisical**（雷達#32 提到的輕量方案）——先不用上 SPIFFE/SPIRE 那種重量級架構，Infisical 對單人專案來說門檻低很多。
+
+**預期產出**：一份「現況 vs 四項原則」對照表，標出哪幾項現在不符合，作為之後要不要導入 Infisical 的判斷依據。執行位置是 `0_JN1_AIECP` repo。
+
+### 第4優先｜SPARK 硬體選型準備（對應雷達 [#2](22_GLOBAL_TECH_RADAR.md)/[#19](22_GLOBAL_TECH_RADAR.md)/[#9](22_GLOBAL_TECH_RADAR.md)，硬體 2026-10-07 才上市，現在只能做「準備」）
+
+**去哪裡做**：`Blueprint/24_SPARK_HARDWARE_READINESS.md`（本 repo 既有檔案，已經有到貨前準備清單）。
+
+**怎麼做（現在，硬體還沒到貨前就能做）**：
+1. 把雷達#2 的選型原則（優先看 MoE 架構如 Qwen3-Coder-Next/Laguna S 2.1，不是看參數量）跟雷達#19 的硬性篩選條件（4-bit量化後實際佔用要算清楚，DeepSeek-V3.2/GLM-5.2 這類塞不進128GB）整理成一份「到貨後第一天就要跑的選型 checklist」。
+2. 把雷達#9 的跨機推理選項（EXO／vLLM+Ray）也放進同一份 checklist，標註「要先測 2.5GbE 頻寬夠不夠，這是已知風險」。
+3. 這份 checklist 直接補進 `Blueprint/24_SPARK_HARDWARE_READINESS.md`，跟既有的硬體安裝 SOP 放在一起，這樣硬體到貨那天你只要打開一份文件照做。
+
+**預期產出**：`Blueprint/24` 新增一節「到貨後第一天選型 checklist」。這一步本 SuperSystem repo 現在就可以幫你把 checklist 寫好（不用等硬體），實際跑 benchmark 才需要等 10/7。
+
+---
+
 ## 精華清單：63 條裡最值得你現在花時間看的 16 條
 
 > Stephen 指定要的「一口氣」清單——不是 63 條的縮寫版，是自我評分後真正篩出來、值得優先讀的部分。每條保留「現有實作 / 既有雷達可拿改良 / 白話建議與取捨 / 前沿還有多遠」四欄精神，壓縮成一行，完整內容看括號裡的連結。
@@ -21,7 +79,7 @@
 | # | 發現 | 一行摘要 |
 |---|---|---|
 | 1 | 雷達#34 [Prompt Caching 降價75%](22_GLOBAL_TECH_RADAR.md) | 現有：每次呼叫都當新輸入計費／可改良：2026-09-01起cache read降到$0.25/M token／建議：檢查AIECP、本repo自己重複讀長CLAUDE.md/BLUEPRINT.md的場景有沒有命中快取／前沿距離：零，是現在就能查的設定問題，不是要追的技術前沿 |
-| 2 | 願景§20 [AIECP Trusted Signing 申請](26_VISION_DRIVEN_FRONTIER_RADAR.md) | 現有：Windows/Store 簽章身分卡住是 OWNER-EXTERNAL gate／可改良：查到 Microsoft Trusted Signing $9.99/月、EV Sole Proprietor 免公司、Store 註冊費已取消／建議：Stephen 本人直接去申請，這是行政流程不是技術問題／前沿距離：已查清楚具體費用與流程，沒有技術前沿要追 |
+| 2 | 願景§20 [AIECP Trusted Signing 申請](26_VISION_DRIVEN_FRONTIER_RADAR.md) | **2026-09-27 Stephen 決定暫緩**（個人開發考量，非技術問題）。現有：Windows/Store 簽章身分卡住是 OWNER-EXTERNAL gate／可改良：查到 Microsoft Trusted Signing $9.99/月、EV Sole Proprietor 免公司、Store 註冊費已取消／備註：資訊已查清楚保留在案，Stephen 決定何時要處理都可以隨時回來看這條，不會過期 |
 | 3 | 願景§14 [SuperBrain Bastion Host 資安習慣](26_VISION_DRIVEN_FRONTIER_RADAR.md) | 現有：Laptop 是唯一連網 Gateway，但沒有刻意精簡/稽核／可改良：這正是成熟30年的Bastion Host模式，只差沒套用它的兩條慣例／建議：精簡 Laptop 對外服務、對 Laptop→Spark 的每個指令做集中紀錄，不花錢不裝新工具／前沿距離：前沿早就有答案，只是沒被套用 |
 | 4 | 雷達#24 [CadQuery AI 生態系（MCP copilot）](22_GLOBAL_TECH_RADAR.md) | 現有：MEGIS 已用 CadQuery，G4 幾何草案階段是人工／可改良：CadQuery 生態系自己長出暴露 MCP server 的 AI copilot，跟本 SuperSystem 技術棧天然相容／建議：優先評估這個而不是 Zoo.dev/AdamCAD 這類獨立商業產品／前沿距離：現成工具已存在，可以直接下載試 |
 | 5 | 雷達#16 [SLSA Artifact Attestations](22_GLOBAL_TECH_RADAR.md) | 現有：AIECP 只有 SHA256SUMS + RELEASE_PROVENANCE.json／可改良：GitHub Artifact Attestations 幾行 YAML 就能加官方可驗證建置證明／建議：低成本先上這個，要衝 SLSA Level 3 再上 slsa-github-generator／前沿距離：幾行設定的距離 |
