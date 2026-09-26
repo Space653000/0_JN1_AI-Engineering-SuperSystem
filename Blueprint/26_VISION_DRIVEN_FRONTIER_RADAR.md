@@ -450,6 +450,51 @@ Sources: [Dual WAN Failover for Your Homelab: Automatic Internet Redundancy (Hom
 
 ---
 
+## 20. AIECP深挖：solo開發者的Windows信任發布現實
+
+### 願景摘要
+延續第 3 節已引用的 AIECP 現況：`Audit/REPOSITORY_INVENTORY.md` 第 168、179 行明確記錄「尚未關閉的是 10 項 ENVIRONMENT gate（需真實機器/帳號執行）與 4 類 OWNER-EXTERNAL gate（只有 repo owner 本人能結案，例如 **Authenticode 簽章、Microsoft Store 身分**、遠端網域/TLS 擁有權、供應商正式生產憑證）」；`Blueprint/19_MASTER_PROGRESS_TRACKER.md` 第 58 行、`Registry/PROJECTS.yaml` 第 96-110 行同步確認這 4 類 OWNER-EXTERNAL gate「數量與清單本輪盤點皆不變」。這是本 SuperSystem repo 已多次標註的**鐵律案例**：這兩項卡住的不是任何 AI agent 能代做的工程任務，而是只有 Stephen 本人（作為法律/商業主體擁有者）才能完成的行政/財務行為（買憑證、註冊發行者身分）——依 CLAUDE.md house rule #5「保持各專案自治」，本節**不代替 AIECP 做任何決策**，只把「2026 年這兩件事實際上要花多少錢、走什麼流程」這個 Stephen 自己需要的具體資訊查清楚，遞給他參考。
+
+### 前沿檢索（2026-09-26）
+
+**A. Authenticode 簽章：兩條路徑並存，價格與流程都已比 2023-2024 年更務實**
+
+- **傳統 EV/OV 憑證路徑**：2026 年市場報價，EV 憑證年費落在約 $296.65（Comodo/Sectigo 起價）到 $507.33（DigiCert 經銷價）之間，SSL.com 報價 $299–$499/年；OV（一般驗證）等級的個人憑證更便宜，SignMyCode 報價 $215.99/年。**關鍵發現：Stephen 不需要先成立公司才能買 EV 等級憑證**——SSL.com 明確提供 **EV Sole Proprietor（個體戶）憑證**，依 CA/B Forum 規範直接以「個人」身分驗證，不要求註冊企業實體；同樣地，Sectigo/Comodo 的 OV Individual Validation 也直接對個人簽發 OV 等級憑證。另外兩個 2026 年新規定要注意：(a) 自 2026-03-01 起，公開信任憑證最長效期已從 39 個月縮短到 **460 天（約 15 個月）**，代表比過去更頻繁需要續約；(b) 自 2023-06-01 起，EV 與一般代碼簽章憑證的私鑰都**必須存放在 FIPS 140-2 Level 2 或 Common Criteria EAL4+ 等級的硬體**上（USB 加密狗或雲端 HSM），不能再存成一般檔案。
+- **Microsoft 自家雲端簽章服務（Trusted Signing，2026 年正式改名為 Azure Artifact Signing）路徑**：這是比買憑證更新、更輕量的替代方案——**$9.99/月即可簽到 5,000 次、含 1 個憑證設定檔（certificate profile）**，超額每次簽名再加 $0.005；完全跑在 Microsoft 自己的 FIPS 140-2 Level 3 基礎設施上，用標準 `signtool.exe` 操作，**完全不需要買任何硬體憑證棒/HSM**，比傳統路徑省掉最麻煩的硬體保管問題。**但這裡有一個 Stephen 必須自己核實、本 repo 標記為 `NEEDS REVIEW` 的資格限制**：至少一份 2025 年初的資料顯示 Microsoft 已把新用戶申請限縮到「美加地區、有 3 年以上可驗證營業紀錄的組織」；但另一份較新資料則描述資格是「已驗證的美國/加拿大/歐盟/英國企業與自雇個人（self-employed individuals）」——兩份資料在「地區範圍」與「是否包含自雇個人」上互相矛盾，這代表 **Stephen 必須自己去 Azure Portal 實際跑一次申請流程，才能確認自己（不管以個人或個體戶身分）是否符合目前的資格條件**，本 repo 無法代為確認這一點，找不到單一權威來源可以蓋棺論定。
+
+**B. Microsoft Store 身分：2025-2026 年已明確變得更容易，兩項費用障礙都已移除**
+
+- **個人開發者帳號已經完全免費**：Microsoft 已取消個人開發者的一次性註冊費（原本約 $19），且**不再要求填信用卡資料**才能申請個人帳號，新流程已在近 200 個市場正式上線。
+- **公司開發者帳號也在 2026-05-07 跟進取消收費**：原本的 $99 一次性註冊費同步取消，Windows Developer Blog 官方部落格明確標題「Publish to Microsoft Store as a company—now with free registration and faster onboarding」。
+- 這代表：如果 AIECP 未來要走「Microsoft Store 上架」這條發行路徑，**財務門檻在 2026 年已經幾乎歸零**——真正剩下要處理的是身分驗證流程本身（個人身分證明或個體戶登記文件），而不是費用。
+
+Sources: [Azure Artifact Signing (formerly Trusted Signing) | Microsoft Azure](https://azure.microsoft.com/en-us/products/artifact-signing) · [Artifact Signing - Pricing | Microsoft Azure](https://azure.microsoft.com/en-us/pricing/details/artifact-signing/) · [How Azure Trusted Signing is a Cost-Effective Solution for Code Signing (G.D.G. Software)](https://www.gdgsoft.com/faq/azure-trusted-signing-cost-effective-exe-code-signing) · [Azure Trusted Signing vs Code Signing Certificate: 2026 Comparison (My-SSL)](https://my-ssl.com/learn/azure-trusted-signing-vs-code-signing-certificate) · [Code signing options for Windows app developers (Microsoft Learn)](https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/code-signing-options) · [EV Code Signing Certificates: Costs, Providers and How to Get One in 2026 (CodeBoom)](https://codeboom1st.com/post/48290/ev-code-signing-certificates) · [Sole Proprietor EV Code Signing Certificates (SSL.com)](https://www.ssl.com/products/software-integrity/code-signing/ev-sole-proprietor/) · [Individual Code Signing Certificate at $215.99/yr (SignMyCode)](https://signmycode.com/individual-code-signing) · [Code Signing Certificates: OV & EV from $219/yr (SSL Dragon)](https://www.ssldragon.com/ssl-certificates/code-signing/) · [Free developer registration for individual developers (Microsoft Learn)](https://learn.microsoft.com/en-us/windows/apps/publish/whats-new-individual-developer) · [Microsoft Store drops fees for individual developers (Windows Central)](https://www.windowscentral.com/microsoft/windows-11/microsoft-store-drops-fees-for-individual-developers-apple-still-charges-usd99-per-year) · [Publish to Microsoft Store as a company—now with free registration and faster onboarding (Windows Developer Blog, 2026-05-07)](https://blogs.windows.com/windowsdeveloper/2026/05/07/publish-to-microsoft-store-as-a-company-now-with-free-registration-and-faster-onboarding/) · [Microsoft Removes Store Registration Fee to Attract More Individual Developers (Winbuzzer)](https://winbuzzer.com/2025/09/12/microsoft-removes-store-registration-fee-to-attract-more-individual-developers-xcxwbn/)
+
+### 🟢 建議評估
+這是本輪任務裡**最直接可執行、跟 AI/agent 研究完全無關的一條**，正好符合任務描述「這裡的前沿不是 AI 前沿，是行政/財務前沿」的定位。具體建議分三步：**第一步，先試 Trusted Signing（Azure Artifact Signing）路徑**——$9.99/月、不用買硬體、流程最快，Stephen 應該自己去 Azure Portal 實際跑一次申請，親自確認自己是否符合目前的地區/身分資格（本 repo 查到的資格描述互相矛盾，標記 `NEEDS REVIEW`，任何 AI agent 都無法代替 Stephen 完成這個身分驗證步驟）；**第二步，如果 Trusted Signing 資格不符，退而求其次選 EV Sole Proprietor 或 OV Individual 憑證**——不需要先成立公司，年費落在約 $216–$500 之間，記得要準備 FIPS 140-2 硬體金鑰（多數憑證供應商會附贈或代購），並注意 2026-03-01 後憑證最長只能買 460 天，續約頻率會比以前高；**第三步，Microsoft Store 身分這關財務障礙已經幾乎消失（個人和公司註冊都免費），如果 AIECP 未來想要有 Store 這條額外發行通路，現在去申請的邊際成本已經很低，剩下只是身分驗證文件準備的時間成本，不是金錢成本**。這三步都是 Stephen 本人要親自執行的 OWNER-EXTERNAL 行為，本 repo 只負責把「現在具體要花多少錢、走什麼流程」這件事查清楚，不代為執行、也不代為判斷該選哪一條路徑。
+
+---
+
+## 21. Provider路由深挖：2026年成本優化前沿是否適用單人規模
+
+### 願景摘要
+延續 `Blueprint/12_PROVIDER_AND_MODEL_ROUTING.md` 第 26-28 行已記錄的 SuperBrain 分流門檻——「在 golden set（100 題）上，本地分數 ÷ 雲端分數 ≥ 0.85 的任務類別才可以預設走本地」，且「閾值與分類皆待 P6 實測後才會有真實數據，目前仍是規劃階段」；以及既有雷達 [#34](22_GLOBAL_TECH_RADAR.md)（2026-09-01 Claude cache read 降價 75% 到 $0.25/M token）、[#35](22_GLOBAL_TECH_RADAR.md)（LiteLLM 統一閘道＋RouteLLM 可省 85% 成本同時保留 95% 品質）——這兩條已經是本 repo 對 Stephen「每週 ~$20 額度」預算痛點給出的最直接建議。本節問一個更深的問題：**這種「靜態 golden-set 分數門檻」加「省錢路由工具」的做法，離 2026 年全世界最嚴謹的成本優化方法論還有多遠？有沒有更進階的做法值得 Stephen 知道？**
+
+### 前沿檢索（2026-09-26）
+
+- **2026 年學術前沿確實已經超越靜態門檻，走向「即時線上學習」的路由演算法**：多篇 2026 年論文把 LLM provider 路由問題直接建模成 **contextual bandit（情境式多臂拉霸機）** 問題，而不是像 SuperBrain 現在這樣先用一份固定的 golden set 算出一個固定門檻。具體系統包括：**MetaLLM** 把路由問題直接寫成多臂拉霸機，用「正確性 - 成本」的權衡即時計算獎勵訊號，動態挑選「最便宜但夠可能答對」的模型；**PILOT** 建立在推薦系統常用的 LinUCB 演算法上，甚至把成本限制建模成「線上多選背包問題（online multi-choice knapsack problem）」來確保路由不超預算；**GreenServ**（2026）更進一步把「GPU 實際耗電量」直接量測進獎勵函數，用 LinUCB 在 16 個開源 LLM 的池子裡即時學習路由策略。這些系統的共同特徵是：**路由規則不是像 golden set 那樣「跑一次、算出一個固定門檻」，而是每次真實請求進來時都持續更新對每個模型「這類問題它答得好不好、划不划算」的信心估計，隨時間自動調整，不需要人工重跑基準測試**。
+- **但這些線上學習系統全部假設「有足夠多、持續不斷的請求量」才能讓演算法真正學到東西**——這是本節最重要、也是 Stephen 最該知道的誠實落差：contextual bandit 類的路由演算法需要**大量、連續的查詢流量**才能讓「探索 vs. 利用」的學習曲線收斂到有意義的策略；PILOT、GreetServ 這類系統的實驗設計，都是假設一個服務同時處理大量使用者的持續查詢流（企業級 API 閘道的流量規模），而不是一個人斷斷續續、一天可能只發出幾十到幾百次請求的使用模式。**在 Stephen 這種單人規模的請求量下，線上 bandit 演算法很可能根本沒有足夠的資料點可以「學」出比 SuperBrain 現有的 golden-set 靜態門檻更好的策略**——這代表 SuperBrain 現有「先用 100 題 golden set 離線算好一個門檻，之後就照這個門檻走」的做法，對單人規模來說反而是**更務實、更容易得到穩定結果**的設計，不是落後於前沿，而是前沿本身在這個流量規模下還沒有明顯優勢。
+- **成本面直接數字佐證「量」是分岔點**：2026 年的本地 vs 雲端總持有成本分析顯示，本地 LLM 與雲端 API 的損益兩平點大約落在**每天 50 萬到 200 萬 token** 之間（依模型大小與硬體而定），低於這個量雲端反而更便宜（把硬體攤提、電費都算進去），高於這個量本地才能省下 60-80% 的單位token成本——這個量級的門檻，本身就直接說明了「多少流量才值得認真做動態路由最佳化」這件事有一個明確的下限，Stephen 需要先確認 SuperBrain 實際的每日 token 用量落在哪一側,才能判斷連「值不值得研究更進階路由演算法」這個問題本身。
+- **企業級 FinOps for AI 這個新興學門在 2026 年正式成形，但目前明確是「企業規模」在驅動，尚無「個人版」的對應成熟做法**：FinOps 基金會 2026 年 State of FinOps 報告（涵蓋 1,192 位受訪者、共管理超過 830 億美元雲端支出）把「AI 成本管理」列為 FinOps 團隊 2026 年最需要培養的第一名技能，追蹤 AI 支出的組織比例從 2024 年的 31%、2025 年的 63%，暴增到 2026 年的 98%；但同一份報告也點出殘酷的另一面——**73% 的受訪組織表示 AI 成本已經超出原本的預算規劃**，Uber 在 2026 年 4 月甚至因為「沒有 per-team 預算上限、沒有模型路由、工程師與 API 之間沒有治理層」，提早把整年度的 AI coding 預算燒完。**這些具體案例的規模（管理 830 億美元雲端支出的組織、Uber 這種等級的公司）跟 Stephen 每週 $20 額度的規模差了好幾個數量級，這條學門目前絕大部分的工具與治理架構（多團隊預算分攤、跨部門 API key 治理、企業級 FinOps 平台）確實是為企業規模設計，直接照搬對單人規模是過度工程化**。
+- **但「minimum viable AI FinOps」這個最小可行版本，概念上確實可以下修到單人規模，而且 Stephen 某種程度上已經在做**：即使是企業級 FinOps 報告自己也承認，最小可行的 AI 成本治理只需要三件事——「基本的成本可見度、一個成本異常警報、明確的成本歸屬」。**這三件事換成 Stephen 的規模，其實就是「知道這週的 Claude 額度花在哪裡」「額度快用完時有警覺」「知道是哪個專案/哪次任務燒掉的」——這正是既有雷達 #34（檢查快取命中率）本質上已經在做的事，只是沒有正式取名字**，不需要因為「FinOps」這個詞聽起來很企業級就覺得自己用不上，最小可行版本的精神本來就適用任何規模。
+
+Sources: [Near-Optimal Online Deployment and Routing for Streaming LLMs (arXiv 2506.17254)](https://arxiv.org/pdf/2506.17254) · [Correlation-Aware Contextual Bandits with Surrogate Rewards for LLM Routing (arXiv 2607.09015)](https://arxiv.org/pdf/2607.09015) · [Survey: Multi-Armed Bandits Meet Large Language Models (arXiv 2505.13355)](https://arxiv.org/pdf/2505.13355) · [A Component-Based Survey of Interactions between Large Language Models and Multi-Armed Bandits (arXiv 2601.12945)](https://arxiv.org/pdf/2601.12945) · [ParetoBandit: Budget-Paced Adaptive Routing for Non-Stationary LLM Serving (arXiv 2604.00136)](https://arxiv.org/pdf/2604.00136) · [Dynamic Model Routing and Cascading for Efficient LLM Inference: A Survey (arXiv 2603.04445)](https://arxiv.org/pdf/2603.04445) · [Local LLMs vs Cloud APIs: 2026 Total Cost of Ownership Analysis (SitePoint)](https://www.sitepoint.com/local-llms-vs-cloud-api-cost-analysis-2026/) · [Hybrid Cloud-Local LLM: The Complete Architecture Guide 2026 (SitePoint)](https://www.sitepoint.com/hybrid-cloudlocal-llm-the-complete-architecture-guide-2026/) · [Local LLM Total Cost of Ownership 2026 (PromptCost.org)](https://promptcost.org/en/blog/local-llms-total-cost-ownership-2026/) · [State of FinOps 2026 Report (FinOps Foundation)](https://data.finops.org/) · [Managing AI Spend in 2026: 5 Takeaways from FinOps X (usage.ai)](https://www.usage.ai/blogs/finops/ai-ml-cost/finops-x-2026-takeaways) · [AI FinOps in 2026: 73% Blow Budget, 98% Now Track (THE D*AI*LY BRIEF)](https://www.beri.net/article/ai-finops-2026-73-percent-blow-budget-cfo-fix) · [FinOps for AI Overview (FinOps.org)](https://www.finops.org/wg/finops-for-ai-overview/) · [FinOps for AI: The Definitive Overview (Finout)](https://www.finout.io/blog/finops-for-ai-the-definitive-overview)
+
+### 🟡/⚪ 建議評估
+這是本輪任務裡少數「誠實查到頭卻建議『不要追』」的條目之一，跟第 14 節 SuperBrain 艦隊管理的結論性質類似。**線上學習路由演算法（bandit-based routing，MetaLLM/PILOT/GreenServ）標記 ⚪ 現況已足夠、不用追**：這些演算法確實比 SuperBrain 現有的靜態 golden-set 門檻更「前沿」，但它們的設計前提是企業級 API 閘道等級的持續高流量，而 Stephen 單人使用的請求量極可能不足以讓這類線上學習演算法收斂出比靜態門檻更好的策略——**換一種說法：不是 SuperBrain 落後前沿，是這條前沿本身在單人規模下大機率沒有用武之地**，繼續用現有的 golden-set 靜態門檻（等 P6 實測出真實數據）是更務實的選擇。**企業級 FinOps for AI 整套治理架構（多團隊預算分攤、企業平台）標記 ⚪ 過度工程化，不適用**：這條學門 2026 年確實正在快速成形，但目前所有具體案例與工具都是為管理數千萬到數十億美元 AI 支出的組織設計，直接照搬對 Stephen 的規模是明顯的殺雞用牛刀，如同第 14 節對艦隊管理工具的結論。**唯一標記 🟢 值得採納的是「minimum viable AI FinOps」這個最小可行版本的精神**——成本可見度、異常警報、成本歸屬這三件事，不需要引入任何企業級工具就能做到，而且本質上跟既有雷達 #34（檢查 Claude cache 命中率）、#35（LiteLLM/RouteLLM 省錢路由）已經是同一件事，只是可以再明確加一條「額度異常消耗警覺」的習慣（例如每週檢查一次額度消耗速度是否明顯偏離平常),不需要為此新增任何工具或架構。**誠實總結給 Stephen**：這條前沿越往深挖，越確認一件事——2026 年成本優化的「真正前沿」是為企業規模的流量與預算量身打造的，對單人規模而言，現有的「靜態 golden-set 門檻 + 檢查快取命中率/用 LiteLLM 省錢」已經是這個規模該有的合理解法，不必因為「國外在做更炫的線上學習演算法」而覺得現有做法落後。
+
+---
+
 ## 交叉引用索引
 
 | 本節 | 對應既有雷達(#1-41) | 對應風險登錄 |
@@ -473,5 +518,7 @@ Sources: [Dual WAN Failover for Your Homelab: Automatic Internet Redundancy (Hom
 | §17 Public Portal 深挖：安全公開投影的前沿 | 無直接對應（全新主題） | [17](17_RISK_GAP_CONFLICT_REGISTER.md) G-05；[15_PUBLIC_PORTAL_ARCHITECTURE.md](15_PUBLIC_PORTAL_ARCHITECTURE.md) |
 | §18 G-04 深挖：GSN 形狀的驗證報告參考範例（非協定設計） | 延續 §13（同一 GSN 方法論，往下挖具體 AI 驗證應用範例） | [17](17_RISK_GAP_CONFLICT_REGISTER.md) G-04（Stephen 已認領，本節僅供參考） |
 | §19 R-01 深挖：單一連網閘道的實際風險與對策 | 延續 §5/§14（同一 SuperBrain 規模與 Bastion Host 架構，往下挖故障情境的具體對策） | [14_FAILURE_RECOVERY_AND_RESILIENCE.md](14_FAILURE_RECOVERY_AND_RESILIENCE.md)、[17](17_RISK_GAP_CONFLICT_REGISTER.md) R-01 |
+| §20 AIECP 深挖：solo開發者Windows信任發布現實 | 無直接對應（純行政/財務問題，非工具選型） | [19_MASTER_PROGRESS_TRACKER.md](19_MASTER_PROGRESS_TRACKER.md) AIECP 列（4 類 OWNER-EXTERNAL gate） |
+| §21 Provider路由深挖：2026成本優化前沿是否適用單人規模 | [#34](22_GLOBAL_TECH_RADAR.md)/[#35](22_GLOBAL_TECH_RADAR.md)（延續，非取代） | [12_PROVIDER_AND_MODEL_ROUTING.md](12_PROVIDER_AND_MODEL_ROUTING.md)（SuperBrain golden-set 門檻） |
 
 要跑哪個專案的更深一層前沿檢索，或針對某個 🟡 項目重新檢索確認是否已有落地產品，直接跟 Claude 說「跑願景雷達：XX」即可。
