@@ -9,6 +9,16 @@ Stephen 每週只有約 $20 額度的 Claude / Codex 可以用在本地七個專
 - **這件事完全可以在 cloud session 裡做，不需要碰本地任何東西**——這正是這個 repo「只讀不寫其他 repo」規則存在的原因：它的價值不是去改本地程式碼，而是幫本地施工提供即時的外部情報與建議。
 - 下面的「System-of-Systems 總藍圖」是這個初衷的**副產品**（先把現況盤點清楚，才知道要往哪裡找情報），不是取代這個初衷。
 
+## 命名對照表（舊名稱／新名稱／功能範疇）
+
+2026-09-26，Stephen 要求本 repo 獨立提案命名，已選定以下對照（詳見 [Blueprint/18 決策記錄](Blueprint/18_DECISION_LOG.md)、[Blueprint/10](Blueprint/10_SUPERVISION_AND_EVIDENCE.md)）。**這是命名與範疇的定義，尚未在任何來源 repo 實際改名。**
+
+| 舊名稱 | 新名稱 | 功能範疇 |
+|---|---|---|
+| （無，這是新定義的整體概念） | **JN1-UOD**（JN1 Unified Operations Domain） | 三台本地機器（ULTRA-MAERA-2、SPARK-AGAVE-3、SPARK-AGAVE-4）＋ Voice Control ＋ AIECP ＋ AERIS ＋ MEGIS 的混合整體——即「本地實際在跑的一切」的總稱。範圍比 SuperBrain 大：SuperBrain＝JN1-UOD 裡的硬體層（三機），JN1-UOD＝SuperBrain（硬體）＋四個軟體系統。 |
+| `0_JN1_AERIS_Supervision`（現況：只監管 AERIS 一個專案的發布快照） | **JN1-UOA**（JN1 Unified Oversight Authority） | 監管整個 JN1-UOD——即監管三台機器＋Voice Control＋AIECP＋AERIS＋MEGIS 全部。目前尚未執行改名，且要等 Stephen 理清 AERIS／AERIS Local Implementation／AERIS Supervision 三者的「Codex 債」後才會動工。 |
+| `0_JN1_2AGAVE128-1MAERA64`（SuperBrain） | （不變，仍叫 SuperBrain） | 只指三台機器本身的硬體 compute fabric，是 JN1-UOD 的子集，不是同義詞。 |
+
 ## 這是什麼
 
 在上述初衷之下，這個 repo 同時也是 Stephen（`space653000`）旗下多個獨立 AI 工程專案的 **System-of-Systems 總藍圖 / 索引 / 跨專案整合層**。
