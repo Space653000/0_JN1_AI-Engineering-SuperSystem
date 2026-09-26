@@ -207,6 +207,54 @@ AIECP 現有的 Codex OFFICIAL/PEGA 隔離 worktree 機制，架構方向**跟 2
 
 ---
 
+## 雷達條目 #12：MEGIS 對照 — AI 公差堆疊分析／DFM 自動審查
+
+**檢索日期**：2026-09-26
+
+### 外部現況
+- 2026 年主流做法是**分兩層**：建模階段用「In-CAD DFM」即時抓問題（拔模不足、薄壁、過緊公差），設計審查階段用更完整的工具評估整個零件（含製造流程、材料、組裝關係）。
+- 「大型機構模型」（Large Mechanical Models，訓練自可信機構設計資料/工程標準/供應商資訊）能辨識實務製造風險（複雜工模需求、倒勾、困難公差堆疊）並給出可執行建議。
+- **業界共識**：2026 年真正有效果的做法不是追求「全自動 DFM 審查」，而是用 AI **縮短資深/資淺工程師的知識落差**——把幾十年的製造經驗教訓即時提示給新手。
+
+Sources: [AI for Tolerance Stack-Up Analysis](https://www.getleo.ai/blog/ai-tolerance-stack-up-analysis) · [DFM Analysis in 2026: Best AI Tools](https://www.getleo.ai/blog/dfm-analysis-ai-tools-manufacturing-feedback) · [DFM Is Broken: How AI Is Finally Making It Work](https://www.getleo.ai/blog/dfm-broken-ai-fixing-design-manufacturability-2026)
+
+### 🟢 建議評估
+MEGIS 的 Gate 制（尤其 G4 模組與限制條件組合）本質上就是在做「公差/組裝關係的正式審查」，跟業界「兩層 DFM」的**審查階段**精神一致。可評估的落差是**建模階段的即時回饋**——如果 MEGIS 工程師是先建模、後面才在 Gate 審查抓到公差問題，導入 in-CAD 即時 DFM 檢查可以把問題往前移，減少 Gate 打回重做的成本。
+
+---
+
+## 雷達條目 #13：AIECP 對照 — AI Agent 憑證/密鑰管理與沙盒安全
+
+**檢索日期**：2026-09-26
+
+### 外部現況
+- 2026 年最佳實踐：憑證應該**短效、限定任務範圍、綁定授權者、可單獨撤銷**（不影響其他 agent/使用者）；避免把密鑰寫死在程式或環境變數，改用 Vault（HashiCorp Vault/AWS Secrets Manager/Azure Key Vault）簽發臨時、限定範圍的憑證。
+- **縱深防禦**：沙盒隔離＋監控＋核准關卡＋簽章產出物，多層疊加；高風險動作（金融交易、刪除資料）強制人工核准；所有程式執行/工具呼叫/API 請求都要留不可竄改的稽核紀錄。
+- Anthropic 自己的 **Managed Agents 平台**（2026-04-08 上線）是一個參考架構：推理引擎本身**永遠不直接持有原始憑證**，憑證由獨立的 broker 短效簽發。
+
+Sources: [AI Agent Credential and Secret Management in Production (Zylos Research)](https://zylos.ai/research/2026-05-07-ai-agent-credential-secret-management-production/) · [How to manage API keys, tokens, and secrets for AI agents (WorkOS)](https://workos.com/blog/ai-agent-secrets-management) · [Practical Security Guidance for Sandboxing Agentic Workflows (NVIDIA)](https://developer.nvidia.com/blog/practical-security-guidance-for-sandboxing-agentic-workflows-and-managing-execution-risk/)
+
+### 🟢 建議評估
+AIECP 現有的「RED 等級操作需 exact-action digest 核准」「agent 無法自我核准」已經符合「高風險動作強制人工核准」這條業界原則。值得補強評估的是**「推理引擎永遠不直接持有原始憑證」**這個模式——AIECP 的 Codex OFFICIAL/PEGA 若目前是直接拿到 GitHub token/API key 本身（而非透過短效 broker 簽發），這是一個可以對齊 2026 業界最佳實踐的具體改善點，也呼應雷達 #5 的 SLSA 對齊建議。
+
+---
+
+## 雷達條目 #14：跨專案知識庫對照 — 本地 RAG／多專案檢索工具
+
+**檢索日期**：2026-09-26　**對照對象**：JN1-UOD／JN1-UOA 未來可能需要跨七個專案文件做檢索的情境。
+
+### 外部現況
+- 2026 年 RAG 工具分兩類：**企業知識管理平台**（Guru、Notion AI、Confluence+Atlassian Intelligence、Glean）解決「檢索介面」問題；**RAG 基礎設施工具**（LangChain、LlamaIndex、Haystack）解決「檢索管線工程」問題。
+- 多專案檢索的企業做法：混合搜尋（向量＋BM25）＋ reranking ＋ LLM-based 知識圖譜做跨文件關聯。
+- **LlamaIndex**、**Haystack** 都是開源、可本地部署，適合「版本感知搜尋＋組織範圍限定＋技術文件語意理解」這類需求——剛好符合七個工程 repo 各自版本演進快、術語不統一的情況。
+
+Sources: [Best LLM Knowledge Base Tools in 2026 (Atlan)](https://atlan.com/know/llm-knowledge-base-tools/) · [15 Best Open-Source RAG Frameworks in 2026](https://www.firecrawl.dev/blog/best-open-source-rag-frameworks) · [Best Enterprise RAG Platforms for 2026](https://onyx.app/insights/enterprise-rag-platforms-2026)
+
+### 🟡 持續觀察
+本 SuperSystem repo 目前是靠人工/Claude 逐一 clone 七個 repo 來盤點（見 [Audit/](../Audit/)），如果未來盤點頻率提高（例如你要求的「每次完成一段工作就回來更新」變得很頻繁），**用 LlamaIndex/Haystack 建一個跨七個 repo 的本地向量索引**，可以讓「重新盤點」從「重新 clone+人工讀」變成「查詢式檢索」，加快速度。但目前盤點頻率還不高，這是**觀察項目**，不是急迫需求。
+
+---
+
 ## 下一批建議雷達方向（尚未執行檢索，供 Stephen 排序）
 
 - SPARK-AGAVE-3/4 真實機型確認後（見雷達 #7），重跑一次精確對照。
