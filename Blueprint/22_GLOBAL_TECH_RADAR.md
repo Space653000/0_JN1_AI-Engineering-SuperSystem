@@ -146,6 +146,7 @@ JN1-UOA 要監管「三機＋Voice+AIECP+AERIS+MEGIS」這麼多異質系統，*
   2. Stephen 提供 Build 2026 中文報導後，查證更正為 Microsoft Surface RTX Spark Dev Box，並誤判「Surface Laptop Ultra 用的 RTX Spark N1X 是規格較低的變體」。
   3. Stephen 指出「沒有搞混」，再次查證後更正：**N1X 是 NVIDIA 對 RTX Spark 晶片本身的代號**，不是獨立低規格款，Laptop Ultra 與 Dev Box 可能共用同一晶片家族——但**本 repo 一度因此進一步推論「兩者記憶體容量/算力等級接近」，這一步是本 repo 自己的過度引申，不是 Stephen 提供的資訊**。
   4. **Stephen 第三次糾正**：他實際持有的 ULTRA-MAERA-2＝Surface Laptop Ultra 是 **64GB**，不是 128GB；SPARK-AGAVE-3/4（Dev Box，未上市）才是 **128GB × 2台**。**以 Stephen 對自己實際硬體的第一手陳述為準**，撤回上一輪「兩者容量/算力接近」的推論。晶片家族命名相同，不代表記憶體規格或算力等級相同——這是本輪雷達最需要記取的教訓：**查到公開資料後，不能自己再往下引申超出資料本身講的事情**。
+  5. **Stephen 進一步澄清（避免本 repo 誤解成不同機型）**：ULTRA-MAERA-2 的 Surface Laptop Ultra**是同一款產品線（RTX Spark版）**，不是舊款/不同型號——差別純粹是 Stephen 這台選的是**次規 64GB 配置**，不是頂規 128GB 配置。也就是說 Surface Laptop Ultra（RTX Spark）本身就有 64GB／128GB 兩種可選記憶體配置，ULTRA-MAERA-2 用的是低配那一版。上一版（本節第4點）「兩者是否同產品線」曾一度講得含糊，這裡明確澄清：**同產品線、不同記憶體配置等級**，不是不同機型。
 
 修正後的事實認定：ULTRA-MAERA-2＝Surface Laptop Ultra，64GB unified（見 [Blueprint/03](03_MACHINE_ARCHITECTURE.md) 原始記載，正確）；SPARK-AGAVE-3/4＝Surface RTX Spark Dev Box（未上市），128GB unified，各自獨立兩台，規格相同。
 
