@@ -274,6 +274,62 @@ Sources: [ABET — Criteria for Accrediting Engineering Programs 2025-2026（含
 
 ---
 
+## 13. JN1-UOA 深挖：安全關鍵產業的保證論證（Assurance Case）方法論
+
+### 願景摘要
+延續第 8 節已引用的核心發現——2026 年 OECD 對 20 個組織的分析發現「多數組織雖然結合量化指標與專家質性判斷，但很少揭露完整方法論，也很少系統性驗證『文件記錄的控制措施』是否真的對應到『實際結果』」（引用細節見第 8 節，此處不重複）。本節問一個更具體的問題：安全關鍵產業（航空、汽車、醫療器材、核能）幾十年來發展出的**保證論證（assurance case）方法論**——Goal Structuring Notation（GSN）、Claims-Arguments-Evidence（CAE），以及 DO-178C、IEC 61508、ISO 26262、IEC 62304 這幾套正式功能安全標準——有沒有提供一套「把文件記錄的控制措施主張，跟能證明它真的成立的證據，結構化地綁在一起」的具體做法，而不只是「證明控制措施的存在」？這是目前全世界對 JN1-UOA 核心問題最接近的部分解答，即使整體問題仍未解決，本節要挖出「多接近」到底是多接近。
+
+### 前沿檢索（2026-09-26）
+
+- **GSN 的核心結構就是為了不讓「文件存在」跟「證據成立」混為一談而設計的**：GSN 用 Goal（安全/正確性主張）、Strategy（推論方式的說明）、Solution（實際證據項目的引用）三種節點組成一張「論證結構圖」，明確要求把一個籠統的頂層主張（例如「這個系統夠安全」）逐層拆解成子主張，直到每個最底層的子主張都能**直接指向一項具體證據**才算完整——這代表 GSN 本身的設計哲學，就是拒絕「主張沒有連到證據就算數」，跟 AERIS/AIECP 既有的「Evidence Before DONE」精神高度一致，差別是 GSN 提供了一張**可視化、可審查的圖**，而不是一份扁平的日誌或勾選清單。2026 年最新研究（OntoGSN、LLM 自動生成/審查 GSN 相容論證案例）顯示這套方法論正在被進一步工具化，甚至嘗試用 LLM 當「論證案例審查員」自動檢查論證結構是否完整。
+- **CAE（Claims-Arguments-Evidence）把「Argument」單獨拉出來當一個不可省略的節點，這是它跟單純「主張+證據」兩欄式做法最大的不同**：CAE 明確定義 Argument 是「連結證據跟主張的推理規則本身」，也就是說光有主張、光有證據都不夠，還必須**明確寫出「為什麼這個證據足以支持這個主張」的推理邏輯**，不能讓讀者自己腦補。ISO/IEC 15026-2:2011 為這套做法提供了標準化支撐。這對 JN1-UOA 很直接的啟示：如果只是把「控制措施存在」跟「某次測試通過」兩件事並排列出來，中間沒有一句話解釋「這次測試為什麼證明了那個控制措施真的在運作」，本質上仍然是 OECD 報告點名的「格式統一但邏輯斷裂」。
+- **正式功能安全標準（DO-178C/IEC 61508/ISO 26262/IEC 62304）都要求「雙向可追溯性（bi-directional traceability）」，這是比 GSN/CAE 更早、更成熟、已被強制執行幾十年的做法**：所有這些標準都要求「需求 → 設計 → 實作 → 驗證結果」四者之間可以雙向追溯——不只是「這個需求有沒有被測試到」，還要「這個測試結果對應到哪個需求、有沒有矛盾」。DO-178C 特別明確：證據必須「支撐它被引用的那項驗證目標本身（而不只是沾得上邊）、經得起獨立審查、跟其他生命週期產出物不矛盾、由符合該保證等級（DAL）獨立性與嚴謹度要求的流程產出」——這已經是一套非常具體、可操作的「證據是否真的成立」判準，比 OECD 報告點名「多數組織缺乏的系統性驗證」精確得多，只是這套判準目前主要活在航空/汽車/醫療器材這些領域的正式驗證流程裡，還沒有被證明可以直接套用到「監管多個異質 AI 工程系統」這種 JN1-UOA 面對的場景。
+- **誠實的落差**：即使是 DO-178C 這套全世界最嚴謹的軟體驗證追溯標準，處理的仍然是「單一系統、單一保證等級、事先定義好的需求集合」這種相對封閉的問題；JN1-UOA 要面對的是「監管五個異質、各自治理、持續演化的系統（Voice Agent/AIECP/AERIS/MEGIS/SuperBrain）」，這比任何單一 DO-178C/ISO 26262 專案的範圍都更開放、更動態。這正是 2026 年那篇《Fifty Years of Specification Completeness》論文（第 8 節已引用）指出的：航空認證五十年經驗告訴我們的是「規格完整性本身有結構性上限（epoch limits）」，不是「只要抄航空的做法就能解決 AI 治理的驗證問題」。
+
+Sources: [Goal Structuring Notation - a short introduction (modeling-languages.com)](https://modeling-languages.com/goal-structuring-notation-introduction/) · [Graphical safety assurance case using Goal Structuring Notation (GSN) — challenges, opportunities and a framework for autonomous trains (ScienceDirect)](https://www.sciencedirect.com/science/article/pii/S0951832022005488) · [OntoGSN: An Ontology-Based Framework for Semantic Management and Extension of Assurance Cases (arXiv 2506.11023)](https://arxiv.org/pdf/2506.11023) · [LLMs as Judges: Toward The Automatic Review of GSN-compliant Assurance Cases (arXiv 2511.02203)](https://arxiv.org/pdf/2511.02203) · [CAE | Adelard](https://www.adelard.com/asce/cae/) · [Guidance on the Assurance of Machine Learning in Autonomous Systems (AMLAS)](https://www.york.ac.uk/media/assuring-autonomy/documents/AMLASv1.1.pdf) · [Functional Safety: ISO 26262, IEC 61508, ASIL, Safety Case (itemis)](https://www.itemis.com/en/compliance-intelligence/functional-safety/) · [Evidence-First Design: Traceability, Formal Properties, and Certification-Grade Simulation for Safety-Critical Systems (novedge.com)](https://novedge.com/blogs/design-news/evidence-first-design-traceability-formal-properties-and-certification-grade-simulation-for-safety-critical-systems) · [Fifty Years of Specification Completeness: What Aviation Certification Tells AI Governance About Epoch Limits, Proof Surfaces, and the Structural Gap (arXiv 2606.25120)](https://arxiv.org/pdf/2606.25120)
+
+### 🟢 建議評估
+這輪檢索找到本輪任務最具體、最可直接借用的一個設計圖案：**JN1-UOA 未來如果要呈現「這裡是我的主張、這裡是支持它的證據鏈」，可以直接借用 GSN 的論證結構圖案（Goal→Strategy→Solution 逐層拆解）當設計模板，而不是像既有雷達 [#6](22_GLOBAL_TECH_RADAR.md)/[#33](22_GLOBAL_TECH_RADAR.md) 建議的那樣，只把 OpenTelemetry/Langfuse 收集到的資料攤成一份扁平日誌**。扁平日誌回答的是「發生了什麼事」，GSN 式的論證圖回答的是「為什麼這件事證明了那項控制措施成立」——後者正是 OECD 報告點名多數組織做不到的那一層。同時要誠實標註：DO-178C/ISO 26262 這類正式標準的雙向追溯要求雖然是全世界最成熟的「把主張連到證據」做法，但都是設計給封閉、單一系統範圍用的，JN1-UOA 面對的是跨五個異質系統的開放式監管，不能直接照搬整套認證流程，只能借用它的「證據必須支撐它被引用的目標、經得起獨立審查、跟其他產出物不矛盾」這三條判準當設計原則。標記 🟢：這是目前全世界對 JN1-UOA 核心問題最接近的部分解答，值得 Stephen 未來設計 JN1-UOA 呈現層時，優先評估 GSN 圖案作為「主張-證據鏈」的具體視覺化模板，而不是繼續假設扁平日誌加監控儀表板就足夠。
+
+---
+
+## 14. SuperBrain 深挖：小規模混合艦隊管理與隔離運算節點模式
+
+### 願景摘要
+延續第 5 節已引用的核心願景（「One SuperBrain, Many Replaceable Workers」、「兩台 Spark 盡量不連網，只跑本地 AI」，`0_JN1_2AGAVE128-1MAERA64/.ai/BLUEPRINT.md` 第 10 行、第 1 節，引用細節見第 5 節）與第 5 節已指出的規模落差：前沿討論的 facility edge server 案例是數十到數百台機器的艦隊管理，SuperBrain 是 3 台機器。本節針對這個規模落差往下挖兩個更具體的問題：(a) 真正小規模（2-5台）的家用 AI/機器人實驗室、home-lab 玩家、小型邊緣 AI 部署，2026 年實際怎麼做設定管理、健康監控、故障轉移，而不會過度工程化去上企業級 orchestration？(b) SuperBrain「一台連網 Gateway + 隔離網路運算節點無直接對外連線」這個獨特的架構選擇，有沒有對應的前沿實務可以參考？
+
+### 前沿檢索（2026-09-26）
+
+- **真正小規模（10-20台以下）的邊緣部署，2026 年業界的實際建議是「不要上企業級 orchestration，人工/半自動化就夠」**：2026 年的邊緣裝置艦隊管理討論明確指出「小規模（10-20台）用人工配置就可以管理，只有部署到數百上千台、跨多個地點時，零觸控佈建（zero-touch provisioning）才變得必要」——這比第 5 節找到的「數十到數百台」門檻又更精確了一層，SuperBrain 的 3 台機器規模，連「10-20台用人工管理」這個更低的門檻都還沒到，代表**現階段連考慮 K3s/Kubernetes 這類輕量容器編排都可能是過度工程化**，比第 5 節原本的評估更保守。
+- **2026 年的 home-lab AI 實務堆疊已經收斂出一組「小而夠用」的標準組合，不是企業級工具**：設定管理用 Ansible（可讀、冪等、透過 SSH 對目標主機操作、目標端不需要裝 agent）；健康監控的預設選擇是 Uptime Kuma（乾淨的介面加推播通知，是多數 home-lab 玩家每天早上第一個檢查的「服務是否都還活著」儀表板）；需要更細緻指標時才疊加 Prometheus + Grafana（VictoriaMetrics 是更省資源的 Prometheus 替代方案，適合較弱的硬體）；容器化選擇上，Docker Compose 給求簡單的人，K3s 給真的想要 Kubernetes 但不想要它的複雜度的人。**這組合直接對應 SuperBrain 3 台機器的規模：Ansible 做三機一致的設定同步，Uptime Kuma 做「三台機器是否都還活著」的第一層監控，暫時不需要 Prometheus/Grafana 這種更重的指標系統，除非 Stephen 真的需要細粒度的效能追蹤**。
+- **SuperBrain「一台連網 Gateway + 隔離網路運算節點」這個架構，在資安/合規世界裡有一個成熟三十年以上的對應模式：Bastion Host / Jump Box**：這個模式的核心定義完全對應 SuperBrain 的設計——「私有節點只能透過 Gateway（jump-box）連線」「一個外部行為者連到 DMZ 裡的專用主機，再從那裡取得對內部網路運算資源的存取權」。這個模式在雲端（AWS/Azure/GCP 的 Bastion Host）與傳統企業內網資安領域行之有年，核心資安慣例是：**Bastion Host 本身盡量精簡（只跑最少必要服務以縮小攻擊面）、集中做存取紀錄與 session 稽核（proxy and log communications）、限制帳號權限**。這對 SuperBrain 的具體參考價值：Laptop 作為唯一連網 Gateway，可以直接借用 Bastion Host 的資安慣例——精簡 Laptop 上對外暴露的服務、對「Laptop→Spark」這段連線做集中的存取紀錄（誰在什麼時候透過 Laptop 對 Spark 下了什麼指令），而不只是把 Laptop 當一般工作機使用。
+- **這個模式的規模適用性完全不受限——Bastion Host 本來就是給「內部只有少數幾台機器」的場景設計的，不是規模落差的問題，是 SuperBrain 現有架構本身已經抓對了一個成熟資安模式，只是還沒有明確借用它的具體慣例（精簡攻擊面、集中稽核 log）去強化。**
+
+Sources: [2026 Fleet Device Management: Guide for IoT & Edge Teams (Portainer)](https://www.portainer.io/blog/fleet-device-management) · [The Homelab AI Stack in 2026: What Self-Hosters Are Actually Running (GeniusTechLab)](https://geniustechlab.com/posts/2026-04-28-homelab-ai-stack-2026) · [The 2026 Homelab Stack: What Self-Hosters Are Actually Running This Year (elest.io)](https://blog.elest.io/the-2026-homelab-stack-what-self-hosters-are-actually-running-this-year/) · [What is a Bastion Host? (StrongDM)](https://www.strongdm.com/what-is/bastion-host) · [Access a bastion host by using Session Manager and Amazon EC2 Instance Connect (AWS Prescriptive Guidance)](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/access-a-bastion-host-by-using-session-manager-and-amazon-ec2-instance-connect.html) · [Jumpbox vs Bastion Host vs Azure Bastion 2026 (Exodata)](https://exodata.io/understanding-jumpboxes-bastion-hosts-and-azure-bastion/) · [What is a Bastion Host or Jump Box? in AWS, Azure, GCP (Cloud Infrastructure Services)](https://cloudinfrastructureservices.co.uk/what-is-a-bastion-host-jump-box/)
+
+### 🟢 建議評估
+這輪檢索對 SuperBrain 有兩個具體、可直接落地的發現：**第一，SuperBrain 3 台機器的規模連「10-20台用人工管理」這個 2026 年業界認定的最低門檻都還沒到，代表現階段不只是「不用急著上 Kubernetes」（第 5 節已有此結論），連 K3s 這種輕量容器編排都可以先不用考慮，Ansible（設定同步）+ Uptime Kuma（健康監控）這組 home-lab 標準組合就足夠，比企業級方案更貼近 SuperBrain 實際規模，且都是免費開源、單人可維運的工具。第二，這是本輪最重要的新發現**：SuperBrain「Laptop 是唯一連網 Gateway、Spark 隔離不連網」這個獨特架構選擇，**不是 SuperBrain 自創的權宜設計，而是資安/合規世界行之有年的 Bastion Host（堡壘主機/跳板機）模式**，這個模式本來就是為「少數幾台機器、其中一台當唯一對外入口」的場景設計，規模完全不是問題。具體建議：Stephen 可以直接借用 Bastion Host 的兩條資安慣例強化 Laptop 這個 Gateway 角色——(1) 精簡 Laptop 上對外暴露的服務與帳號權限，縮小攻擊面；(2)對「Laptop 對 Spark 下達的每個指令」做集中紀錄與稽核，而不只是把 Laptop 當一般工作機隨意使用。這兩條慣例低成本、不需要新工具，只需要調整使用習慣，且直接呼應 AIECP「證據優於自我宣稱」的精神——建議列入下一輪 SuperBrain 安全設計的具體檢查項。
+
+---
+
+## 15. AERIS Local Implementation 深挖：可重現工程模擬的前沿
+
+### 願景摘要
+延續第 6 節已引用的 GATE-06「四方版本一致」要求（Blueprint SHA、Implementation SHA、Local checkout HEAD/dirty digest、Running service loaded SHA，引用細節見第 6 節）與第 6 節已指出的方向：目前靠人工核對 SHA，Proof of Execution / CAVA 這類 runtime attestation 框架是 2026 年研究方向但非現成工具。本節換一個更貼近 AERIS 實際領域的角度往下挖：AERIS 的核心工作是**聲學工程模擬**，不是通用軟體交付，所以真正該問的問題不是「軟體供應鏈怎麼證明沒被竄改」（那是 SLSA/build provenance 的範疇，第 3 節已涵蓋），而是**「給定完全相同的輸入、完全相同的模擬設定、完全相同的程式版本，能不能用密碼學/確定性的方式證明這次模擬結果是可重現的？」**——這是可重現計算科學（reproducible computational science）這個領域幾十年在處理的問題，2026 年的具體工具有哪些可以直接借用？
+
+### 前沿檢索（2026-09-26）
+
+- **可重現性工具鏈已經有三個層次分工明確的技術方向，不是單一工具能解決**：(a) **元資料/描述層**——RO-Crate（Research Object Crate）是把「一次分析執行的所有相關物件（輸入、輸出、程式碼、計算環境、研究者）」打包成一份標準化元資料的做法，2026-08 已發布 1.3 版；其中 **Workflow Run RO-Crate（WRROC）** 這個延伸規範專門處理「工作流程執行的可追溯性」，並進一步拆成三種顆粒度：Process Run Crate（單次工具執行，可以是手動或腳本跑的）、Workflow Run Crate（工作流程系統管理的整次執行）、Provenance Run Crate（工作流程內每個步驟的完整 provenance）——這正好對應 AERIS 可能需要的顆粒度選擇：一次完整聲學模擬跑批可以用 Workflow Run Crate，若要追蹤模擬內部每個步驟（網格劃分→邊界條件設定→求解→後處理）的細節則需要 Provenance Run Crate。(b) **通用 provenance 資料模型層**——W3C PROV 是 2013 年就標準化的 provenance 資料模型（PROV-DM），2026 年仍持續有新工具（例如圖形化 W3C PROV 建模工具）在降低使用門檻，許多模擬平台正在採用它來儲存與管理 provenance；但 W3C PROV 本身是通用資料模型，不是「執行環境」，需要搭配（a）或（c）才能真正落地。(c) **執行環境的位元級可重現（bit-reproducibility）層**——這是三層裡跟 AERIS「模擬結果是否真的可重現」最直接相關的一層：2026 年的做法是用 GNU Guix 建立「從原始碼 bootstrap 就可宣告式、可驗證」的軟體環境，打包成 Apptainer 容器後可以跨不同 HPC 系統執行且達到位元對位元（bit-for-bit）一致的結果（適用於執行緒安全的確定性演算法）；OpenGeoSys（地質工程模擬軟體，應用於地熱系統與放射性廢棄物處置評估）的案例顯示，**只需要對建置流程做幾個小調整（例如鎖定編譯器版本、關閉浮點數重排優化），就能讓建置過程產生跨機器完全相同的執行檔**，這是一個已經在真實工程模擬領域（不是通用軟體）跑過的具體案例。
+- **判定「是否可重現」本身也有一個明確、可自動化判定的技術做法**：位元對位元重現的判定基礎是 IEEE-754 浮點數確定性運算，加上避免任何會重新排序浮點數運算順序的編譯器優化；當這兩個條件滿足時，**標準測試的容許誤差（tolerance）可以設為零，讓「是否可重現」變成一個機器可以直接判定 yes/no 的問題，不需要人工判斷「夠不夠接近」**——這對 AERIS GATE-06 現在的「人工核對 SHA」是一個具體的技術路徑升級參考：與其只核對版本號的雜湊值是否相同，若能進一步驗證「同一版本在不同機器上重跑，輸出結果是否位元對位元相同」，會是比對版本號更直接的可重現性證明。
+- **這條路徑比 SLSA/generic build provenance 更貼近 AERIS 的實際需求，因為它處理的是「同一份程式碼在不同機器/不同次執行，結果是否真的一樣」，而不是「這份程式碼有沒有被竄改過」——這是兩個不同的問題，AERIS GATE-06 想解決的四方一致，其實同時涉及這兩者，但 Local Implementation 層目前的做法（人工核對 SHA）只碰到了「有沒有被竄改」這一半，沒有碰到「同一份程式碼重跑結果是否一致」這一半**，後者正是聲學模擬這種數值密集型工程領域特有的風險（浮點數運算順序、編譯器優化、硬體差異都可能讓「同一份程式碼」在不同機器上跑出微妙不同的結果，這在通用軟體交付驗證裡完全不會被考慮到）。
+
+Sources: [Recording provenance of workflow runs with RO-Crate (arXiv 2312.07852)](https://arxiv.org/html/2312.07852v1) · [Research Object Crate (RO-Crate)](https://www.researchobject.org/ro-crate/) · [About RO-Crate](https://www.researchobject.org/ro-crate/about_ro_crate) · [Fusion of computational and experimental provenance in RO-Crate (PMC)](https://pmc.ncbi.nlm.nih.gov/articles/PMC13526443/) · [The W3C PROV family of specifications for modelling provenance metadata](https://dl.acm.org/doi/10.1145/2452376.2452478) · [Model-Driven Engineering for Data Provenance: A Graphical W3C PROV Modeling Tool (Springer, 2026)](https://link.springer.com/chapter/10.1007/978-3-031-96841-9_9) · [Unlocking the Potential of Containers in Scientific Computing to Achieve Bitwise Reproducibility, Portability and Performance (Springer)](https://link.springer.com/chapter/10.1007/978-3-031-86240-3_4) · [Reproducible HPC software deployments, simulations, and workflows — a case study for far-field deep geological repository assessment (Environmental Earth Sciences, Springer)](https://link.springer.com/article/10.1007/s12665-025-12501-z) · [Report on Challenges of Practical Reproducibility for Systems and HPC Computer Science (arXiv 2505.01671)](https://arxiv.org/pdf/2505.01671)
+
+### 🟡 建議評估
+這輪檢索找到一條**比第 6 節原本提到的 generic runtime attestation（Proof of Execution/CAVA）更貼近 AERIS 實際領域（工程模擬）的具體技術路徑**：可重現計算科學領域已經有「元資料打包（RO-Crate/WRROC）＋ 通用 provenance 模型（W3C PROV）＋ 位元級可重現執行環境（GNU Guix + Apptainer 容器）」這三層分工明確的工具鏈，而且**位元級可重現這一層已經有真實工程模擬案例（OpenGeoSys 地質工程模擬）驗證過可行**，不是純學術構想。具體建議：AERIS Local Implementation 未來若要把 GATE-06 的「四方版本一致」從人工核對 SHA 升級為自動化驗證，比起等待 Proof of Execution/CAVA 這類還在 2026 年才發表的通用 agentic AI 認證框架成熟，**優先評估「用容器鎖定聲學模擬的完整執行環境（編譯器版本、關閉浮點重排優化）+ 用 RO-Crate 的 Workflow Run Crate 打包一次模擬跑批的完整輸入/輸出/環境元資料」這條路徑更務實、更貼近 AERIS 的實際工程模擬需求**——這條路徑不需要等待任何還在研究階段的新框架，GNU Guix/Apptainer/RO-Crate 都是現在就能安裝使用的成熟工具。誠實的落差：這條路徑解決的是「同一版本重跑結果是否一致」，沒有解決「版本本身有沒有被竄改」（那仍然需要第 3/6 節談的 SLSA/build provenance），AERIS 若要完整的四方一致驗證，長期需要把這兩條路徑合起來看，不能只做其中一半。標記 🟡：技術路徑具體可行且有真實案例佐證，但目前 AERIS 聲學模擬工具鏈本身狀態仍是 `UNKNOWN`（見第 1 節），必須先確認 AERIS 實際用哪套模擬軟體，才能評估這條路徑的實際導入成本，屬於「方向已找到、落地時機待 AERIS 自己盤點清楚後再評估」。
+
+---
+
 ## 交叉引用索引
 
 | 本節 | 對應既有雷達(#1-41) | 對應風險登錄 |
@@ -290,5 +346,8 @@ Sources: [ABET — Criteria for Accrediting Engineering Programs 2025-2026（含
 | §10 AIECP 深挖：MDO 跨領域協調 | [#28](22_GLOBAL_TECH_RADAR.md)（Agent Harness 對照，層次不同） | [17_RISK_GAP_CONFLICT_REGISTER.md](17_RISK_GAP_CONFLICT_REGISTER.md) G-02 |
 | §11 Voice Agent 深挖：雙向澄清對話 | [#1](22_GLOBAL_TECH_RADAR.md)/[#8](22_GLOBAL_TECH_RADAR.md)（延續，非取代） | — |
 | §12 MEGIS 深挖：機械工程師完整能力地圖 | [#22](22_GLOBAL_TECH_RADAR.md)/[#23](22_GLOBAL_TECH_RADAR.md)（延續，非取代） | — |
+| §13 JN1-UOA 深挖：Assurance Case 方法論 | 延續 §8（同一問題，往下挖具體方法論） | [10_SUPERVISION_AND_EVIDENCE.md](10_SUPERVISION_AND_EVIDENCE.md) |
+| §14 SuperBrain 深挖：小規模艦隊管理與隔離節點模式 | 延續 §5（同一規模落差，往下挖具體實務） | [14_FAILURE_RECOVERY_AND_RESILIENCE.md](14_FAILURE_RECOVERY_AND_RESILIENCE.md)、[17](17_RISK_GAP_CONFLICT_REGISTER.md) R-01 |
+| §15 AERIS Local Implementation 深挖：可重現工程模擬 | 延續 §6（同一問題，換聲學模擬領域角度往下挖） | — |
 
 要跑哪個專案的更深一層前沿檢索，或針對某個 🟡 項目重新檢索確認是否已有落地產品，直接跟 Claude 說「跑願景雷達：XX」即可。
