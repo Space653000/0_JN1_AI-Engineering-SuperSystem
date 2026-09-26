@@ -31,6 +31,8 @@
 
 | 2026-09-27 | Stephen 口頭補充三個專案的定位（記錄於 [Blueprint/26](26_VISION_DRIVEN_FRONTIER_RADAR.md)、[Blueprint/23](23_TECH_RADAR_SUMMARY_REPORT.md)）：AERIS＝聲學工程師全方位能力盤點、MEGIS＝機構工程師全方位能力盤點、AIECP＝跨領域協調MEGIS與AERIS（協調/溝通/接收指令/分配交付/銜接本地雲端）。三者現在做不到的能力項目，未來交給對應子藍圖與工程專案逐步達成。同時再次確認 AERIS Supervision 未來改名為監管全系統施工/監工/運作狀況（呼應既有 JN1-UOA 決策）| 這些是 Stephen 對各專案定位的補充說明，比來源 repo 現有文件更具體，本 repo 誠實標註來源為口頭確認、非 repo 文件引用，不代替各專案自行修改藍圖 |
 
+| 2026-09-27 | **Stephen 接受本輪四條深挖建議**：①AERIS——自行拼一份 INCE/ASA/AES/IEC 61094 交集草案對照100席位，特別檢查麥克風校準/波束成形是否被獨立列出；②AIECP——直接借用 NASA OpenMDAO 的「共用設計變數/誰先決定/如何收斂衝突」詞彙設計 MEGIS↔AERIS 協調層（G-02）；③Voice Agent——雙向澄清對話方向接受，但 3-4B模型是否可離線即時跑在本地機器（推理速度而非記憶體，ULTRA-MAERA-2 64GB 記憶體本身綽綽有餘）留待實際設計時才研究判斷；④MEGIS——直接採用 ABET機構工程認證準則+ASME Vision 2030 對照 G0-G9，尤其熱力系統這條軌 | 記錄為 Stephen 已接受的方向決策，實際落地仍屬各專案自己的施工，本 repo 不代為執行 |
+
 ## 尚待 Stephen 決策的事項（本 repo 整理，不代為決定）
 
 1. 是否要推進 AIECP ↔ AERIS/MEGIS ↔ SuperBrain 的整合，以及優先順序（見 [16](16_ROADMAP_AND_ACCEPTANCE.md)）。
