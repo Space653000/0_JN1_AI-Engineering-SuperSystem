@@ -1,6 +1,8 @@
 # 22 — Global Tech Radar
 
 > 這份文件是本 repo **建立初衷**的直接實踐（見 [README.md](../README.md)「建立初衷」段落，2026-09-26 Stephen 澄清）：Stephen 每週只有約 $20 額度可用在本地施工，追不上全球 AI 進展速度。本文件的工作是持續往雲端／全世界檢索最新技能、方法、工具、架構，跟本地七個專案現況對標，找出可以借用/仿製的落差，寫成建議——**完全在 cloud session 進行，不涉及修改任何本地或來源 repo**。
+>
+> **2026-09-26 第二輪擴充**：#1-16 是第一輪（14條後補到16條）；Stephen 要求「先列100+候選再自己篩選收斂」，完整候選長清單與篩除理由見 [25_TECH_RADAR_CANDIDATE_LONGLIST.md](25_TECH_RADAR_CANDIDATE_LONGLIST.md)，通過篩選並實際檢索的25條新條目是 #17-#41（見下方「2026-09-26 第二輪擴充」小節）。
 
 ## 怎麼用這份文件
 
@@ -305,6 +307,409 @@ Sources: [slsa-github-generator (GitHub)](https://github.com/slsa-framework/slsa
 
 ### 🟢 建議評估
 AIECP 若要落地雷達 #5 的建議（對齊 SLSA Level 2/3），最低成本的路徑是**先上 GitHub Artifact Attestations**（幾行 YAML，不用管密鑰）替現有的 SHA256SUMS + RELEASE_PROVENANCE.json 加上官方可驗證的建置證明；如果要衝 Level 3，`slsa-github-generator` 這個現成工具鏈可以直接用，不用自己重新發明簽章機制——這剛好也回答了雷達 #13（憑證管理）的「短效、broker 簽發」原則，因為 Fulcio 核發的就是短效憑證。
+
+---
+
+## 2026-09-26 第二輪擴充（#17-#41）
+
+> 這批條目回應 Stephen 的要求——「先列100+候選再自己篩選收斂」。完整的候選長清單、篩除理由（含「篩除未檢索」與「檢索後篩除」）見 [25_TECH_RADAR_CANDIDATE_LONGLIST.md](25_TECH_RADAR_CANDIDATE_LONGLIST.md)。這裡只放通過篩選、真正檢索過的 25 條正式雷達條目。
+
+---
+
+## 雷達條目 #17：語音對照延伸 — 中文ASR最新選項 SenseVoice/FunASR + 全雙工架構 Kyutai Moshi
+
+**檢索日期**：2026-09-26　**對照對象**：延伸雷達#1，補強「Voice Agent中文ASR具體引擎未知」這個缺口的外部對標基準。
+
+### 外部現況
+- **SenseVoice/FunASR vs Whisper**：2026-07-15 一次基準測試（184個中文長音訊檔、共192.3分鐘、單張H100）顯示 SenseVoice 中文字元錯誤率(CER) 7.81%、Paraformer 10.18%，對比 Whisper-large-v3 的 20.02%（turbo版21.71%）——FunASR系模型錯誤率約為Whisper的一半或更低。SenseVoice-Small 推論速度達169.6倍即時，比Whisper-large-v3快約12倍；純CPU上SenseVoice仍有17.2倍即時，比Whisper用GPU還快。原因是SenseVoice/Paraformer是非自回歸架構（一次前向推論出全文），加上訓練資料本身針對中文/亞洲語言調校。
+- **Kyutai Moshi**：CC-BY 4.0授權的語音-文字基礎模型，全雙工對話框架（同時建模「Moshi說話」與「使用者說話」兩條音訊流），理論延遲160ms、實務延遲低至200ms（L4 GPU）。提供PyTorch(bf16/int8)、MLX(int4/int8/bf16)、Rust/Candle(int8/bf16)多種本地部署格式，2026-04發布MoshiRAG讓Moshi能結合文字LLM回答複雜問題。
+
+Sources: [FunASR vs Whisper: Real Chinese ASR Benchmark](https://www.funasr.com/en/blog/funasr-vs-whisper-benchmark.html) · [Which FunASR Model? Nano vs MLT-Nano vs SenseVoice vs Paraformer (2026 Guide)](https://www.funasr.com/en/blog/which-funasr-model.html) · [FunAudioLLM/SenseVoiceSmall (Hugging Face)](https://huggingface.co/FunAudioLLM/SenseVoiceSmall) · [GitHub - kyutai-labs/moshi](https://github.com/kyutai-labs/moshi) · [Why Moshi STT Could Replace Whisper](https://scalastic.io/en/moshi-stt-vs-whisper/)
+
+### 🟢 建議評估
+Voice Agent 現有97.9%中文辨識率是實測數字，但目前盤點未取得其底層ASR引擎的具體名稱（見[Registry/PROJECTS.yaml](../Registry/PROJECTS.yaml) `voice-agent`條目）。**SenseVoice/FunASR的公開中文benchmark（CER 7.81% vs Whisper 20%+）是目前找到最具體、最貼近中文場景的對標對象**，建議Voice Agent專案自己拿SenseVoice跑一次A/B測試，而不是只跟通用多語言ASR（如雷達#2提到的Parakeet TDT）比較。Kyutai Moshi的全雙工架構（160-200ms延遲）則呼應雷達#1「串接式管線→端到端音訊模型」的架構演進方向，且是CC-BY 4.0可本地部署，值得列入下一輪「如果要重新設計語音管線」的候選清單，但**不建議在沒有A/B測試前替換現有管線**（同雷達#1既有原則）。
+
+---
+
+## 雷達條目 #18：語音對照延伸 — 開源TTS最新選型 CosyVoice3 / F5-TTS / GPT-SoVITS
+
+**檢索日期**：2026-09-26　**對照對象**：延伸雷達#1的TTS選型建議（原本是Kokoro-82M/Qwen3-TTS）。
+
+### 外部現況
+- **CosyVoice3**（阿里FunAudioLLM團隊，0.5B參數，2025-12更新）：支援18種中文方言＋9種語言，是評測集中唯一能覆蓋Multilingual Voice Cloning benchmark全部語言的系統，支援串流、zero-shot語音克隆、情感控制。
+- **F5-TTS**：非自回歸、基於Diffusion Transformer的flow-matching系統，zero-shot克隆不需複雜音素對齊，受控benchmark下WER表現更強，但**長文本處理較弱**（CV3-Hard-EN樣本大量失敗）。
+- **GPT-SoVITS**：少樣本(few-shot)語音克隆能力強，是中文/日文/韓文開源選項中最強之一，但**英文合成品質有明確文獻記載的限制**（跨語言合成到英文會有瑕疵與韻律問題）。
+- 2026年實務建議：語音克隆需求選F5-TTS或GPT-SoVITS，多語言需求選CosyVoice3。
+
+Sources: [CosyVoice 3: Towards In-the-wild Speech Generation via Scaling-up and Post-training](https://arxiv.org/html/2505.17589v2) · [9 Best Open Source Text to Speech Models in 2026 (Bland AI)](https://www.bland.ai/blog/best-open-source-text-to-speech-model) · [Best TTS Models 2026 (CodeSOTA)](https://www.codesota.com/guides/tts-models)
+
+### 🟢 建議評估
+若Voice Agent目前TTS是純中文場景，**GPT-SoVITS的少樣本語音克隆或CosyVoice3的18種中文方言支援**都比雷達#1原先建議的Kokoro-82M（英文為主）更貼近中文場景需求，值得下載跑一次實測比較，尤其如果未來有「客製化語音人格」的需求（語音克隆）。**與雷達#1一樣，不建議在沒有實測前直接替換。**
+
+---
+
+## 雷達條目 #19：本地LLM選型現實檢查 — 修正雷達#2的容量假設
+
+**檢索日期**：2026-09-26　**對照對象**：延伸並部分修正雷達#2（SPARK-AGAVE本地LLM選型）。
+
+### 外部現況（重要：對容量的具體修正）
+- **DeepSeek-V3.2**（671B參數）在多數量化等級下都會超過128GB容量，**不適合SPARK-AGAVE-3/4這類128GB機器**。
+- **GLM-5.2**（744B總參數、40B啟用）即使1-bit量化也需要223GB，2-bit版本才勉強塞進256GB Mac，**同樣不適合128GB**。
+- **Mistral Medium 3.5**（128B dense多模態模型）在4-bit量化下需80GB、3-bit需64GB，**是128GB系統可行的dense模型選項**。
+- **Qwen3系列（Apache 2.0授權）**被評為「本地自架授權最寬鬆、部署門檻最輕」的選項，2026年建議路徑是「先從Qwen3或Devstral開始，等基礎設施夠了再考慮DeepSeek-V4等級」。
+
+Sources: [Best Open Source and Open-Weight LLM Models to Run Locally in 2026 (Hugging Face)](https://huggingface.co/blog/daya-shankar/open-source-llm-models-to-run-locally) · [Local LLM 2026: Every Major Model Release + Ollama Status](https://www.promptquorum.com/local-llms/local-llm-model-updates-2026) · [GLM-5.2 vs DeepSeek V4 vs Qwen3: The Open-Weights Coding Model Showdown (2026)](https://www.developersdigest.tech/blog/glm-5-2-vs-deepseek-v4-vs-qwen3-open-weights-coding-showdown)
+
+### 🟢 建議評估（修正雷達#2的具體風險）
+雷達#2原本建議「優先評估MoE架構」是對的方向，但**這輪檢索找到具體反例**：如果SuperBrain未來考慮跑GLM-4.6/DeepSeek V3.2這類熱門中文模型，**必須先確認量化後是否真的塞得進128GB**——本輪查到的具體數字顯示這兩個常被提及的模型系列在多數量化等級下都超出128GB。建議SuperBrain選型時把「4-bit量化後實際記憶體佔用」列為硬性篩選條件，而不是只看「MoE vs dense」這個維度；Qwen3系列（雷達#2已提及的Qwen3-Coder-Next同系）目前看起來是128GB硬體上限最寬鬆的路線。
+
+---
+
+## 雷達條目 #20：本地推理加速 — EAGLE-3 推測解碼(Speculative Decoding)
+
+**檢索日期**：2026-09-26　**對照對象**：延伸雷達#2/#9，本地推理速度優化技術。
+
+### 外部現況
+- EAGLE-3已成為2026年推測解碼的業界標準，2026年初已合併進vLLM、SGLang、TensorRT-LLM主線。
+- 原理：一個輕量draft模型在混合特徵層級提出多個候選token，目標模型一次前向推論驗證所有候選，平均每次目標模型推論可換取約3個被接受的token——因為token生成在低batch size下是**記憶體頻寬瓶頸**（GPU每生成一個token都要重新從VRAM讀取權重），這正好對應雷達#2提到SPARK硬體273GB/s頻寬瓶頸的問題。
+- 實測效果：LLaMA-3.3-70B上達到最高4.79倍加速，且不損失品質。
+
+Sources: [Eagle-3 Speculative Decoding on GPU Cloud: 3-4x Faster LLM Inference (2026)](https://www.spheron.network/blog/eagle-3-speculative-decoding-gpu-cloud/) · [Fly Eagle(3) fly: Faster inference with vLLM & speculative decoding (Red Hat Developer)](https://developers.redhat.com/articles/2025/07/01/fly-eagle3-fly-faster-inference-vllm-speculative-decoding)
+
+### 🟢 建議評估
+這是直接針對雷達#2發現的「SPARK硬體273GB/s頻寬瓶頸」的**具體緩解技術**，不是選另一個模型，而是同一個模型跑得更快。如果SuperBrain未來用vLLM或SGLang部署本地模型（雷達#9已建議評估vLLM+Ray），**EAGLE-3推測解碼應該一併納入評估**，因為它已是這些推理引擎的內建選項，理論上不需要額外開發成本就能拿到最高4.79倍的加速——特別值得注意的是這個技術專門解決「頻寬瓶頸下的低batch size推理」，剛好是SPARK硬體的痛點場景。
+
+---
+
+## 雷達條目 #21：AERIS 對照延伸 — 揚聲器非線性失真AI預測模型
+
+**檢索日期**：2026-09-26　**對照對象**：延伸雷達#4，聚焦揚聲器設計特有的技術缺口。
+
+### 外部現況
+- 學術界已有多篇2025-2026論文用深度學習預測揚聲器非線性失真（THD/IMD），例如針對參數陣列揚聲器(parametric array loudspeakers)的深度學習非線性失真辨識與補償研究，估測THD/IMD與實測值平均誤差僅1.08%與0.34%。
+- 傳統Thiele-Small模型是線性低頻近似；學術界正在發展「有限維、功率平衡、可保證被動性」的非線性port-Hamiltonian系統來擴充Thiele-Small模型處理非線性現象（音圈位置/電壓的非線性電感、順性、動態力因子）。
+- COMSOL官方部落格本身也有「如何對揚聲器驅動器做非線性失真分析」的教學，顯示商業CAE工具本身已內建這類分析能力（非AI專屬，是既有數值方法）。
+
+Sources: [Deep Learning-Based Approach for Identification and Compensation of Nonlinear Distortions in Parametric Array Loudspeakers](https://arxiv.org/pdf/2412.01092) · [Passive modelling of the electrodynamic loudspeaker: from the Thiele–Small model to nonlinear port-Hamiltonian systems](https://acta-acustica.edpsciences.org/component/article?access=doi&doi=10.1051%2Faacus%2F2019001) · [How to Perform a Nonlinear Distortion Analysis of a Loudspeaker Driver (COMSOL Blog)](https://www.comsol.com/blogs/how-to-perform-a-nonlinear-distortion-analysis-of-a-loudspeaker-driver)
+
+### 🟡 持續觀察
+這批文獻目前仍是**學術論文/碩士論文層級**（例如Lund University 2025年的碩論"Modeling Loudspeaker Nonlinearities with Deep Learning"），還沒有找到打包成可直接使用的開源工具或商業套件。AERIS若已有自己的非線性失真分析流程（本輪未取得AERIS實際用哪套模擬工具，見[25](25_TECH_RADAR_CANDIDATE_LONGLIST.md)候選#36-38的篩除說明），**這批AI預測方法值得列入觀察名單**，但目前還停留在「論文證明可行」而非「有現成工具可以馬上用」的階段，不建議現在投入時間自建。
+
+---
+
+## 雷達條目 #22：MEGIS 對照 — AI驅動GD&T自動公差標註工具
+
+**檢索日期**：2026-09-26　**對照對象**：延伸雷達#12（DFM/公差堆疊分析）。
+
+### 外部現況
+- 2026年AI GD&T工具已從「檢查有沒有標公差」進化到「理解公差方案是否真的表達了設計意圖」。
+- **CoLab AutoReview**：內建GD&T完整性/一致性檢查，偵測缺失基準(datum)、標示超出公司標準的公差、辨識可能造成檢驗或製造歧義的標註違規；更進階的AI agent能讀取原生幾何、跨視圖比對標註、解讀工程意圖，抓出靜態規則抓不到的問題。
+- **公差資料擷取**：頂尖AI平台已能直接從掃描件/PDF自動擷取尺寸與公差，透過API把CAD/PDF圖面裡的公差、尺寸、GD&T框架自動化擷取出來。
+- 發展方向：AI工具正在權衡公差鬆緊與成本/品質/可製造性，並用自然語言處理把工程需求翻譯成正確的GD&T標註，朝向符合ASME Y14.5/ISO GPS標準的智慧化系統前進。
+
+Sources: [AI Tools for CAD Standards Enforcement: Your Complete Guide to Automated Compliance (2026)](https://www.colabsoftware.com/guides/ai-tools-for-cad-standards-enforcement-your-complete-guide-to-automated-compliance-2026) · [The Best AI Tools for Better GD&T (CoLab)](https://www.colabsoftware.com/post/the-best-ai-tools-for-better-gd-t) · [Best AI Solution for GD&T in 2026 (Energent.ai)](https://www.energent.ai/use-cases/en/compare/ai-solution-for-gdt)
+
+### 🟢 建議評估
+MEGIS的Gate制（尤其G4的公差堆疊/組裝關係審查）目前是人工審查性質。**CoLab AutoReview這類工具示範了「AI讀原生幾何＋跨視圖比對＋抓設計意圖不一致」的具體做法**，可以評估是否能加裝在G4審查階段之前做「第一輪自動掃描」，把明顯的GD&T完整性問題（缺基準、標註不一致）在人工Gate審查前先攔掉，跟雷達#12既有建議（in-CAD即時DFM檢查）互補，一個是建模階段即時提示，一個是審查前的自動掃描層。
+
+---
+
+## 雷達條目 #23：MEGIS/AERIS 對照 — 拓樸優化開源工具 + FEA/CAE Surrogate Model AI加速
+
+**檢索日期**：2026-09-26　**對照對象**：跨MEGIS（拓樸優化）與AERIS/MEGIS共通（模擬加速）。
+
+### 外部現況
+- **開源拓樸優化工具2026年趨勢**：`topoptlab`（2026-02發布，模組化benchmarking框架）、`SOPTX`（2026-05，基於FEALPy，解耦分析與優化，支援NumPy/PyTorch/JAX多後端）、`STORX`（MATLAB物件導向框架）、`OpenPicso`（模組化GUI+CLI+Python函式庫）。趨勢是走向「模組化、多後端、更好的軟體工程實踐」而非單體工具。
+- **FEA Surrogate Model**：AI加速有限元分析已從學術界走向工業級IP——Bosch、Pratt & Whitney、X Development都已申請專利，明確用來在設計優化迴圈中「取代或消除FEM solver呼叫」。實例：Abaqus熱傳模擬（22MnB5熱沖壓製程）訓練出的深度學習surrogate模型，溫度場預測平均誤差僅約3°C，換來約10^4倍的速度提升。
+
+Sources: [topoptlab: An Open and Modular Framework for Benchmarking and Research in Topology Optimization](https://joss.theoj.org/papers/10.21105/joss.09105) · [SOPTX: A Modular and Extensible Framework for Topology Optimization](https://www.global-sci.com/cicp/article/view/24166) · [AI-accelerated FEA technology landscape 2026 (Patsnap)](https://www.patsnap.com/resources/blog/articles/ai-accelerated-fea-technology-landscape-2026/) · [AI in engineering 2026: How simulation, digital twins and surrogate models are redefining CAE](https://www.tgm.solutions/en/top-technologies-in-engineering/ai-in-engineering-2026-how-simulation-digital-twins-surrogate-models-are-redefining-cae/)
+
+### 🟢 建議評估
+如果MEGIS的Gate制流程中有需要跑拓樸優化或重複性高的FEA模擬（例如反覆迭代的結構驗證），**這兩個技術方向都值得評估**：拓樸優化開源工具（尤其`SOPTX`的多後端Python生態，跟MEGIS已用的CadQuery/Python工作流相容性可能較高）可以評估取代/補充商業工具；FEA surrogate model則是「先花時間訓練一次，之後大量迭代設計時省下重跑FEM的成本」的策略，適合MEGIS/AERIS若有需要跑大量相似結構的模擬迭代場景。**這輪只找到工業案例存在，沒有直接證據顯示MEGIS/AERIS目前的模擬工作量是否大到值得投入建置surrogate model**，屬於「值得評估，但先確認自己的模擬迭代量」的建議。
+
+---
+
+## 雷達條目 #24：MEGIS 對照 — CadQuery AI生態系（Text-to-CAD Copilot、MCP整合）
+
+**檢索日期**：2026-09-26　**對照對象**：MEGIS已確認使用CadQuery（見[Audit/REPOSITORY_INVENTORY.md](../Audit/REPOSITORY_INVENTORY.md)、[Audit/GAP_ANALYSIS.md](../Audit/GAP_ANALYSIS.md)）。
+
+### 外部現況
+- CadQuery本身是成熟的開源Python參數化CAD腳本框架（基於OCCT），生態系正在快速長出AI輔助工具：**「CAD/CAE Copilot」**——一個AI原生的CAD/CAE/CAX工作台，主打給AI agent用，具備Text-to-CAD、text-to-CAE、真實build123d/OpenCASCADE幾何、可編輯參數、穩定拓撲指標(stable topology pointers)、確定性critique，並且**暴露MCP server工具**。
+- 另有「Text23D Mechanical CAD Explorer」——從對話式輸入生成/精煉3D參數化CAD模型，一個自我校正的text-to-CAD agent能把英文描述轉成經驗證的CadQuery 3D模型。
+- 也已出現公開的「CadQuery Skill for Claude Code」（skillselion.com），顯示CadQuery + Claude Code agent工作流已經有現成的整合範例可參考。
+
+Sources: [CadQuery – a Python module for building parametric 3D CAD models](https://blog.adafruit.com/2026/04/21/cadquery-a-python-module-for-building-parametric-3d-cad-models/) · [Cadquery Skill for Claude Code (Skillselion)](https://skillselion.com/skills/fandhe-ai/agent-reference-skills/cadquery) · [GitHub - cadquery/cadquery](https://github.com/cadquery/cadquery)
+
+### 🟢 建議評估（直接可行動）
+這是本輪對MEGIS最直接可行動的發現之一：MEGIS已經用CadQuery，而**CadQuery生態系本身已經長出「暴露MCP server工具」的AI copilot**——這剛好跟本SuperSystem目前的AIECP/AI agent技術棧（MCP-based）天然相容。如果MEGIS未來想讓G4模組的幾何草案生成階段（雷達#3已提到的痛點）加速，**先評估CadQuery生態系自己的AI copilot工具，會比評估Zoo.dev/AdamCAD這類獨立商業Text-to-CAD產品（雷達#3既有建議）更貼合MEGIS現有的技術棧**，整合成本可能更低。這點更新了雷達#3的建議方向：不是「要不要導入Text-to-CAD」，而是「優先看CadQuery自己生態系裡的AI工具」。
+
+---
+
+## 雷達條目 #25：跨專案協定對照 — MCP 2026-07-28 重大改版
+
+**檢索日期**：2026-09-26　**對照對象**：本session本身即透過MCP呼叫工具，AIECP的Provider整合架構直接相關。
+
+### 外部現況
+- **2026-07-28版MCP規格**是官方稱「自發布以來最大幅度的修訂」：協定核心變成**無狀態(stateless)**，移除session概念與初始化交握，新增Multi Round-Trip Requests、header-based routing、可快取的list結果、授權機制強化，並引入正式的擴充框架(extensions framework)。
+- 原本核心功能的Tasks功能被移出核心協定、改成一個獨立extension。
+- 這次改版被The Register形容為「MCP準備跟它的有狀態過去決裂」。
+
+Sources: [The 2026-07-28 Specification (Model Context Protocol Blog)](https://blog.modelcontextprotocol.io/posts/2026-07-28/) · [Specification - Model Context Protocol 2026-07-28](https://modelcontextprotocol.io/specification/2026-07-28) · [The biggest MCP spec update ships July 28 (WorkOS)](https://workos.com/blog/mcp-2026-spec-agent-authentication) · [Model Context Protocol prepares to break with its stateful past (The Register)](https://www.theregister.com/devops/2026/07/23/model-context-protocol-prepares-to-break-with-its-stateful-past/5276722)
+
+### 🟢 建議評估
+AIECP若未來要正式把「MCP-compatible Provider」納入自己的Provider路由架構（呼應[Blueprint/12](12_PROVIDER_AND_MODEL_ROUTING.md)），**必須注意這不是舊版MCP的小補丁，而是協定核心語意改變**（有狀態→無狀態、移除初始化交握）。如果AIECP或SuperBrain現有任何MCP整合（或未來規劃）是依照舊版spec假設寫的，這次改版是**必須重新確認相容性的斷點升級**，不是可以忽略的版本號迭代。這也回應了雷達#9/#13裡「暴露OpenAI/Claude相容API」這個方向——MCP作為協定層的地位在2026年更加確立，值得AIECP把它當成跨系統介面的候選標準之一。
+
+---
+
+## 雷達條目 #26：跨專案協定對照 — A2A協定(Agent2Agent) + AGENTS.md標準化
+
+**檢索日期**：2026-09-26　**對照對象**：直接對應[17](17_RISK_GAP_CONFLICT_REGISTER.md)的 G-01/G-02/G-03（AIECP↔AERIS/MEGIS/SuperBrain介面完全缺失）。
+
+### 外部現況
+- **A2A（Agent2Agent Protocol）**：Google於2025-04發起、現已移交Linux Foundation治理的開放協定，讓不同框架/廠商/領域的自治AI agent能互相發現能力、委派任務、協調複雜工作流，走HTTP/JSON-RPC/Server-Sent Events等既有web標準，並提供安全/稽核/合規防護。定位是與MCP互補：MCP給agent工具與上下文，A2A給agent與agent之間的溝通協定。
+- **AGENTS.md**：已被超過60,000個開源專案使用，是Codex/Cursor/Copilot/Gemini CLI/Aider/Windsurf/Zed/Factory/Jules等20多個工具原生支援讀取的格式，現由Linux Foundation旗下的Agentic AI Foundation管理。格式刻意極簡（無強制欄位、標準Markdown），2026年的定位是「業界事實標準的agent context檔案慣例」而非正式規格。
+
+Sources: [Agent2Agent Protocol (Google Developers Blog)](https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/) · [Linux Foundation Launches the Agent2Agent Protocol Project](https://www.linuxfoundation.org/press/linux-foundation-launches-the-agent2agent-protocol-project-to-enable-secure-intelligent-communication-between-ai-agents) · [A Comparative Study of MCP and A2A for Inter-Agent Coordination in LLM-Based Systems](https://arxiv.org/pdf/2607.23884) · [What Is AGENTS.md? How to Write One in 2026 (Tembo)](https://www.tembo.io/blog/agents-md) · [AGENTS.md Complete Guide 2026: Spec, Tools, Examples](https://codersera.com/blog/agents-md-complete-guide-2026/)
+
+### 🟢 建議評估
+G-01/G-02/G-03這幾個「AIECP↔其他系統介面完全缺失」的高優先缺口，**目前是各專案自己定義任務schema（例如AIECP的`aecp.task/v1`），沒有共通協定**。A2A協定剛好是為了解決「不同廠商/框架的自治agent怎麼互相發現能力、委派任務」這個確切問題而生，且已有Linux Foundation治理背書，值得AIECP在設計跨系統介面時列為候選標準——**不是要求AIECP現在就採用**，而是提醒：與其自創一套handshake格式，先看A2A是否已經解決了同樣的問題。另外，七個repo已經不約而同都在用AGENTS.md這個事實標準（本repo自己的CLAUDE.md也是同類角色），這件事本身值得記錄：**跨專案至少已經有一個非正式但高度一致的慣例存在**，可以作為未來設計正式跨專案協定時的參考起點。
+
+---
+
+## 雷達條目 #27：AIECP 對照 — 供應鏈證據延伸：OpenSSF Scorecard + SBOM
+
+**檢索日期**：2026-09-26　**對照對象**：延伸雷達#5/#16的SLSA對齊建議。
+
+### 外部現況
+- 2026年供應鏈安全工具鏈標準組合：**OpenSSF Scorecard**（自動化評分repo的安全實踐）、**SBOM**（CycloneDX或SPDX格式的軟體物料清單）、**in-toto attestations**，三者已經是現代供應鏈安全工具（Scorecard、GitHub Dependency Graph、Chainloop、in-toto）預期互相搭配的組合。
+- 實務作法：用`Syft`（Anchore開源工具）從容器映像/檔案系統產生CycloneDX/SPDX格式SBOM，用`Parlay`（Apache授權CLI）為SBOM加註授權/漏洞/維護者/scorecard資料，OpenSSF Scorecard的評分結果可以記錄成CycloneDX SBOM裡元件的屬性。
+
+Sources: [Software supply chain security tools guide (2026, Minimus)](https://www.minimus.io/post/software-supply-chain-security-tools) · [SPDX CycloneDX standards (OpenSSF)](https://openssf.org/tag/spdx-cyclonedx-standards/) · [CycloneDX Tool Center](https://cyclonedx.org/tool-center/)
+
+### 🟢 建議評估
+延伸雷達#16的建議路徑（先上GitHub Artifact Attestations，要衝Level 3用`slsa-github-generator`）：**AIECP現有的SHA256SUMS + RELEASE_PROVENANCE.json可以再補一層SBOM**（用Syft自動產生CycloneDX格式），並搭配OpenSSF Scorecard做repo層級的自動化安全評分——這兩者都是「幾行CI設定就能加上」的低成本項目，跟雷達#16的Artifact Attestations建議是同一個「先上免費/低成本官方工具」的邏輯，可以一起排進同一輪落地評估。
+
+---
+
+## 雷達條目 #28：AIECP Harness 對照 — LangGraph/CrewAI/AutoGen + Temporal.io
+
+**檢索日期**：2026-09-26　**對照對象**：AIECP自己的Mission/Task/Queue/Scheduler Harness（見[08](08_AIECP_ORCHESTRATION_ARCHITECTURE.md)）。
+
+### 外部現況
+- **LangGraph**：把agent工作流建模成有型別狀態的有向圖，適合需要最大控制權、合規、正式生產級狀態管理的企業場景。
+- **CrewAI**：把多agent協作建模成「團隊(crew)」角色扮演模式，2026年v1.10.1起支援串流、A2A協定相容、MCP整合，v1.14起完全移除LangChain依賴、變成獨立框架。
+- **AutoGen**（微軟）：對話式agent團隊，AG2引入GroupChat作為主要協調模式。
+- **Temporal.io**：開源工作流編排引擎，2026年2月獲3億美元融資明確用於建置AI agent基礎設施，2026年3月與OpenAI Agents SDK正式整合(GA)，提供**Durable Execution**（自動失敗復原、內建重試、狀態持久化）與**Time-Travel Debugging**（完整事件歷史回放）。業界認為工作流引擎是「生產級agent的必要基礎設施」已成共識。
+
+Sources: [LangGraph vs CrewAI vs AutoGen: Which AI Agent Framework Should Your Enterprise Use in 2026?](https://pub.towardsai.net/langgraph-vs-crewai-vs-autogen-which-ai-agent-framework-should-your-enterprise-use-in-2026-3a9ebb407b09) · [CrewAI vs LangGraph vs AutoGen vs OpenAgents — Best AI Agent Framework (2026)](https://openagents.org/blog/posts/2026-02-23-open-source-ai-agent-frameworks-compared) · [Agentic AI Workflows: Why Orchestration with Temporal is Key](https://intuitionlabs.ai/articles/agentic-ai-temporal-orchestration) · [From agent zoo to agent orchestra: The benefits of Temporal as your enterprise agentic control plane](https://temporal.io/blog/from-agent-zoo-to-agent-orchestra-temporal-agentic-control-plane)
+
+### 🟡 持續觀察
+AIECP現有的Mission→Task→Queue→Scheduler架構方向跟業界的workflow engine邏輯一致，**不需要現在就換架構**。但如果未來AIECP的Queue/Scheduler遇到「失敗重試、跨步驟狀態持久化、長時間執行任務的可觀測性」這類問題時，**Temporal.io的Durable Execution模式值得評估**——它解決的正是「agent任務執行到一半失敗要怎麼恢復」這個問題，跟[17](17_RISK_GAP_CONFLICT_REGISTER.md)的R-01（無跨機故障轉移設計）也有間接關聯。三個multi-agent框架（LangGraph/CrewAI/AutoGen）則更適合「agent之間怎麼分工協作」這個問題，跟AIECP目前「Codex Builder + Claude Reviewer」的固定角色分工模式不完全對應，屬於觀察項目而非急迫建議。
+
+---
+
+## 雷達條目 #29：AIECP Builder 對照 — GitHub Copilot Coding Agent vs Devin
+
+**檢索日期**：2026-09-26　**對照對象**：AIECP的Codex OFFICIAL/PEGA Builder角色。
+
+### 外部現況
+- **Devin**（Cognition Labs）：完全自主，從任務描述獨立完成規劃、架構、寫程式、測試、除錯到部署的整個流程，在隔離虛擬機容器中異步執行；適合「可以完全委派」的任務，但**運作時不會每步都要求核准**。
+- **GitHub Copilot Coding Agent**：異步在沙盒中工作，指派GitHub issue後開draft PR給人類審查，2026年評測中在「即時完成、IDE整合、社群生態」這些日常開發指標上領先（8.79/10 vs Devin 7.64/10），但Devin在「自主執行、大型context window、企業功能」上仍有優勢。
+- 定價：GitHub Copilot Pro $10/mo起；Devin Free/Pro $20/mo/Max $200/mo。
+
+Sources: [Devin vs GitHub Copilot Workspace in 2026](https://www.mgsoftware.nl/en/vergelijking/devin-vs-github-copilot-workspace) · [Devin 2.0 vs. GitHub Copilot Agent Mode: 2026 Comparison](https://weavai.app/blog/en/2026/05/19/devin-2-0-vs-github-copilot-agent-mode-2026-comparison/) · [Devin vs Claude Code vs Copilot Workspace (2026)](https://pristren.com/blog/devin-vs-claude-code-vs-github-copilot-workspace/)
+
+### 🟡 持續觀察
+AIECP現有原則「Neither OFFICIAL nor PEGA may self-declare engineering completion」（[00](00_MASTER_BLUEPRINT.md)問題24）比Devin的「完全自主、不逐步要求核准」模式更保守，這**符合AIECP自己的治理哲學（Builder不能自我核准），不建議往Devin的完全自主模式靠攏**。GitHub Copilot Coding Agent的「異步沙盒＋開draft PR給人審查」模式其實跟AIECP現有Codex worktree隔離＋人工merge的流程更接近，可以作為「業界怎麼包裝類似流程給更廣泛使用者用」的介面設計參考，但不構成需要採用外部工具的理由——這條主要是確認AIECP自己的既有方向沒有走偏。
+
+---
+
+## 雷達條目 #30：AIECP/#11 沙盒對照 — Windows Execution Containers(MXC) SDK
+
+**檢索日期**：2026-09-26　**對照對象**：直接回應雷達#11「Windows ARM64業界資料稀少」這個明確缺口。
+
+### 外部現況（重要：官方直接回應了這個技術缺口）
+- 微軟在**2026-06-02（與RTX Spark Dev Box同一場Build 2026發表會）** 公開了 **Microsoft Execution Containers (MXC) SDK**的早期預覽——一個跨平台、政策驅動(policy-driven)的agent執行層，涵蓋Windows與WSL，開發者定義要限制什麼，Windows在執行期一致地強制套用這些限制。
+- MXC提供一個跨隔離原語的抽象層，讓開發者不用自己管理底層隔離細節；同一套政策模型與SDK可以對應到不同的隔離結構（依工作負載風險程度而定，例如coding agent跟企業資料處理agent不需要一樣的防護等級）。
+- 對照：Codex在Linux上用Bubblewrap做namespace隔離、macOS上用Seatbelt(`sandbox-exec`)、Windows上用受限token行程(restricted-token processes)——這正是既有雷達#11提到「Windows沙盒隔離業界資料稀少」的現況，而MXC是微軟自己在同一時間點推出的官方解法。
+
+Sources: [Windows platform security for AI agents (Windows Developer Blog)](https://blogs.windows.com/windowsdeveloper/2026/06/02/windows-platform-security-for-ai-agents/) · [Comparing Sandboxing Approaches for AI Agents (Docker Blog)](https://www.docker.com/blog/comparing-sandboxing-approaches-ai-agents/) · [Harness Engineering: Anatomy, Architecture, and Evolution of Coding Agents](https://arxiv.org/pdf/2609.00006)
+
+### 🟢 建議評估（升級為本輪高優先，直接回應既有缺口）
+雷達#11指出「Windows/ARM64沙盒隔離業界資料稀少，AIECP可能要自己試出來」，**這輪找到微軟官方在同一時間點（2026-06-02）針對這個確切問題推出的MXC SDK**——這改變了雷達#11的結論：不是「業界沒有答案」，而是「答案剛剛在2026年中期才出現，是早期預覽階段」。AIECP的Codex OFFICIAL/PEGA若要在Windows/ARM64（考慮到SPARK-AGAVE用Grace ARM CPU，見雷達#31）上做沙盒隔離驗證，**MXC SDK應該是第一個要評估的官方選項**，而不是繼續假設「要自己組合底層隔離原語」。由於是早期預覽，需注意穩定性與功能完整度可能還不到生產級。
+
+---
+
+## 雷達條目 #31：硬體/CI 對照 — Windows ARM64工具鏈成熟度：WSL3 + GitHub Actions ARM64 Runner
+
+**檢索日期**：2026-09-26　**對照對象**：延伸雷達#7（確認SPARK硬體用ARM CPU）與雷達#11（Windows ARM64缺口）。
+
+### 外部現況（關鍵確認：SPARK-AGAVE機器是ARM64）
+- 雷達#7已確認RTX Spark晶片＝20核**Grace(Arm) CPU** + Blackwell RTX GPU。這代表**SPARK-AGAVE-3/4實際上是ARM64架構的Windows機器**，不是x86——這個推論此前的雷達條目沒有明確點出，本輪補上。
+- **WSL 3**：Build 2026（2026-06-02）預覽，用更輕量的準虛擬化(paravirtualized)機器取代WSL2沿用至今的Hyper-V VM後端，GPU/NPU存取改走DirectML 2.0。此前Snapdragon X Elite這類ARM機器上Ollama在WSL2裡因缺乏GPU/NPU後端只能CPU運算，**WSL 3的新架構理論上能消除這個障礙**（但需支援的硬體）。微軟明確表示Build 2026的訊息是「開發者應該把Arm64當成Windows的一級目標」。
+- **GitHub Actions ARM64 Runner**：2026-01-29起，Linux/Windows arm64標準GitHub-hosted runner已支援私有repo（此前只有公開repo）；Windows ARM硬體的**self-hosted runner支援自2022年就有，但2026年現況仍是public preview/beta狀態**，尚未GA。
+
+Sources: [Build 2026: Native Windows, Arm, Local AI & Agent-First Hardware](https://windowsforum.com/news/build-2026-native-windows-arm-local-ai-and-agent-first-hardware-explained.423790/) · [WSL 3 at Build 2026: Near-Native GPU and NPU Passthrough Brings Local AI to Windows](https://www.techtimes.com/articles/317598/20260602/wsl-3-build-2026-near-native-gpu-npu-passthrough-brings-local-ai-windows.htm) · [arm64 standard runners are now available in private repositories (GitHub Changelog)](https://github.blog/changelog/2026-01-29-arm64-standard-runners-are-now-available-in-private-repositories/) · [Actions: Self-hosted runners now support Windows ARM64 (GitHub roadmap Issue #616)](https://github.com/github/roadmap/issues/616)
+
+### 🟢 建議評估（更新雷達#7/#11的解讀）
+這是本輪對SuperBrain/AIECP最重要的一條交叉確認：**SPARK-AGAVE-3/4是ARM64機器，這件事本身此前的雷達條目沒有講清楚**。這意味著：①AIECP若要在SPARK-AGAVE上驗證Codex OFFICIAL/PEGA worktree隔離（雷達#11卡住的ENVIRONMENT gate），驗證環境必須是**Windows on ARM64**，不是一般假設的x86 Windows；②WSL 3才是SPARK-AGAVE上跑本地AI工作負載的正確目標（不是WSL2），但WSL 3截至本輪檢索仍是Build 2026剛預覽的新東西，穩定性未知；③GitHub Actions的self-hosted ARM64 runner支援仍是preview/beta，**如果AIECP的CI要在SPARK-AGAVE本機跑self-hosted runner，這條路線目前業界本身都還不算成熟**，這解釋了雷達#11「業界資料稀少」的部分原因——不是沒人做，是這條路線2026年整體都還在早期階段。建議：等SPARK-AGAVE 10/7上市、Stephen實機到手後，第一個要做的相容性測試就是「WSL 3能否在RTX Spark上正常跑GPU/NPU passthrough」，這比自己假設WSL2堪用更保險。
+
+---
+
+## 雷達條目 #32：AIECP 對照延伸 — 憑證管理：Infisical Agent Vault + SPIFFE/SPIRE
+
+**檢索日期**：2026-09-26　**對照對象**：延伸雷達#13的「推理引擎不該直接持有原始憑證」建議。
+
+### 外部現況
+- **Infisical Agent Vault**：開源、專門為AI agent設計的credential proxy——重點是「光有secret manager不夠，因為任何能通過驗證的東西都能拿到密鑰本身，要把選定的secret store放在一個credential proxy後面，讓agent永遠拿不到密鑰本身」。2026年業界定位：Vault適合100人以上工程團隊/受監管產業/複雜多雲環境；Doppler上手最快；Infisical是開源自主可控選項。
+- **SPIFFE/SPIRE**：SPIFFE是規格，SPIRE是開源實作，定義「這個workload是什麼」的密碼學可驗證身分標準，是AI agent身分的合適基礎——agent是會呼叫其他agent/工具/下游模型供應商的非人類身分。2026年生產架構：每個agent容器啟動時透過SPIRE的attestation API取得SVID(SPIFFE ID)憑證，每小時輪替。**已知限制**：SPIRE要求每個workload要先在SPIRE server預先註冊，對於動態產生的sub-agent這件事需要額外自動化管線。
+
+Sources: [Secrets for AI Agents: Vault vs Doppler vs Infisical + ESO (2026)](https://callsphere.ai/blog/vw6h-secrets-vault-doppler-infisical-eso-ai-agents-2026) · [SPIFFE: Securing the identity of agentic AI and non-human actors (HashiCorp)](https://www.hashicorp.com/en/blog/spiffe-securing-the-identity-of-agentic-ai-and-non-human-actors) · [SPIFFE/SPIRE for AI Agents: Cryptographic Workload Identity Instead of Long-Lived Service Account Tokens](https://bex.co/blog/2026/07/10/spiffe-spire-ai-agent-workload-identity)
+
+### 🟢 建議評估
+雷達#13已指出AIECP的Codex OFFICIAL/PEGA若目前直接持有GitHub token/API key本身（而非透過短效broker簽發），這是可以對齊業界最佳實踐的具體改善點。這輪找到兩個**具體可以評估的開源落地選項**：規模較小、單機/單人使用場景（目前AIECP現況）更適合先評估**Infisical Agent Vault**（開源、專為AI agent credential proxy設計、上手成本較低）；如果未來SuperBrain三機＋多個agent worker的場景變複雜到需要「每個agent有自己密碼學可驗證身分」，**SPIFFE/SPIRE**是更完整但也更重的方案（需要預先註冊機制，不適合現階段一人維運的AIECP）。建議順序：先評估Infisical Agent Vault這種輕量選項，SPIFFE/SPIRE留到系統規模明顯變大時再考慮。
+
+---
+
+## 雷達條目 #33：JN1-UOA 落地選型 — Langfuse vs Arize Phoenix Self-Host詳細比較
+
+**檢索日期**：2026-09-26　**對照對象**：延伸雷達#6的「下一步」建議（具體評估Langfuse vs Phoenix落地成本）。
+
+### 外部現況
+- **架構**：Phoenix是單一process、OpenTelemetry原生、Elastic License 2.0（非OSI核准的source-available授權），可以單一Docker容器直接跑（預設SQLite，正式環境用Postgres 14+）；Langfuse拆分成交易資料(Postgres)、分析(ClickHouse)、queue/cache(Redis)、事件內容(S3相容儲存)四個服務，需要web+worker容器分開跑。
+- **授權**：Langfuse核心程式碼MIT授權；Arize Phoenix是ELv2（source-available但非OSI核准）。
+- **強項分工**：Langfuse領先於tracing規模、多agent可觀測性、有版本控管的prompt管理；Phoenix領先於評測深度、RAG專用tracing、一行程式碼自動裝配(auto-instrumentation)。
+- **2026年新發展**：ClickHouse於2026年1月收購Langfuse，OLAP引擎與出品公司現在是同一家。
+
+Sources: [Arize Phoenix vs Langfuse (2026): Self-Host, OTel, and Event Caps Settled](https://www.morphllm.com/comparisons/arize-phoenix-vs-langfuse) · [Langfuse vs. Arize AX and Arize Phoenix (Langfuse)](https://langfuse.com/resources/engineering/best-phoenix-arize-alternatives) · [Langfuse vs Arize Phoenix: License, Self-Hosting (2026)](https://www.agenticwire.news/article/langfuse-vs-arize-phoenix)
+
+### 🟢 建議評估（回答雷達#6的懸而未決問題）
+對JN1-UOA這種**一人維運、需要監管七個異質系統**的場景，**Phoenix的「單一process、MIT-like但實際是ELv2授權、SQLite可跑」部署模式比Langfuse的四服務架構更輕量、維運成本更低**——這點對Stephen這種資源受限的操作特別重要。但如果JN1-UOA未來真的需要「多agent可觀測性」與「跨系統prompt版本管理」（考慮到要監管AIECP/AERIS/MEGIS/Voice Agent/SuperBrain這麼多子系統），**Langfuse的MIT授權與更完整的LLM engineering platform功能**可能在長期更合適。建議：先用Phoenix做最小可行的可觀測性驗證(PoC)，因為部署成本低；如果之後發現需要更完整的跨系統prompt/tracing管理，再評估遷移到Langfuse。
+
+---
+
+## 雷達條目 #34：成本優化 — Claude Prompt Caching 2026-09-01 降價75%
+
+**檢索日期**：2026-09-26　**觸發原因**：直接對應本repo建立初衷——Stephen每週約$20額度的預算限制（見[README.md](../README.md)「建立初衷」段落）。
+
+### 外部現況（直接影響Stephen預算的具體變化）
+- Anthropic prompt caching定價機制：5分鐘cache write為base價格1.25倍、1小時cache write為2倍，**cache read只要base價格的0.1倍**。
+- **2026-09-01起，Claude prompt caching定價再降75%**：cache read降到每百萬token $0.25。實作得當的prompt caching可以讓輸入token成本降低60-90%，尤其是長system prompt、大型RAG上下文、或session內累積的對話歷史這類重複性高的場景，能省下70-90%的輸入端費用。
+- 經濟效益前提：要有足夠多次的cache read才能攤銷cache write的溢價成本——換句話說，**單次性、不重複的prompt不會從快取受益**。
+
+Sources: [Prompt Caching for Claude: Cut Your API Bill 60% in Production](https://www.aimagicx.com/blog/prompt-caching-claude-api-cost-optimization-2026) · [Prompt caching - Claude Platform Docs](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) · [Claude Prompt Caching Pricing: 75% Cheaper Cache Reads (2026)](https://aimoneylabjuliangoldie.com/blog/claude-prompt-caching-pricing/) · [Prompt Caching in 2026: Cut Azure OpenAI and Claude Costs](https://technspire.com/en/blog/prompt-caching-2026-real-cost-wins)
+
+### 🟢 建議評估（最直接對應本repo存在理由的一條）
+這條直接回答本repo「建立初衷」段落點出的痛點：Stephen每週~$20額度追不上全球AI進展。**2026-09-01這次75%降價（cache read降到$0.25/M token）意味著：任何重複性高的呼叫模式（例如AIECP的Codex/Claude Reviewer反覆讀同一份長CLAUDE.md/BLUEPRINT.md context、或本SuperSystem repo自己每次雷達更新都要重新讀七個repo的長文件）現在用prompt caching的成本效益比降價前更高**。具體建議：檢查AIECP、本SuperSystem repo自己的Claude Code使用模式，是否有「同一份長system prompt/CLAUDE.md/BLUEPRINT.md反覆被當作輸入」的場景——如果有，**確保這些場景有命中cache（而不是每次都當成新輸入計費）**，可能是目前所有雷達建議裡「不花時間開發、純粹調整使用方式」就能拿到立即效益最大的一條。
+
+---
+
+## 雷達條目 #35：成本優化 / AIECP Provider路由 — AI Gateway/Router落地選項：LiteLLM + RouteLLM
+
+**檢索日期**：2026-09-26　**對照對象**：延伸雷達#34的成本主題，並對應AIECP/SuperBrain的Provider路由設計（[12](12_PROVIDER_AND_MODEL_ROUTING.md)）。
+
+### 外部現況
+- **LiteLLM**：開源LLM閘道，Python SDK將多供應商（Anthropic/OpenAI/Cohere等）統一成OpenAI相容介面，自架為預設模式；生產架構是無狀態LiteLLM Proxy + 雙層快取(記憶體L1、Redis L2) + 依健康度/延遲/剩餘rate-limit選供應商的router，並支援語意快取(semantic cache)進一步降低重複請求成本。
+- **RouteLLM**：ICLR 2025研究成果，用訓練過的分類器判斷簡單查詢是否可以交給輕量模型處理。實測在MT-Bench上比商業路由產品(Martian、Unify AI)便宜40%以上、同等效果；標準benchmark上可省下超過85%花費同時保留95%頂級模型的回應品質。
+
+Sources: [Cut AI API Costs 14x With a LiteLLM Router (2026)](https://tech-insider.org/litellm-multi-model-ai-router-2026/) · [LLM Gateway in Production: Multi-Provider Routing + Fallbacks with LiteLLM](https://devopsboys.com/blog/llm-gateway-litellm-multi-provider-routing-production-2026) · [LLM Router 2026: RouteLLM Benchmarks, Cut Costs 30-85%](https://klymentiev.com/blog/llm-router)
+
+### 🟢 建議評估
+AIECP目前的Provider路由（[12](12_PROVIDER_AND_MODEL_ROUTING.md)）與SuperBrain的golden-set分流設計，都是在解決「什麼任務該用哪個供應商/模型」這個問題，但**目前沒有看到自架的統一閘道層**。LiteLLM可以評估作為「AIECP呼叫Claude/GPT/Gemini各家API的統一入口」，把快取、路由、重試/fallback、預算控管都收斂到一層；RouteLLM則是更進一步——**用分類器自動判斷簡單任務降級到便宜模型**，這對Stephen每週$20預算的場景特別有意義：如果AIECP的Task有明確難度分級（例如inspect-workspace這類簡單任務vs需要深度推理的任務），RouteLLM式的路由可以把「不需要用最貴模型做的事」自動導去便宜路徑。建議與雷達#34一起評估，因為兩者都是「不改架構本質、純粹省錢」的低風險項目。
+
+---
+
+## 雷達條目 #36：G-04 驗證方法更新 — Mutation Testing + Property-based Testing + 多Agent Debate警示
+
+**檢索日期**：2026-09-26　**對照對象**：延伸雷達#10/#15，G-04（SPARK-AGAVE-4獨立驗證SPARK-AGAVE-3協議設計）。
+
+### 外部現況
+- **Mutation Testing對AI生成程式碼的必要性**：2026年業界觀察是「AI生成的測試在追求覆蓋率指標，但覆蓋率是執行的代理指標，不是驗證的代理指標」。具體案例：一個有20個測試方法、覆蓋率不錯的測試檔案，跑mutation testing只拿到70%分數，3個mutant存活，測試漏掉了邊界條件與功能旗標行為這類關鍵案例。2026年共識明確指出：**不該讓同一個AI模型同時寫程式碼跟寫測試**。
+- **Property-based Testing**：結合mutation testing用來斷言「不管輸入怎麼隨機變化都該成立的不變量」（例如排序約束、單調性），這種組合被認為「AI幾乎無法投機取巧地繞過」。
+- **多Agent Debate的警示（呼應既有雷達#10）**：2026年研究進一步證實「多數決在高度相關的LLM錯誤下會系統性鎖定錯誤答案」（稱為Tyranny of the Majority）；另有研究發現「無引導的同質agent debate，交換非結構化推理後多數決，考慮token成本後並沒有顯著優於單純的自我修正(self-correction)」；業界目前發現「用一個更小的模型當專門驗證者、搭配精心設計的評分標準，持續優於用更大的模型臨時檢查自己的作業」。
+
+Sources: [Mutation Testing for AI-Generated Code: A Practical Guide (Augment Code)](https://www.augmentcode.com/guides/mutation-testing-ai-generated-code) · [Your AI-Generated Tests are Lying to You (Medium)](https://singhpr.medium.com/your-ai-generated-tests-are-lying-to-you-and-what-to-do-about-it-57fb0e5f2783) · [Minority Sentinel: When to Overturn Majority Voting in Multi-Agent LLM Debates](https://arxiv.org/html/2606.29270v1) · [The Cost of Consensus: Isolated Self-Correction Prevails Over Unguided Homogeneous Multi-Agent Debate](https://arxiv.org/html/2605.00914v1)
+
+### 🟢 建議評估（G-04設計的具體補充，延伸雷達#10/#15）
+這輪找到的證據**進一步強化雷達#10/#15已經給的警示，並提供更具體的落地技術**：①如果G-04設計中SPARK-AGAVE-4的驗證邏輯包含「跑測試」這一步，**mutation testing應該是驗證測試品質本身夠不夠格的標準做法**（不只是看SPARK-AGAVE-3寫的測試覆蓋率，而是主動變異程式碼看測試會不會抓到）；②Property-based testing可以補強「邊界案例」這種傳統範例測試容易漏掉的地方；③2026年最新研究**再次確認「多個LLM互相debate」不是可靠的驗證手段**（甚至可能因為相關錯誤而系統性放大共同盲點），這跟雷達#10「LLM Judge與執行式驗證器有32.4%分歧率」的警示方向完全一致，進一步佐證G-04設計時**應該優先讓SPARK-AGAVE-4做「跑mutation testing/property-based testing這類確定性檢查」，而不是讓它用另一個LLM去讀SPARK-AGAVE-3的推理過程做「debate式」驗證**。
+
+---
+
+## 雷達條目 #37：跨專案介面設計參考 — Contract Testing (Pact)
+
+**檢索日期**：2026-09-26　**對照對象**：直接對應[17](17_RISK_GAP_CONFLICT_REGISTER.md)的G-01/G-02（AIECP↔Voice Agent、AIECP↔AERIS/MEGIS介面完全缺失，兩者都標記「高」嚴重度）。
+
+### 外部現況
+- **Pact**是消費者驅動契約測試(consumer-driven contract testing)的主流開源框架：消費者(consumer)定義自己需要provider提供什麼、寫成機器可讀契約，provider端獨立驗證自己是否還能滿足這個契約——解決的正是「整合測試很貴，但服務又需要互相相容」這個問題，讓每個團隊可以獨立開發部署，同時對「不會破壞消費者、也不會被provider端變更破壞」有高度信心。
+- 2026年AI相關應用：對AI驅動的團隊，contract testing被認為是驗證AI coding agent產出的API是否正確、向後相容、安全的關鍵手段。
+
+Sources: [Pact Contract Testing: The Complete 2026 Guide (Pact JS)](https://qaskills.sh/blog/contract-testing-pact-complete-guide.html) · [Ultimate Guide - The Best API Contract Testing Tools of 2026](https://www.testsprite.com/use-cases/en/the-top-api-contract-testing-tools) · [Pact Testing Explained: Contract Testing for Reliable Microservices](https://www.baserock.ai/blog/pact-testing)
+
+### 🟢 建議評估（直接對應G-01/G-02，高優先）
+G-01（Voice Agent↔AIECP介面缺失）與G-02（AIECP↔AERIS/MEGIS派工介面缺失）都是本repo登錄的「高」嚴重度缺口，本質上都是「介面契約不存在」的問題。**Pact的消費者驅動契約測試模式提供一個具體的設計起手式**：與其等AIECP和AERIS/MEGIS哪天真的要對接時才發現雙方假設不一致，可以先讓「消費者」（例如未來若AIECP要呼叫AERIS/MEGIS）用Pact寫下「我預期呼叫這個介面會得到什麼」的契約，AERIS/MEGIS端（如果將來真的要暴露介面）獨立驗證能否滿足。**這不是要求AERIS/MEGIS現在就開放API**（違反CLAUDE.md「不修改其他repo」與「保持各專案自治」的鐵律），而是給Stephen或任何一方未來真的要設計這個介面時，一個「不用整合測試就能先把雙方預期講清楚」的具體方法論參考。
+
+---
+
+## 雷達條目 #38：容錯設計參考 — Chaos Engineering for Multi-Node AI Clusters
+
+**檢索日期**：2026-09-26　**對照對象**：對應[17](17_RISK_GAP_CONFLICT_REGISTER.md)的R-01（ULTRA-MAERA-2單點故障風險）與[14](14_FAILURE_RECOVERY_AND_RESILIENCE.md)（跨機故障轉移未定義）。
+
+### 外部現況
+- 2026年AI叢集的chaos engineering已有機器可檢驗的標準：2026-08發布的一套「AI叢集chaos engineering保真度標準」，包含八層故障模型(fault model)、chaos實驗的spec schema、會在CI中擋下錯誤分層實驗的linter、以及20個參考實驗的目錄。
+- **ReliabilityBench**（2026年1月）：針對LLM agent的chaos-engineering式故障注入框架，涵蓋一致性/穩健性/容錯性三維度的可靠性介面，故障注入涵蓋逾時、rate limit、部分回應、schema drift。
+- **LitmusChaos**：CNCF託管的開源Kubernetes原生chaos平台，2026年已成熟到生產可用等級，含ChaosHub（預建實驗庫）與ChaosCenter（編排介面）。
+
+Sources: [Adaptive Fault Injection Planning for Multi-Layer Self-Healing AI Infrastructure](https://arxiv.org/pdf/2607.16161) · [ai-cluster-chaos-fidelity (PyPI)](https://pypi.org/project/ai-cluster-chaos-fidelity/) · [Chaos Engineering for AI Agent Systems: Fault Injection, Resilience Testing, and Production Hardening (Zylos Research)](https://zylos.ai/research/2026-04-09-chaos-engineering-ai-agent-systems/)
+
+### 🟡 持續觀察
+SuperBrain目前規劃了「Spark斷線30秒判定OFFLINE、收回lease重新派工」的單機層級容錯機制，但**尚未實作、也不是三機互為備援的完整架構**（見[14](14_FAILURE_RECOVERY_AND_RESILIENCE.md)）。ReliabilityBench這類「故障注入框架」提供了一個具體的驗證方法論：**等SuperBrain的容錯機制真的實作出來後，可以用故障注入的方式主動測試（例如刻意讓其中一台Spark斷線、注入逾時/rate limit），而不是等真的故障才發現設計有漏洞**。但目前SuperBrain連基本容錯機制都還沒實作（P0未完成），這個主題屬於「等基礎機制做出來之後才用得上」的觀察項目，不是現階段優先事項。
+
+---
+
+## 雷達條目 #39：#7硬體對照延伸 — Windows Copilot+ PC NPU / Windows ML / Aion 1.0 On-Device SLM
+
+**檢索日期**：2026-09-26　**對照對象**：延伸雷達#7對Surface RTX Spark Dev Box官方軟體工具鏈的記載。
+
+### 外部現況
+- **Windows ML**是微軟建議的NPU推論介面（取代DirectML的定位），提供CPU/GPU/NPU的硬體加速推論；Copilot+ PC上的NPU是針對「小型、持續運作模型」（約40億參數以下）調校的固定功能加速器。
+- **Build 2026(2026-06-02)公告**：微軟開放更多Windows AI API，**Copilot+ PC上的免費本地推論現在是Windows開發的一級目標，不需要雲端依賴**；同時發布**Aion 1.0**——內建於系統的裝置端小型語言模型(SLM)家族，14B參數、32K上下文，隨附在支援的裝置上。微軟的開發者訴求從「Copilot+獨佔功能」轉向「Windows ML、本地模型、跨CPU/GPU/NPU的異質加速」。
+
+Sources: [Windows AI Models at Build 2026: Free On-Device Inference Is Now a First-Class Build Target](https://chatforest.com/builders-log/microsoft-build-2026-windows-ai-models-aion-local-inference-builder-guide/) · [Build 2026: Windows AI Shifts to Local Agents on Any Hardware](https://windowsforum.com/news/build-2026-native-windows-arm-local-ai-and-agent-first-hardware-explained.423790/) · [Develop AI applications for Copilot+ PCs (Microsoft Learn)](https://learn.microsoft.com/en-us/windows/ai/npu-devices/)
+
+### 🟢 建議評估
+延伸雷達#7既有記載（SPARK Dev Box預裝Windows ML＋Windows Copilot Runtime）：**Aion 1.0這個微軟官方隨附的14B/32K-context裝置端SLM，是一個此前雷達沒有提到的具體選項**——如果SuperBrain未來有「輕量、常駐、不需要動用整台Spark的128GB模型」的任務（例如簡單分類、路由判斷），Aion 1.0跑在NPU上可能比動用GPU跑更大模型更省電、更快啟動，值得跟雷達#2/#19的MoE模型選型一起評估「哪些任務適合丟給NPU上的輕量常駐模型，哪些才需要動用GPU大模型」這個分層策略。
+
+---
+
+## 雷達條目 #40：Voice Agent 對照延伸 — Anthropic Computer Use 2026-08-19 GA
+
+**檢索日期**：2026-09-26　**對照對象**：延伸雷達#1，Voice Agent的「語音控制Windows桌面」核心能力對標。
+
+### 外部現況
+- **2026-08-19**，Anthropic的computer use、browser use工具、Files API、Agent Skills API同一天一起脫離beta、正式GA（`computer_toolset_20260801`）。重要改進：**現在支援批次動作(batch actions)**，agent可以在同一輪次執行多個動作，不用每步都等待確認。
+- 新增**browser use工具**（`browser_toolset_20260801`）：讀取accessibility tree、操作表單、管理分頁、處理檔案上傳，跟computer use（給agent一個可控制的虛擬桌面）互補。
+- 部署範圍：在支援的macOS/Windows系統上，Claude Desktop、Cowork、Claude Code可以在「監督式研究預覽」下控制經核准的應用程式（Pro/Max用戶）。
+
+Sources: [Anthropic Makes AI Agent Tools Production-Ready (Enterprise DNA)](https://enterprisedna.co/resources/news/anthropic-browser-use-computer-use-skills-api-enterprise-ga-august-2026/) · [Anthropic's Claude Computer Use Agent (Tech Insider)](https://tech-insider.org/anthropic-claude-computer-use-agent-2026/) · [Claude Code Can Now Run Your Desktop (DevOps.com)](https://devops.com/claude-code-can-now-run-your-desktop/)
+
+### 🟡 持續觀察
+Voice Agent的核心能力是「完全離線的語音控制Windows桌面」，Anthropic Computer Use則是「雲端Claude透過螢幕截圖控制桌面，需要網路連線」——**兩者的離線/雲端前提完全相反**，這跟雷達#1既有結論一致：不建議為了「雲端方案功能聽起來更完整」就放棄Voice Agent的離線設計初衷。但**batch actions這個新功能**（一輪執行多個動作而非每步等確認）這個介面設計思路，如果Voice Agent未來要優化「語音下達多步驟指令」的執行效率，值得參考其批次執行的介面設計模式，而不是採用Anthropic Computer Use本身（違反離線原則）。
+
+---
+
+## 雷達條目 #41：微調技術對照 — Unsloth QLoRA 本地微調
+
+**檢索日期**：2026-09-26　**對照對象**：新主題——若AERIS/MEGIS未來需要針對領域術語/工作流微調小模型。
+
+### 外部現況
+- **QLoRA + Unsloth + Ollama**組合可以在單張消費級GPU（8-16GB VRAM）微調7B-8B等級的專用模型。
+- Unsloth支援LoRA、QLoRA、全微調、預訓練、RL(GRPO/DPO)、FP8；QLoRA搭配Unsloth微調Gemma 4時，27B模型可塞進22GB VRAM以下，訓練速度比標準HuggingFace快1.6倍、記憶體少用60%。
+- LoRA用16-bit精度、稍快稍準但VRAM用量是QLoRA的4倍；QLoRA用4-bit、稍慢稍不準但VRAM省4倍。2026年建議：大部分場景直接從QLoRA開始。
+
+Sources: [Unsloth and Training Hub: Lightning-fast LoRA and QLoRA fine-tuning (Red Hat Developer)](https://developers.redhat.com/articles/2026/04/01/unsloth-and-training-hub-lightning-fast-lora-and-qlora-fine-tuning) · [GitHub - unslothai/unsloth](https://github.com/unslothai/unsloth) · [Fine-Tuning LLMs in 2026: LoRA, QLoRA, Unsloth, and Everything In Between](https://pub.towardsai.net/fine-tuning-llms-in-2026-lora-qlora-unsloth-and-everything-in-between-929eaf94aea2)
+
+### 🟡 持續觀察
+本輪盤點沒有找到AERIS/MEGIS/AIECP任一個來源repo提出過「需要微調自己的專屬模型」這個需求（屬於speculative候選，見[25](25_TECH_RADAR_CANDIDATE_LONGLIST.md)候選#95）。但如果Stephen未來發現「通用模型在AERIS聲學術語或MEGIS機構工程術語上表現不夠好，且靠prompt/RAG補不齊」，**QLoRA+Unsloth是目前成本最低的本地微調路徑**（單張消費級GPU即可，不需要SPARK-AGAVE等級硬體）。這是一個**先記錄起來、等真的出現需求再評估**的候選，不是現在就該投入的項目。
 
 ---
 
