@@ -21,10 +21,14 @@
 | 2026-09-26 | 依 Stephen 要求，把七專案施工順序建議從形容詞改為量化評分（見 [16](16_ROADMAP_AND_ACCEPTANCE.md)），公式與權重明確標註為本 repo 自訂判斷，非科學公式 | 避免用「動能強」「優先度低」這類無法比較的形容詞 |
 | 2026-09-26 | 記錄 Stephen 對 AERIS／AERIS Local Implementation／AERIS Supervision 的角色定位（藍圖／主施工／副監工），並記錄這是「Codex 的債」、Stephen 要自己先理清才會處理（含 AERIS Supervision 更名/擴大範圍一事）。本 repo 在此之前不代為調整這三者的分工或評分 | 尊重 house rule #5（保持各專案自治），避免在 Stephen 自己理清前搶先下判斷 |
 
+| 2026-09-26 | **Stephen 澄清本 repo 建立初衷**：主要工作是持續往雲端/全球檢索最新 AI 進展，對標本地七專案，把落差寫成建議（見新增 [22_GLOBAL_TECH_RADAR.md](22_GLOBAL_TECH_RADAR.md)），System-of-Systems 盤點藍圖是這個初衷的副產品，不是主要目的。已同步更新 README.md「建立初衷」段落 | 修正先前只做靜態盤點的定位偏差，回到使用者原始動機 |
+| 2026-09-26 | **Stephen 確認目標流程**：Voice Control 應先接 AIECP，AIECP 再分派給 AERIS＋MEGIS（不是 Voice 直接接 AERIS）。這與既有 [Blueprint/20](20_PROPOSED_INTERFACE_CONTRACTS.md) G-01/G-02 提案方向一致，本次是使用者對此方向的正式確認，非新提案 | 讓語音入口具備完整架構能力，而不是繞過控制平面直接綁定單一領域 |
+| 2026-09-26 | **Stephen 確認 AERIS Supervision 目標範圍**：擴大監管三台本地機器（ULTRA-MAERA-2/SPARK-AGAVE-3/4）＋ Voice Control ＋ AIECP ＋ AERIS ＋ MEGIS，即監管全系統，不再只服務 AERIS 一個專案。**這是目標方向的確認，不是本 repo 代為執行的實作**——實際改名/擴大範圍的工程需要另開一個對 `0_JN1_AERIS_Supervision` 有寫入權限的 session 執行，本 repo 只記錄方向 | 呼應 house rule：本 repo 只讀不寫其他 repo，架構決策記錄與實際落地分屬不同 session |
+
 ## 尚待 Stephen 決策的事項（本 repo 整理，不代為決定）
 
 1. 是否要推進 AIECP ↔ AERIS/MEGIS ↔ SuperBrain 的整合，以及優先順序（見 [16](16_ROADMAP_AND_ACCEPTANCE.md)）。
 2. AIECP 的命名是否要統一為 "AIECP"（目前 repo 內文件全用 "AECP"）。
-3. AERIS Supervision 是否要擴展為跨專案發布監督（見 [10](10_SUPERVISION_AND_EVIDENCE.md)）。
+3. ~~AERIS Supervision 是否要擴展為跨專案發布監督~~ → **方向已於 2026-09-26 確認**（擴大監管三機＋Voice Control＋AIECP＋AERIS＋MEGIS，見上表），但要等 Stephen 理清 AERIS／Local Impl／Supervision 三者的「Codex 債」後才動工，且實際執行需另開對 `0_JN1_AERIS_Supervision` 有寫入權限的 session（見 [10](10_SUPERVISION_AND_EVIDENCE.md)）。
 4. Voice Agent 現用的 RTX Spark 機器身分確認（是否為 SPARK-AGAVE-3/4 之一）。
 5. ~~SPARK-AGAVE-4 驗證 SPARK-AGAVE-3 的具體協議設計~~ → 已由 Stephen 認領（見上表 2026-09-25），本 repo 不再列為待決事項，改追蹤於 Roadmap（見 [16](16_ROADMAP_AND_ACCEPTANCE.md)）。

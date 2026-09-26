@@ -1,10 +1,19 @@
 # 0_JN1_AI-Engineering-SuperSystem
 
+## 建立初衷（2026-09-26 Stephen 親自澄清，優先於下面的一般說明）
+
+Stephen 每週只有約 $20 額度的 Claude / Codex 可以用在本地七個專案的實際施工，**追不上全世界 AI 進展的即時速度**。這個 repo 存在的**根本理由**，是讓這種落差有解：
+
+- **本 repo 的主要工作是往外看、往雲端看、往全世界最新的 AI 進展看**——持續在 cloud session 裡檢索全球最新的技能、方法、工具、架構、模型、配置，跟七個本地專案的現況對標，找出「別人已經做得更好、我可以借用或仿製」的地方。
+- 具體例子（Stephen 原話）：ChatGPT 網頁版的語音輸入體驗比本地語音好、而且網頁對話不燒 API token，這種落差就是本 repo 該主動找出來、寫成建議的東西。第一筆這樣的雷達紀錄見 [Blueprint/22_GLOBAL_TECH_RADAR.md](Blueprint/22_GLOBAL_TECH_RADAR.md)。
+- **這件事完全可以在 cloud session 裡做，不需要碰本地任何東西**——這正是這個 repo「只讀不寫其他 repo」規則存在的原因：它的價值不是去改本地程式碼，而是幫本地施工提供即時的外部情報與建議。
+- 下面的「System-of-Systems 總藍圖」是這個初衷的**副產品**（先把現況盤點清楚，才知道要往哪裡找情報），不是取代這個初衷。
+
 ## 這是什麼
 
-這是 Stephen（`space653000`）旗下多個獨立 AI 工程專案的 **System-of-Systems 總藍圖 / 索引 / 跨專案整合層**。
+在上述初衷之下，這個 repo 同時也是 Stephen（`space653000`）旗下多個獨立 AI 工程專案的 **System-of-Systems 總藍圖 / 索引 / 跨專案整合層**。
 
-Stephen 手上已經有好幾個「各自很強但很散」的 repo：AERIS（聲學工程）、MEGIS（機構工程）、AIECP（工程控制平面）、Offline-Local-Voice-Agent（離線語音代理人）、2AGAVE128-1MAERA64／SuperBrain（多機語音調度）、AERIS_Supervision（AERIS 發布監督）……每個 repo 都有自己的藍圖、治理規則與施工節奏。這個 repo 的工作，是站在這些專案之上，回答「整個系統長什麼樣子」「誰擁有什麼」「哪台機器跑什麼」「資料怎麼流動」「出事了誰負責」這類跨專案問題，並且誠實記錄現實與理想架構之間的落差。
+Stephen 手上已經有好幾個「各自很強但很散」的 repo：AERIS（聲學藍圖）、AERIS Local Implementation（聲學主施工）、MEGIS（機構工程）、AIECP（工程控制平面）、Offline-Local-Voice-Agent（離線語音代理人）、2AGAVE128-1MAERA64／SuperBrain（多機語音調度）、AERIS_Supervision（目前服務 AERIS，目標是擴大成全系統監管）……每個 repo 都有自己的藍圖、治理規則與施工節奏。這個 repo 的工作，是站在這些專案之上，回答「整個系統長什麼樣子」「誰擁有什麼」「哪台機器跑什麼」「資料怎麼流動」「出事了誰負責」這類跨專案問題，並且誠實記錄現實與理想架構之間的落差。
 
 ## 這不是什麼
 
@@ -17,7 +26,7 @@ Stephen 手上已經有好幾個「各自很強但很散」的 repo：AERIS（�
 
 | 資料夾 | 內容 |
 |---|---|
-| [`Blueprint/`](Blueprint/) | 19 份總藍圖文件：系統邊界、機器架構、責任矩陣、資料流、Agent 角色、供應商路由、風險登錄、決策紀錄……`00_MASTER_BLUEPRINT.md` 是入口，直接回答使用者提出的 25 個問題。 |
+| [`Blueprint/`](Blueprint/) | 22 份總藍圖文件：系統邊界、機器架構、責任矩陣、資料流、Agent 角色、供應商路由、風險登錄、決策紀錄、介面契約草案、全球技術雷達……`00_MASTER_BLUEPRINT.md` 是入口，`22_GLOBAL_TECH_RADAR.md` 是本 repo 建立初衷的具體實踐。 |
 | [`Registry/`](Registry/) | 機器可讀的 YAML 登錄：專案、機器、Agent 角色、供應商、跨專案介面。 |
 | [`Audit/`](Audit/) | 對現有 repo 的實際盤點結果：逐專案 Inventory Card、重複能力分析、衝突分析、缺口分析。這裡的每個結論都附來源檔案。 |
 | [`Architecture/`](Architecture/) | 系統圖與資料流圖（ASCII / Mermaid），給想先看圖再看字的人。 |

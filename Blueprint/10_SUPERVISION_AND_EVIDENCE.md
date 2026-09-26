@@ -24,13 +24,23 @@
 2. **權威混淆風險**：規則7 要求「supervisor 獨立核對」，如果一個機制要橫跨六個專案的 Blueprint/Implementation 版本核對，其查證複雜度會大幅增加，且可能被誤認為「跨專案的工程驗收權威」（實際上規則6 已經明文排除這個誤解，但擴大範圍後更容易被誤讀）。
 3. **私有 repo 存取風險**：本次盤點已確認 AERIS Supervision 是私有 repo；若要擴展服務其他專案，需要重新評估存取範圍與權限模型。
 
-### Recommended Boundary（本 repo 建議，非強制）
+### 2026-09-26 更新：Stephen 已確認選項 B 為目標方向
 
-維持**選項 A（AERIS-only）**作為短期方向，理由：
-- 目前沒有任何其他來源 repo 表達過需要這種發布監督機制的需求（MEGIS、AIECP、SuperBrain 都有自己足夠的證據/CI/Release 機制）。
-- 擴大範圍是一個需要獨立、明確決策的架構變更，不應該因為本次盤點順帶建議就被默默採納。
+Stephen 已明確裁定（見 [Blueprint/18 決策記錄](18_DECISION_LOG.md) 2026-09-26）：**選項 B——AERIS Supervision 擴大為 SuperSystem-wide 發布監督**是目標方向，監管範圍涵蓋：
 
-若 Stephen 未來決定要做選項 B，建議先在這個 SuperSystem repo 裡（而不是直接修改 AERIS Supervision 本身）寫一份獨立的擴展提案文件，經過明確評估後，再交給 AERIS Supervision 專案自己的治理流程決定是否採納。
+- 三台本地機器（ULTRA-MAERA-2、SPARK-AGAVE-3、SPARK-AGAVE-4）
+- Voice Control
+- AIECP
+- AERIS
+- MEGIS
+
+即上面列出的所有 Migration Risk（bundle 格式差異、權威混淆風險、私有 repo 存取範圍）都是**未來要處理的真實工程問題**，不再是「要不要做」的假設性討論，而是「怎麼做」的落地問題。
+
+**重要邊界**：這是目標方向的確認，**不是本 SuperSystem repo 代為執行的實作**——本 repo 沒有寫入權限、也不應該去改 `0_JN1_AERIS_Supervision`。實際的改名/擴大範圍/整合各專案 bundle 格式，需要 Stephen 另開一個對該 repo 有寫入權限的 session 執行。Stephen 也表示這件事要等他先理清 AERIS／AERIS Local Implementation／AERIS Supervision 三者目前的「Codex 債」之後才會動工（見 [Blueprint/16](16_ROADMAP_AND_ACCEPTANCE.md)）。
+
+**本 repo 能先做的準備工作**（僅供參考，等 Stephen 決定要開始時再評估是否需要）：
+1. 先盤點清楚 AIECP（`RELEASE_PROVENANCE.json` + SHA256SUMS）、MEGIS（目前無正式 Release 機制）、SuperBrain（尚無 Release 概念）各自現有的證據/發布格式差異，作為未來設計統一 bundle 格式的輸入。
+2. 追蹤全球「多系統統一監督/審計層」的參考架構（可作為 [22_GLOBAL_TECH_RADAR.md](22_GLOBAL_TECH_RADAR.md) 的下一個雷達方向）。
 
 ---
 
