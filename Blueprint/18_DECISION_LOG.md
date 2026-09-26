@@ -18,6 +18,9 @@
 | 2026-09-25（第二輪） | 重新 clone/pull 全部 7 個來源 repo 的當前 HEAD（而非沿用第一輪 clone 的快照），逐一比對是否有實質進度變化 | 使用者要求「re-confirm 各自進度」，且明確提到「以後我只要完成各自功能就會回來跟這個藍圖回報」，代表這份 tracker 之後會被反覆信任為現況依據，必須先確認自己不是憑第一輪的舊資料 |
 | 2026-09-25（第三輪） | 新增 `Blueprint/20_PROPOSED_INTERFACE_CONTRACTS.md`（G-01/G-02/G-03 三個缺失介面的具體草案）與 `Blueprint/21_VOICE_SUPERBRAIN_INTEGRATION_PROPOSAL.md`（D-02 的具體整合建議），編號延續 19 之後的順序。同步擴充 `Registry/INTERFACES.yaml`，在既有 `MISSING` 條目下新增 `proposed_contract` 欄位（含 precedent 引用），並在 `Architecture/SYSTEM_MAP.md`、`MACHINE_MAP.md`、`DATA_FLOW.md` 補上 Mermaid 圖 | 使用者明確要求把 G-01/G-02/G-03 從「已知缺口」推進到「具體草案」，並把 D-02 從「重複風險」推進到「可執行的整合建議」；全文一律使用建議/草案語氣，不宣稱已被來源 repo 採用（house rule #2） |
 
+| 2026-09-26 | 依 Stephen 要求，把七專案施工順序建議從形容詞改為量化評分（見 [16](16_ROADMAP_AND_ACCEPTANCE.md)），公式與權重明確標註為本 repo 自訂判斷，非科學公式 | 避免用「動能強」「優先度低」這類無法比較的形容詞 |
+| 2026-09-26 | 記錄 Stephen 對 AERIS／AERIS Local Implementation／AERIS Supervision 的角色定位（藍圖／主施工／副監工），並記錄這是「Codex 的債」、Stephen 要自己先理清才會處理（含 AERIS Supervision 更名/擴大範圍一事）。本 repo 在此之前不代為調整這三者的分工或評分 | 尊重 house rule #5（保持各專案自治），避免在 Stephen 自己理清前搶先下判斷 |
+
 ## 尚待 Stephen 決策的事項（本 repo 整理，不代為決定）
 
 1. 是否要推進 AIECP ↔ AERIS/MEGIS ↔ SuperBrain 的整合，以及優先順序（見 [16](16_ROADMAP_AND_ACCEPTANCE.md)）。

@@ -22,6 +22,35 @@
 - ⚠️ **G-01（Voice Agent↔AIECP）、G-02（AIECP↔AERIS/MEGIS）、G-03（AIECP↔SuperBrain）介面契約仍完全缺失**——本輪未見任何一個來源 repo 新增對應文件或程式碼，維持「下一優先待辦」定位。
 - 🟡 **G-04（SPARK-AGAVE-4 驗證 SPARK-AGAVE-3 協議）維持 Stephen 認領、待其自行設計**，本輪不代為設計，非本 SuperSystem repo 的阻塞項。
 
+## 量化施工順序評分（2026-09-26，取代純形容詞排序）
+
+Stephen 要求把施工順序建議量化，而不是用「動能強／優先度低」這類形容詞。下表用可引用的來源數字（完成度、剩餘阻塞項數、下游依賴數）＋本 repo 自訂的權重公式算出一個分數，**公式本身是本 repo 的判斷，不是科學公式**，權重可隨時調整：
+
+**優先分數 = 下游依賴數 × 3 ＋ 完成度% ÷ 10 − 剩餘阻塞項數 × 0.5 − 重工風險 × 5**
+
+| 專案 | 完成度（來源引用） | 剩餘阻塞項 | 下游依賴數 | 重工風險 | 優先分數 |
+|---|---|---|---|---|---|
+| **AIECP** | 核心 100%（290/290 測試，`.ai/STATUS.md`），整體卡 14 項外部關卡（10 ENVIRONMENT + 4 OWNER-EXTERNAL） | 14 | 3（G-01/G-02/G-03 都需要它先穩定） | 0 | **11** |
+| **Voice Agent** | 加權約 84%（P0-P2:100%、P3:90%、P4:95%、P5部分、P6:55%，`.ai/STATUS.md`） | 2（P5 閉環、P6 邊界情境） | 1（G-01）＋ SuperBrain 潛在重用 | 1（D-02） | **5.4** |
+| **MEGIS** | 40%（G0-G3／共10個Gate已關閉，`execution/PROJECT_STATE.md`） | 6（G4-G9） | 1（G-02） | 0 | **4** |
+| **AERIS Local Implementation** | UNKNOWN（無獨立驗收文件） | UNKNOWN | 1（AERIS Core／MEGIS路由都需要它） | 0 | 待釐清後補算 |
+| **AERIS Core** | 0%（A-D NOT VERIFIED，E NOT_STARTED，五項驗收皆未過，`HANDOFF.md`） | 5（A、B、C、D、E） | 2（G-02、Voice Agent既有整合） | 0 | 待釐清後補算 |
+| **SuperBrain** | 0%（P0/12 階段未完成，`.ai/STATUS.md`） | 12 | 1（G-03） | 1（D-02，Phase C 若現在做等於重工） | **−8** |
+| **AERIS Supervision（現況）** | 100%（快照 `S0005` 已穩定） | 0 | 0 | 0 | 已完成，不用排入施工序 |
+| **AERIS Supervision（若擴大為跨專案監管）** | 0%（全新設計） | 未定義 | 最終上限 6（監管全部專案） | 0 | 邏輯上排最後——它要監管的對象（各專案的 evidence 輸出）還沒穩定，此為 Stephen 認領的 Codex 債，本輪不代為排序 |
+
+**排序**：AIECP(11) → Voice Agent(5.4) → MEGIS(4) → AERIS Local Impl/AERIS Core（暫緩，見下）→ SuperBrain(−8)。
+
+## AERIS / AERIS Local Implementation / AERIS Supervision 三者角色，Stephen 已釐清（2026-09-26）
+
+Stephen 對這三個既有 repo 的實際定位如下（記錄其原話定位，本 repo 不代為評論或調整）：
+
+- **AERIS**（`0_JN1_AERIS`）＝ **藍圖**
+- **AERIS Local Implementation**＝ **主施工**
+- **AERIS Supervision**＝ **副監工**
+
+Stephen 表示這三者目前的狀態／欠帳是「**Codex 的債**」，要等他自己先把 AERIS 內部這三者理清楚之後，才會回頭處理（包括前面提到的「AERIS Supervision 更名、擴大為全專案監管」）。**本 SuperSystem repo 在 Stephen 理清之前，不會替這三者的分工/命名/範圍做任何假設性調整**，`Audit/REPOSITORY_INVENTORY.md` 與上面量化表中 AERIS Core／AERIS Local Impl 的分數暫標「待釐清後補算」，避免在 Stephen 自己整理前產生誤導性的優先順序。
+
 ## 若要推進使用者目標架構（跨專案整合），建議的優先順序（本 repo 提案，非強制）
 
 這不是任何專案的官方路線圖，只是本 SuperSystem repo 基於本輪發現的落差，提出的一種可能排序：
