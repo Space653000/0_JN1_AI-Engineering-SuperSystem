@@ -128,19 +128,28 @@ JN1-UOA 要監管「三機＋Voice+AIECP+AERIS+MEGIS」這麼多異質系統，*
 
 ---
 
-## 雷達條目 #7：硬體對照 — NVIDIA DGX Spark／GB10（SPARK-AGAVE-3/4 疑似真身）
+## 雷達條目 #7：硬體對照 — 確認為 Microsoft Surface RTX Spark Dev Box（2026-09-26 由 Stephen 提供線索、本輪查證確認）
 
-**檢索日期**：2026-09-26　**對照對象**：R-02（Voice Agent 用的「型號 RTX Spark」機器身分未確認）。
+**檢索日期**：2026-09-26（首次：假設為 NVIDIA DGX Spark）／**2026-09-26 更新**（Stephen 提供 Microsoft Build 2026 中文報導，本輪查證確認為另一款更精準吻合的機型）。
+**對照對象**：R-02（Voice Agent 用的「型號 RTX Spark」機器身分未確認）＋ SPARK-AGAVE-3/4 硬體規格確認。
 
-### 外部現況
-- **NVIDIA DGX Spark**（2025-03 發表、2025-10 開始出貨，$3,999–$4,699）：GB10 Grace Blackwell Superchip，128GB unified memory，1 petaFLOP FP4 算力。
-- 效能特性：Prefill（載入/處理初始 prompt）表現優秀，適合中小型模型（≤20B）；**70B 以上模型的 Decode（逐字生成）效能有硬性瓶頸**，因為記憶體頻寬只有 273GB/s（約桌上型 GDDR7 顯卡的 1/6）。
-- 適用場景評估：本地原型開發 70B-200B 模型、CUDA 原生開發、不能離開建築物的敏感資料、單人微調、便攜性——**這些描述跟 SuperBrain 藍圖對 SPARK-AGAVE-3/4 的定位高度吻合**。
+### 外部現況（已查證確認，非推測）
+- **產品名稱**：**Microsoft Surface RTX Spark Dev Box**，於 **2026-06-02 Microsoft Build 2026** 大會發表，執行長 Satya Nadella 稱為開發者的「夢中神機」。
+- **正式上市日**：**2026-10-07**，美國率先開賣，僅在 Microsoft.com 獨家銷售——**本文撰寫時（2026-09-26）尚未正式上市，距上市僅約 11 天**。
+- **晶片**：NVIDIA **RTX Spark** 系統級晶片（SoC）＝ 20 核 Grace（Arm）CPU ＋ Blackwell RTX GPU（6,144 CUDA 核心，與 RTX 5070 同核心數），透過 NVLink-C2C 連接，1 petaFLOP AI 算力。
+- **記憶體**：128GB 統一記憶體，可在本地流暢執行 **120B+ 參數模型，支援最高 100 萬 token 超長上下文**。
+- **散熱/功耗**：陽極氧化鋁一體成型機殼兼被動散熱器，1,000 個通風孔，100W 熱設計功耗（TDP），近乎零噪音。
+- **軟體**：預裝客製化 Windows 11 Pro（深色主題、精簡工作列、開發者模式已開啟）、WSL2 已配置 GPU 直通＋CUDA、VS Code＋GitHub Copilot＋Git＋Python／Node.js 全部預裝、VS Code AI Toolkit 可做模型轉換/微調/評估、Windows ML＋Windows Copilot Runtime（內建TensorRT）做本地推論、Microsoft Foundry 做本地↔雲端無縫部署。
+- **安全**：Secured-core PC 架構，BitLocker＋Microsoft Defender 標配，支援 Entra ID／Intune 企業裝置管理。
+- **重要區分**：Microsoft 同場也發表了 **Surface Laptop Ultra**（搭載規格較低的「RTX Spark N1X」GPU 變體），這台**不是**同一台機器——這剛好對應到本 repo 既有盤點：`Architecture/MACHINE_MAP.md` 記載 ULTRA-MAERA-2＝Surface Laptop Ultra ARM64＋RTX Spark **N1X**（較低規格）；SPARK-AGAVE-3/4＝Surface RTX Spark，128GB unified（應為完整版 Dev Box）。**兩種「RTX Spark」是不同產品線，不要混為一談。**
 
-Sources: [NVIDIA DGX Spark: Best Local LLM Hardware in 2026](https://www.explainx.ai/blog/nvidia-dgx-spark-local-llm-best-setup-2026) · [NVIDIA DGX Spark In-Depth Review (Hacker News)](https://news.ycombinator.com/item?id=45575127) · [Nvidia says it's more than doubled the DGX Spark's performance since launch](https://www.theregister.com/2026/01/05/nvidia_dgx_spark_speed/)
+Sources: [Microsoft Devices Blog: Building the next generation of devices for developers](https://blogs.windows.com/devices/2026/06/02/building-the-next-generation-of-devices-for-developers-surface-rtx-spark-dev-box/) · [VentureBeat: Microsoft debuts Surface RTX Spark Dev Box](https://venturebeat.com/ai/microsoft-debuts-surface-rtx-spark-dev-box-to-run-large-ai-models-without-cloud-costs) · [Microsoft Surface 官方產品頁](https://www.microsoft.com/en-us/surface/devices/surface-rtx-spark-dev-box) · [Thurrott: Build 2026 - Surface RTX Spark Dev Box Coming Later this Year](https://www.thurrott.com/a-i/336931/build-2026-nvidia-powered-surface-rtx-spark-dev-box-is-coming-later-this-year) · [XDA-Developers：every RTX Spark competitor coming this fall](https://www.xda-developers.com/microsoft-build-most-powerful-surface-nvidia-new-chip-every-rtx-spark-competitor/)
 
-### 🟢 建議評估
-SuperBrain 藍圖裡「Surface RTX Spark，128GB unified」的機器規格描述，跟 NVIDIA DGX Spark／GB10 的公開規格（128GB unified memory）**高度疑似是同一顆晶片的不同品牌包裝**（Microsoft Surface 系列與 NVIDIA 都有推出搭載 GB10 的機型）。若確認屬實，上面雷達 #2 的頻寬瓶頸/MoE 選型建議、以及官方公開的 benchmark 數字，可以直接拿來當 SPARK-AGAVE-3/4 的效能基準，不用自己從頭 benchmark。**這件事值得請 Stephen 本人確認一下機器的實際型號/規格**，因為這會讓本輪雷達 #2 的建議從「業界通例」變成「直接適用的實測數字」。
+### 🟢 建議評估（重要性從 #7 升級為本輪最高優先）
+1. **這解釋了 SuperBrain P0 為什麼卡住**：P0（硬體盤點）需要的機器 2026-09-26 當下**根本還沒正式上市**（10/7 才上市），SuperBrain 藍圖標記的「P0 硬體盤點：未完成」極可能不是施工延遲，而是**硬體還買不到**。這是一個此前盤點都沒抓到的關鍵落差，已同步更新進 [Blueprint/19 總表](19_MASTER_PROGRESS_TRACKER.md) 與 [Audit/CONFLICT_ANALYSIS.md](../Audit/CONFLICT_ANALYSIS.md)。
+2. 雷達 #2（本地LLM選型）與 #9（跨機推理）的建議現在可以**直接套用官方公開規格**（128GB、1 petaFLOP、100萬token context），不用再等 Stephen 自己 benchmark。
+3. 預裝的 **WSL2 GPU直通/CUDA、VS Code AI Toolkit、Windows Copilot Runtime（TensorRT）、Microsoft Foundry** 這一整套官方 AI 開發工具鏈，剛好可以評估是否能直接拿來實作雷達 #9 提到的「本地推理暴露 OpenAI 相容 API」需求，甚至可能比自己組 EXO/vLLM+Ray 更省事——上市後值得優先評估用官方工具鏈 vs 開源方案。
+4. **Secured-core PC + BitLocker + Entra ID/Intune** 這組安全基礎設施，剛好可以對照雷達 #13（AIECP 憑證管理），評估是否能用 Windows 原生的裝置層安全機制，取代/補強 AIECP 自己另外設計的一套。
 
 ---
 

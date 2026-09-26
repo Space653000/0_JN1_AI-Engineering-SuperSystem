@@ -16,6 +16,7 @@
 
 ## 現實檢查
 
+0. **2026-09-26 重大發現（見 [Blueprint/22 雷達 #7](22_GLOBAL_TECH_RADAR.md)）**：SuperBrain 藍圖裡「Surface RTX Spark，128GB unified」對應的實際產品是 **Microsoft Surface RTX Spark Dev Box**（2026-06-02 Build 2026 發表），**正式上市日是 2026-10-07**——本文撰寫當下（09-26）尚未上市。這代表下面第1點「P0 硬體盤點尚未完成」，很可能不是進度落後，而是**硬體本身還買不到**，建議 Stephen 確認這個推論是否屬實，若屬實應把「等 10/7 上市」明確排進 [Blueprint/16 Roadmap](16_ROADMAP_AND_ACCEPTANCE.md)，而不是繼續當成未解釋的落後項。另外要注意：Microsoft 同場發表的 **Surface Laptop Ultra** 搭載的是規格較低的「RTX Spark **N1X**」GPU 變體，跟 SPARK-AGAVE-3/4 用的完整版 Dev Box 是不同產品，對應 ULTRA-MAERA-2（見上表）用的正是這個較低規格的 N1X。
 1. **P0 硬體盤點尚未完成**：SuperBrain `.ai/STATUS.md` 明確指出兩台 Spark 尚未實機盤點，只有 Laptop（ULTRA-MAERA-2）部分完成盤點。
 2. **沒有任何 repo 證實 ULTRA-MAERA-2 上真的跑著 AIECP、AERIS、MEGIS 或 Voice Agent**。這四個 repo 的文件都沒有指定具體部署機器。
 3. **Voice Agent 已經在一台「型號為 RTX Spark」的機器上跑通完整的離線語音管線**，但這台機器是否就是 SPARK-AGAVE-3 或 SPARK-AGAVE-4，目前無法確認（見 [Audit/CONFLICT_ANALYSIS.md](../Audit/CONFLICT_ANALYSIS.md) C-02）。如果是同一台實體機器，代表 SPARK 節點的角色定義需要同時容納「語音本地推論」與「FAST/DEEP 批次工作」，SuperBrain 藍圖目前沒有考慮到這個負載共存問題。

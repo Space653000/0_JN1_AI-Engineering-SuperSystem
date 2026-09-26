@@ -27,6 +27,8 @@
 
 | 2026-09-26 | **本 repo（雲端獨立）提案並經 Stephen 選定正式名稱**：整套「三台本地機器＋Voice Control＋AIECP＋AERIS＋MEGIS」混合整體命名為 **JN1 Unified Operations Domain（JN1-UOD）**；AERIS Supervision 擴大監管全部後的新名稱為 **JN1 Unified Oversight Authority（JN1-UOA）**。命名風格比照 AIECP（AI Engineering Control Plane）的「功能性縮寫」慣例，非神話/拉丁詞。**這只是命名提案的選定，不是任何 repo 的改名執行**——`0_JN1_AERIS_Supervision` 本身尚未改名，需 Stephen 另開有寫入權限的 session 執行 | Stephen 明確要求由 cloud 獨立建議名稱，且要求純功能性、避免創意命名的歧義/版權疑慮 |
 
+| 2026-09-26 | **重大雷達發現**：Stephen 提供 Microsoft Build 2026 中文報導線索，本 repo 查證確認 SPARK-AGAVE-3/4 對應的硬體是 **Microsoft Surface RTX Spark Dev Box**，正式上市日 **2026-10-07**，本文撰寫時尚未上市。已更新 [Blueprint/22 雷達#7](22_GLOBAL_TECH_RADAR.md)、[Blueprint/23 彙整報告](23_TECH_RADAR_SUMMARY_REPORT.md)、[Blueprint/03](03_MACHINE_ARCHITECTURE.md)。**推論**（未經 Stephen 確認）：SuperBrain P0 硬體盤點卡住，可能原因是硬體還沒上市，不是施工延遲 | 這是本輪雷達最重要的單一發現，直接影響 Roadmap 對 SuperBrain P0 進度的解讀方式 |
+
 ## 尚待 Stephen 決策的事項（本 repo 整理，不代為決定）
 
 1. 是否要推進 AIECP ↔ AERIS/MEGIS ↔ SuperBrain 的整合，以及優先順序（見 [16](16_ROADMAP_AND_ACCEPTANCE.md)）。
