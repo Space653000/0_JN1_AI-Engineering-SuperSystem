@@ -39,6 +39,8 @@
 
 | 2026-09-26（第五輪） | 完成兩個新深挖主題（見 [Blueprint/26](26_VISION_DRIVEN_FRONTIER_RADAR.md) §16-17）：G-01/G-02/G-03 具體協定參照（A2A逐欄位對照`aecp.task/v1`、AGENTS.md角色釐清、STEP AP242/OSLC誠實無解、EDA Handoff Perspective論文的Stage/Flow/Organization-Bound分類）、Public Portal安全公開投影前沿（Anthropic Transparency Hub、SRE公開狀態頁「內外分開維護」共識、PII脫敏工具的語意判斷落差）；同步更新 [Blueprint/23](23_TECH_RADAR_SUMMARY_REPORT.md) 四欄比較 | Thread H/I 兩個新分支，延續 Stephen「90%外部前沿、10%本地對照」的既定方向 |
 
+| 2026-09-27 | Stephen 接受 §16-17（G-01/02/03 A2A逐欄位對照、Public Portal安全公開投影前沿含「即時投影不可行、需人工審查」的誠實結論）| 記錄為已接受方向 |
+
 ## 尚待 Stephen 決策的事項（本 repo 整理，不代為決定）
 
 1. 是否要推進 AIECP ↔ AERIS/MEGIS ↔ SuperBrain 的整合，以及優先順序（見 [16](16_ROADMAP_AND_ACCEPTANCE.md)）。
