@@ -48,6 +48,7 @@
 | 25 | [TECH_RADAR_CANDIDATE_LONGLIST](Blueprint/25_TECH_RADAR_CANDIDATE_LONGLIST.md) | 2026-09-26 | 2026-09-26 | 110個候選主題篩選紀錄 |
 | 26 | [VISION_DRIVEN_FRONTIER_RADAR](Blueprint/26_VISION_DRIVEN_FRONTIER_RADAR.md) | 2026-09-26 | 2026-09-27 | 22節 top-down 願景對照前沿雷達 |
 | 27 | [FRONTIER_RADAR_MASTER_SYNTHESIS](Blueprint/27_FRONTIER_RADAR_MASTER_SYNTHESIS.md) | 2026-09-27 | 2026-09-27 | 63條發現自我分級總結＋聚焦執行清單 |
+| 28 | [HANDOFF_PROMPTS_FOR_FOCUS_ITEMS](Blueprint/28_HANDOFF_PROMPTS_FOR_FOCUS_ITEMS.md) | 2026-09-27 | 2026-09-27 | 8份給各專案Claude Code的獨立導入評估提示詞 |
 
 **輔助文件**：`Registry/*.yaml`（5份機器可讀登錄）、`Audit/*.md`（6份盤點/研究文件）、`Architecture/*.md`（3份圖表）——這些不逐一列日期，內容穩定、變動頻率低，見各自資料夾。
 

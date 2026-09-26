@@ -51,6 +51,8 @@
 
 | 2026-09-27 | **Stephen 決定暫緩 AIECP Trusted Signing 申請**（個人開發考量，非技術原因），改為優先聚焦四件事：①AERIS能力地圖自查、②MEGIS能力地圖自查、③AIECP憑證管理對照、④SPARK硬體選型準備。已在 [Blueprint/27](27_FRONTIER_RADAR_MASTER_SYNTHESIS.md) 加上具體「去哪裡做/怎麼做/預期產出」執行說明並重新排序，並把選型checklist寫進 [Blueprint/24](24_SPARK_HARDWARE_READINESS.md)。同時在 [STATUS.md](../STATUS.md) 建立含日期的完整文件盤點總表 | Trusted Signing 資訊保留在案不會過期，Stephen 之後想處理隨時可以回頭看；四項聚焦是低成本、Stephen 現在就能動手的事 |
 
+| 2026-09-27 | 應 Stephen 要求，把🔴精選項目（扣除已暫緩的Trusted Signing）拆成8份獨立提示詞，寫入 [Blueprint/28](28_HANDOFF_PROMPTS_FOR_FOCUS_ITEMS.md)，供 Stephen 貼給各自指向本機資料夾+對應GitHub repo的Claude Code session執行導入評估 | 這些改動屬於各來源repo自己的施工範圍，本SuperSystem repo不能代為執行，只能準備好交接用的提示詞 |
+
 ## 尚待 Stephen 決策的事項（本 repo 整理，不代為決定）
 
 1. 是否要推進 AIECP ↔ AERIS/MEGIS ↔ SuperBrain 的整合，以及優先順序（見 [16](16_ROADMAP_AND_ACCEPTANCE.md)）。
