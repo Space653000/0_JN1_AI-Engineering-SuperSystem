@@ -495,6 +495,26 @@ Sources: [Near-Optimal Online Deployment and Routing for Streaming LLMs (arXiv 2
 
 ---
 
+## 22. 跨系統信任邊界深挖：Zero-Trust Agent Identity 對照 JN1-UOD 五個異質系統
+
+### 願景摘要
+[Blueprint/13_SECURITY_PRIVACY_AND_TRUST.md](13_SECURITY_PRIVACY_AND_TRUST.md) 記錄了五個來源系統**各自獨立**的風險分級詞彙（AIECP GREEN/YELLOW/RED、SuperBrain GREEN/YELLOW/RED、Voice Agent L0-L3、AERIS constitution GATE-01~08、MEGIS Artifact classification/maturity，第 3-19 行），並明確指出這是「本 repo 整理，非強制統一」（第 13 行）。同一份文件也記載了 AIECP 的核心信任邊界原則：「官方 ChatGPT Web 不可被碰觸」「Spark 節點完全網路隔離」「外部資料一律視為 UNTRUSTED_DATA」（第 21-26 行）。**這份文件本身沒有回答一個問題：當 G-01/G-02/G-03（見 [Blueprint/20](20_PROPOSED_INTERFACE_CONTRACTS.md)）這些跨 repo 介面真的被建起來、Voice Agent 呼叫 AIECP、AIECP 派工給 AERIS/MEGIS、SuperBrain 三機互相協調時，這五套各自獨立的風險分級詞彙之間，誰的憑證可以跨過哪條邊界、憑證存活多久、誰稽核這條跨系統呼叫——這是一個「五個系統之間的信任邊界」問題，跟既有雷達 [#13](22_GLOBAL_TECH_RADAR.md)/[#32](22_GLOBAL_TECH_RADAR.md)（AIECP 自己內部的憑證管理）跟 §16（G-01/G-02/G-03 的 wire schema 欄位設計）都不是同一個問題層次——前兩者問的是「一個系統內部」跟「欄位長什麼樣子」，這裡問的是「呼叫要不要跨系統信任、怎麼證明」。
+
+### 前沿檢索（2026-09-26）
+
+- **Zero-Trust Agent Identity（ZTAI）已在 2026 年成為業界對「AI agent 之間互相呼叫」的標準框架**：核心原則是「每一次 agent 呼叫都要被獨立驗證身分、獨立授權、獨立稽核」，不能因為兩個 agent 屬於「同一個信任體系」就默認放行；微軟 2026-03-19 發布的 Zero Trust for AI 參考架構明確點名「過度授權的 agent（overprivileged agents）」是 agentic 系統裡的首要風險來源，具體技術做法是「短效 agent token——agent 從不持有長效 API 金鑰，正式環境改發行範圍限定在單一任務圖（task graph）、任務完成即失效的臨時 JWT」。Gravitee《2026 State of AI Agent Security》報告指出**目前只有 47.1% 的已部署 AI agent 被主動監控或設防**，微軟同一份報告也指出 97% 曾發生 AI 相關資安事件的組織，事發時都缺乏適當的 AI 存取控制——這代表「多系統 agent 互相呼叫沒有統一信任邊界」目前在業界本身就是普遍未解決的破口，不是 SuperSystem 特有的落後。
+- **雲端安全聯盟（Cloud Security Alliance, CSA）2026 年的 Agentic Trust Framework / AegisSwarm 參考架構**：核心設計是「一個去耦合(decoupled)的零信任治理層，包在自治多 agent 網路外面」，具體案例是「同一個共用基礎設施上跑著不同專案的 agent 工作流，A 專案的 agent 不應該能碰到 B 專案的資產/工具/其他 agent，即使底層基礎設施相同」——這個案例形狀幾乎就是 JN1-UOD 的縮影：Voice Agent、AIECP、AERIS、MEGIS、SuperBrain 三機雖然是「同一個 Stephen 的系統家族」，但也是五個各自治理的獨立 repo（呼應 CLAUDE.md「保持各專案自治」），CSA 這個框架處理的正是「同一個大家族內、不同治理邊界的 agent 之間預設不互信」這個確切問題。
+- **跨異質環境的具體落地技術路徑：SPIRE 聯邦身分 + 集中式政策引擎**：2026 年的一個具體案例是用單一 SPIRE server 做聯邦身分（federated identity）的錨點、搭配 CA 簽發身分，再用 OPA（Open Policy Agent）做集中政策執行，以此在「異質環境（不同雲平台、不同框架的 agent）」之間套用一致的身分/政策/稽核——這跟既有雷達 [#32](22_GLOBAL_TECH_RADAR.md) 已經對 AIECP 建議評估的 SPIFFE/SPIRE（當時的脈絡是「AIECP 內部多 worker 身分」）是同一套技術，但這裡的應用場景升級成「五個獨立系統之間」的聯邦身分，而不是單一系統內部的 worker 身分。
+
+Sources: [New tools and guidance: Announcing Zero Trust for AI (Microsoft Security Blog, 2026-03-19)](https://www.microsoft.com/en-us/security/blog/2026/03/19/new-tools-and-guidance-announcing-zero-trust-for-ai/) · [Advance Zero Trust for AI: New tools and guidance to secure AI agents and DevSecOps (Microsoft Security Blog, 2026-08-04)](https://www.microsoft.com/en-us/security/blog/2026/08/04/advance-zero-trust-for-ai-new-tools-and-guidance-to-secure-ai-agents-and-devsecops/) · [Securing the Swarm: Governance, Attack Surfaces, and Zero-Trust Architectures in Multi-Agent AI Environments (Cloud Security Alliance, 2026-06-24)](https://cloudsecurityalliance.org/blog/2026/06/24/securing-the-swarm-governance-attack-surfaces-and-zero-trust-architectures-in-multi-agent-ai-environments) · [The Agentic Trust Framework: Zero Trust Governance for AI Agents (Cloud Security Alliance, 2026-02-02)](https://cloudsecurityalliance.org/blog/2026/02/02/the-agentic-trust-framework-zero-trust-governance-for-ai-agents) · [Zero Trust Authorization for Multi-Agent Systems: When AI Agents Call Other AI Agents (Security Boulevard, 2026-03)](https://securityboulevard.com/2026/03/zero-trust-authorization-for-multi-agent-systems-when-ai-agents-call-other-ai-agents/) · [KYA: A Framework-Agnostic Trust Layer for Autonomous Systems with Verifiable Provenance and Hierarchical Policy Composition (arXiv 2605.25376)](https://arxiv.org/pdf/2605.25376) · [Security Considerations for Multi-agent Systems (arXiv 2603.09002)](https://arxiv.org/pdf/2603.09002)
+
+### 🟡 建議評估
+這輪檢索補上了一個此前雷達確實沒有觸碰到的層次：**既有雷達 [#13](22_GLOBAL_TECH_RADAR.md)/[#32](22_GLOBAL_TECH_RADAR.md) 談的是「AIECP 自己內部要不要用 Vault/Infisical/SPIFFE 管好自己的憑證」，§16 談的是「G-01/G-02/G-03 的資料欄位長什麼樣子」，但兩者都沒有問「當這些介面真的建起來後，Voice Agent 的一個請求，憑什麼被 AIECP 信任去派工給 AERIS？這個信任的存活期是多久？誰在稽核」**——這正是 2026 年 Zero-Trust Agent Identity（ZTAI）框架要解決的問題形狀。誠實的落差評估：①這是**方向正確但完全不急迫**的項目——G-01/G-02/G-03 目前連 wire schema 本身都還是草案（[Blueprint/20](20_PROPOSED_INTERFACE_CONTRACTS.md)），連「有沒有介面」都還沒到，討論「介面之間的零信任稽核」明顯是本末倒置的超前部署；②但這輪檢索找到一個值得**現在就記下來、等介面真的動工時直接套用**的具體原則：**G-01/G-02/G-03 未來若真的落地，每一次跨 repo 呼叫都應該用「短效、範圍限定在單一任務」的憑證，而不是讓 AIECP 對 AERIS/MEGIS 持有一份「長期有效、可以呼叫任何功能」的萬用憑證**——這個原則不需要等 SPIFFE/SPIRE 這類重型基礎設施，可以先用「每次呼叫附帶一個綁定 task_id、只在這次任務有效」的簡化版 token 精神落地，呼應 A2A（§16）本來就有的 `Task.id`/`context_id` 欄位設計；③CSA 的「同一基礎設施上不同治理邊界的 agent 預設不互信」這個框架語言，可以直接補進 [Blueprint/13](13_SECURITY_PRIVACY_AND_TRUST.md) 現有的跨專案風險對照表，作為未來擴充這張表格時的第四維度（現有表格只比較「風險等級詞彙」，還沒有「誰可以呼叫誰、憑證存活多久」這個維度）。標記 🟡：這是本輪任務裡目前唯一補上的「純安全治理」缺口，方向正確、有 2026 年真實業界共識支撐，但落地時機明確排在 G-01/G-02/G-03 wire schema 本身之後，現階段只需要記錄這個原則，不需要投入設計。
+
+（本節同時回應了任務要求檢查的 [Blueprint/11_AI_AGENT_ROLE_ARCHITECTURE.md](11_AI_AGENT_ROLE_ARCHITECTURE.md) 抽象角色模型是否有未覆蓋的 2026 前沿落差——經檢索確認：2026 年業界的 agent 角色分工共識（planner/critic/executor/verifier 分工、「verifier 是承重牆，多數多 agent 系統失敗可追溯到驗證缺失或壞掉」）跟 AIECP 既有的 Planner/Builder/Reviewer/Verifier 九角色模型**方向高度一致**，且這個角色分工/驗證不可靠的落差，既有雷達 [#10](22_GLOBAL_TECH_RADAR.md)/[#15](22_GLOBAL_TECH_RADAR.md)/[#28](22_GLOBAL_TECH_RADAR.md)/[#29](22_GLOBAL_TECH_RADAR.md)/[#36](22_GLOBAL_TECH_RADAR.md) 已經從「LLM Judge 32.4%分歧率」「Devin vs Copilot 自主程度」「Temporal.io durable execution」等多個角度深挖過，**沒有找到一個 11 號文件真正缺漏、值得單獨立一節的新角度**——這是本輪任務判斷「不製造低價值條目」的具體案例，故不另立獨立章節，僅在此附註說明已查證過、判定為無新增價值。)
+
+---
+
 ## 交叉引用索引
 
 | 本節 | 對應既有雷達(#1-41) | 對應風險登錄 |
@@ -520,5 +540,6 @@ Sources: [Near-Optimal Online Deployment and Routing for Streaming LLMs (arXiv 2
 | §19 R-01 深挖：單一連網閘道的實際風險與對策 | 延續 §5/§14（同一 SuperBrain 規模與 Bastion Host 架構，往下挖故障情境的具體對策） | [14_FAILURE_RECOVERY_AND_RESILIENCE.md](14_FAILURE_RECOVERY_AND_RESILIENCE.md)、[17](17_RISK_GAP_CONFLICT_REGISTER.md) R-01 |
 | §20 AIECP 深挖：solo開發者Windows信任發布現實 | 無直接對應（純行政/財務問題，非工具選型） | [19_MASTER_PROGRESS_TRACKER.md](19_MASTER_PROGRESS_TRACKER.md) AIECP 列（4 類 OWNER-EXTERNAL gate） |
 | §21 Provider路由深挖：2026成本優化前沿是否適用單人規模 | [#34](22_GLOBAL_TECH_RADAR.md)/[#35](22_GLOBAL_TECH_RADAR.md)（延續，非取代） | [12_PROVIDER_AND_MODEL_ROUTING.md](12_PROVIDER_AND_MODEL_ROUTING.md)（SuperBrain golden-set 門檻） |
+| §22 跨系統信任邊界深挖：Zero-Trust Agent Identity | [#13](22_GLOBAL_TECH_RADAR.md)/[#32](22_GLOBAL_TECH_RADAR.md)（延伸，從單一系統內部升級到系統之間） | [13_SECURITY_PRIVACY_AND_TRUST.md](13_SECURITY_PRIVACY_AND_TRUST.md)；[20_PROPOSED_INTERFACE_CONTRACTS.md](20_PROPOSED_INTERFACE_CONTRACTS.md) G-01/G-02/G-03 |
 
 要跑哪個專案的更深一層前沿檢索，或針對某個 🟡 項目重新檢索確認是否已有落地產品，直接跟 Claude 說「跑願景雷達：XX」即可。

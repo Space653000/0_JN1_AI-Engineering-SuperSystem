@@ -1,5 +1,7 @@
 # 23 — Tech Radar 彙整比較報告
 
+> **想先看總結、不想從頭讀完整份雷達的人，直接看 [27_FRONTIER_RADAR_MASTER_SYNTHESIS.md](27_FRONTIER_RADAR_MASTER_SYNTHESIS.md)**——那是兩輪雷達（本文件41條＋[26](26_VISION_DRIVEN_FRONTIER_RADAR.md)22節，共63條發現）自我評分後的最終彙整：精華16條清單、🔴🟡⚪完整分級表、給 Stephen 的真心話。這份 23 號文件是雷達#1-41 的四欄詳細版，仍然完整保留，供想看細節的人查閱。
+
 > 這是 [22_GLOBAL_TECH_RADAR.md](22_GLOBAL_TECH_RADAR.md) 41 條雷達的**彙整版**：一張表看完「本地現況 vs 2026 最新科技 vs 本 repo 建議」。長話短說版，完整引用來源請點對應雷達條目。#1-16 是第一輪；#17-41 是 2026-09-26 第二輪（Stephen 要求「先列100+候選再篩選收斂」後的成果，篩選過程見 [25_TECH_RADAR_CANDIDATE_LONGLIST.md](25_TECH_RADAR_CANDIDATE_LONGLIST.md)）。
 
 ---
