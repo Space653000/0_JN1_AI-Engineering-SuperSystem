@@ -25,6 +25,8 @@
 | 2026-09-26 | **Stephen 確認目標流程**：Voice Control 應先接 AIECP，AIECP 再分派給 AERIS＋MEGIS（不是 Voice 直接接 AERIS）。這與既有 [Blueprint/20](20_PROPOSED_INTERFACE_CONTRACTS.md) G-01/G-02 提案方向一致，本次是使用者對此方向的正式確認，非新提案 | 讓語音入口具備完整架構能力，而不是繞過控制平面直接綁定單一領域 |
 | 2026-09-26 | **Stephen 確認 AERIS Supervision 目標範圍**：擴大監管三台本地機器（ULTRA-MAERA-2/SPARK-AGAVE-3/4）＋ Voice Control ＋ AIECP ＋ AERIS ＋ MEGIS，即監管全系統，不再只服務 AERIS 一個專案。**這是目標方向的確認，不是本 repo 代為執行的實作**——實際改名/擴大範圍的工程需要另開一個對 `0_JN1_AERIS_Supervision` 有寫入權限的 session 執行，本 repo 只記錄方向 | 呼應 house rule：本 repo 只讀不寫其他 repo，架構決策記錄與實際落地分屬不同 session |
 
+| 2026-09-26 | **本 repo（雲端獨立）提案並經 Stephen 選定正式名稱**：整套「三台本地機器＋Voice Control＋AIECP＋AERIS＋MEGIS」混合整體命名為 **JN1 Unified Operations Domain（JN1-UOD）**；AERIS Supervision 擴大監管全部後的新名稱為 **JN1 Unified Oversight Authority（JN1-UOA）**。命名風格比照 AIECP（AI Engineering Control Plane）的「功能性縮寫」慣例，非神話/拉丁詞。**這只是命名提案的選定，不是任何 repo 的改名執行**——`0_JN1_AERIS_Supervision` 本身尚未改名，需 Stephen 另開有寫入權限的 session 執行 | Stephen 明確要求由 cloud 獨立建議名稱，且要求純功能性、避免創意命名的歧義/版權疑慮 |
+
 ## 尚待 Stephen 決策的事項（本 repo 整理，不代為決定）
 
 1. 是否要推進 AIECP ↔ AERIS/MEGIS ↔ SuperBrain 的整合，以及優先順序（見 [16](16_ROADMAP_AND_ACCEPTANCE.md)）。

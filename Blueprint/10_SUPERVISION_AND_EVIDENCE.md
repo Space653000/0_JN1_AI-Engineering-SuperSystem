@@ -24,7 +24,13 @@
 2. **權威混淆風險**：規則7 要求「supervisor 獨立核對」，如果一個機制要橫跨六個專案的 Blueprint/Implementation 版本核對，其查證複雜度會大幅增加，且可能被誤認為「跨專案的工程驗收權威」（實際上規則6 已經明文排除這個誤解，但擴大範圍後更容易被誤讀）。
 3. **私有 repo 存取風險**：本次盤點已確認 AERIS Supervision 是私有 repo；若要擴展服務其他專案，需要重新評估存取範圍與權限模型。
 
-### 2026-09-26 更新：Stephen 已確認選項 B 為目標方向
+### 2026-09-26 更新：正式名稱已選定
+
+擴大後的 Supervision 正式名稱為 **JN1 Unified Oversight Authority（JN1-UOA）**，監管對象是 **JN1 Unified Operations Domain（JN1-UOD）**——即「三台本地機器＋Voice Control＋AIECP＋AERIS＋MEGIS」這個混合整體的正式名稱（見下方定義區塊與 [Blueprint/18 決策記錄](18_DECISION_LOG.md)）。兩個名稱都是本 repo 應 Stephen 要求獨立提案、由 Stephen 選定，**尚未在任何來源 repo 落地**，`0_JN1_AERIS_Supervision` 目前仍叫這個名字。
+
+> **JN1-UOD 與 SuperBrain 的關係**：SuperBrain（`0_JN1_2AGAVE128-1MAERA64`）＝ULTRA-MAERA-2＋SPARK-AGAVE-3＋SPARK-AGAVE-4 三台機器本身（純硬體層 compute fabric，見 [Blueprint/09](09_SUPERBRAIN_COMPUTE_FABRIC.md)）。**JN1-UOD 範圍更大**：SuperBrain 這三台機器 **加上** 跑在其上的四個軟體層（Voice Control、AIECP、AERIS、MEGIS）合起來的整體運作實體。也就是 JN1-UOD = SuperBrain（硬體）＋ Voice/AIECP/AERIS/MEGIS（軟體），JN1-UOA 監管的是這整個 JN1-UOD，不只是硬體層。
+
+### Stephen 已確認選項 B 為目標方向
 
 Stephen 已明確裁定（見 [Blueprint/18 決策記錄](18_DECISION_LOG.md) 2026-09-26）：**選項 B——AERIS Supervision 擴大為 SuperSystem-wide 發布監督**是目標方向，監管範圍涵蓋：
 

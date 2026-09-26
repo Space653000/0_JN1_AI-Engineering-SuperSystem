@@ -22,6 +22,10 @@
 - Spark 節點完全網路隔離，只能透過 Laptop（ULTRA-MAERA-2）向雲端求援（NEEDS_ESCALATION 流程）。
 - 施工階段 P0-P12，目前卡在 **P0（三台機器盤點）尚未完成**。
 
+## 命名補充（2026-09-26）：SuperBrain 與 JN1-UOD 的範圍差異
+
+SuperBrain＝三台機器本身（硬體層 compute fabric）。**Stephen 已選定一個更大範圍的正式名稱 JN1 Unified Operations Domain（JN1-UOD）**，涵蓋 SuperBrain（三機硬體）＋跑在其上的四個軟體層（Voice Control、AIECP、AERIS、MEGIS）整體。未來 AERIS Supervision 擴大後（改名 JN1 Unified Oversight Authority，JN1-UOA）監管的對象就是這整個 JN1-UOD，不只是 SuperBrain 硬體。詳見 [Blueprint/10](10_SUPERVISION_AND_EVIDENCE.md)、[Blueprint/18 決策記錄](18_DECISION_LOG.md)。這只是命名與範圍定義，**尚未在任何來源 repo 落地**。
+
 ## Stephen 已裁決的分工邊界（2026-09-25，見 [Blueprint/18](18_DECISION_LOG.md)）
 
 為避免 C-04 / D-01 所述「AIECP 與 SuperBrain 重工」風險，Stephen 裁定：
