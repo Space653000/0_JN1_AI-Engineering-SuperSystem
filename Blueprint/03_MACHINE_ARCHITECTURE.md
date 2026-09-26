@@ -16,7 +16,9 @@
 
 ## 現實檢查
 
-0. **2026-09-26 重大發現與更正（見 [Blueprint/22 雷達 #7](22_GLOBAL_TECH_RADAR.md)）**：SuperBrain 藍圖裡「Surface RTX Spark，128GB unified」對應的實際產品是 **Microsoft Surface RTX Spark Dev Box**（2026-06-02 Build 2026 發表），**正式上市日是 2026-10-07**——本文撰寫當下（09-26）尚未上市。這代表下面第1點「P0 硬體盤點尚未完成」，很可能不是進度落後，而是**硬體本身還買不到**，建議 Stephen 確認這個推論是否屬實，若屬實應把「等 10/7 上市」明確排進 [Blueprint/16 Roadmap](16_ROADMAP_AND_ACCEPTANCE.md)。**二次查證更正**：Microsoft 同場發表的 **Surface Laptop Ultra（ULTRA-MAERA-2）用的「RTX Spark N1X」不是低規格變體，是同一顆晶片的代號**——Laptop Ultra 與 Dev Box 用的是同一顆 RTX Spark 晶片（20核Grace CPU+Blackwell GPU、最高128GB統一記憶體、1petaFLOP），差別只在**外型/散熱**：Dev Box 100W TDP 撐得住長時間高負載訓練，Laptop Ultra 受筆電散熱/電池限制無法長時間全速跑。也就是說 ULTRA-MAERA-2 跟 SPARK-AGAVE-3/4 **理論算力等級接近**，主要差在「能不能長時間全速跑」——這點原本第一輪盤點沒抓到，值得納入下面「機器角色」表的設計考量。Stephen 另確認 SPARK-AGAVE-3/4 是**兩台規格相同的獨立 Dev Box**（非同一機殼兩顆晶片），與 SuperBrain 藍圖「FAST/DEEP 各一台」設計一致。
+0. **2026-09-26 重大發現，經 Stephen 兩輪查證修正（見 [Blueprint/22 雷達 #7](22_GLOBAL_TECH_RADAR.md)）**：
+   - SuperBrain 藍圖裡「Surface RTX Spark，128GB unified」對應的實際產品是 **Microsoft Surface RTX Spark Dev Box**（2026-06-02 Build 2026 發表），**正式上市日是 2026-10-07**——本文撰寫當下（09-26）尚未上市。這代表下面第1點「P0 硬體盤點尚未完成」，很可能不是進度落後，而是**硬體本身還買不到**，建議 Stephen 確認這個推論是否屬實，若屬實應把「等 10/7 上市」明確排進 [Blueprint/16 Roadmap](16_ROADMAP_AND_ACCEPTANCE.md)。
+   - **記憶體容量：以 Stephen 對自己實際機器的確認為準**——**ULTRA-MAERA-2＝Surface Laptop Ultra，64GB**（與下方「機器角色」表原本記載一致，這是正確數字，不應被推翻）；**SPARK-AGAVE-3/4＝Surface RTX Spark Dev Box（未上市），128GB × 2台**。本 repo 先前一度依公開網路文章推論「兩者都可能是128GB同一等級」，經 Stephen 兩次糾正後撤回此推論——**Stephen 對自己實際持有/採購中硬體的第一手陳述，優先於本 repo 查到的公開資料**。晶片家族（RTX Spark／N1X 命名）是否相同不影響這個記憶體容量的事實認定，也不代表算力等級接近，本文件不再做這個引申。
 1. **P0 硬體盤點尚未完成**：SuperBrain `.ai/STATUS.md` 明確指出兩台 Spark 尚未實機盤點，只有 Laptop（ULTRA-MAERA-2）部分完成盤點。
 2. **沒有任何 repo 證實 ULTRA-MAERA-2 上真的跑著 AIECP、AERIS、MEGIS 或 Voice Agent**。這四個 repo 的文件都沒有指定具體部署機器。
 3. **Voice Agent 已經在一台「型號為 RTX Spark」的機器上跑通完整的離線語音管線**，但這台機器是否就是 SPARK-AGAVE-3 或 SPARK-AGAVE-4，目前無法確認（見 [Audit/CONFLICT_ANALYSIS.md](../Audit/CONFLICT_ANALYSIS.md) C-02）。如果是同一台實體機器，代表 SPARK 節點的角色定義需要同時容納「語音本地推論」與「FAST/DEEP 批次工作」，SuperBrain 藍圖目前沒有考慮到這個負載共存問題。
