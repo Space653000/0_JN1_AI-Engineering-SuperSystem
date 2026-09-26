@@ -20,12 +20,19 @@
 | 12 | DFM審查(MEGIS) | Gate審查階段抓問題 | 2026做法：建模階段即時+審查階段完整，兩層疊加 | 🟢 評估加裝in-CAD即時檢查，往前抓問題 |
 | 13 | 憑證管理(AIECP) | 未知是否短效/透過broker | 短效、限定範圍、broker簽發、推理引擎不碰原始憑證 | 🟢 評估Codex OFFICIAL/PEGA的憑證是否符合這個模式 |
 | 14 | 跨專案知識庫 | 人工clone七repo盤點 | LlamaIndex/Haystack本地RAG，混合搜尋+知識圖譜 | 🟡 盤點頻率高了再考慮，現在不急 |
+| 15 | G-04深挖：獨立驗證實作 | 待Stephen設計 | Behavioral Equivalence Harness（驗證器不含模型）、Contract-Driven Adversarial Verification（結構性隔離兩agent） | 🟢 SuperBrain現有的Spark互不連線設計天生符合結構性隔離，設計時保留這個優勢 |
+| 16 | SLSA落地細節(AIECP) | 自家SHA256SUMS+RELEASE_PROVENANCE.json | GitHub Artifact Attestations（幾行YAML）；`slsa-github-generator`可直接衝Level 3 | 🟢 先上Artifact Attestations成本最低，要衝Level 3有現成工具鏈可用 |
 
 ## 三個最該優先看的（2026-09-26 更新）
 
 1. **#7 硬體身分——已確認，且是本輪最大發現**：SPARK-AGAVE-3/4＝Microsoft Surface RTX Spark Dev Box，**2026-10-07 才正式上市**，現在（09-26）根本還買不到。SuperBrain P0「硬體盤點未完成」很可能不是進度落後，而是**硬體還沒上市**——這改變了整個施工時程的解讀，建議把「等 10/7 上市」明確排進 Roadmap，而不是繼續當成一個懸而未決的落後項。
 2. **#10 獨立驗證的警示**——直接關係到你自己要設計的 G-04，業界最新數據說「LLM互相驗證」本身就不可靠，設計時務必以確定性測試為主軸。
 3. **#5 + #13**——SLSA 對齊 + 憑證管理，這兩條加起來剛好是 AIECP 從「自家證據系統」升級成「跟業界安全標準對齊」的具體路徑，而且都是評估成本低、可能收益高的項目。上市後 Surface RTX Spark Dev Box 內建的 Secured-core PC／BitLocker／Entra ID 也可以直接拿來對照評估。
+
+## 追加：G-04 與 SLSA 的具體落地路徑（#15、#16）
+
+- **G-04**：`Behavioral Equivalence Harness`（記錄行為→重放比對，驗證器不含模型）與 `Contract-Driven Adversarial Verification`（兩個 agent 依同一合約分開實作/測試，結構性看不到對方）是目前業界最貼近「確定性優先」原則的實作模式，且 SuperBrain 現有的 Spark 網路隔離設計剛好天生符合這種結構性隔離要求。
+- **SLSA 落地**：AIECP 最低成本路徑是先上 **GitHub Artifact Attestations**（幾行 YAML），要衝 Level 3 有現成的 `slsa-framework/slsa-github-generator` 工具鏈可直接用，不用自己重新發明簽章機制。
 
 ## 標籤說明
 

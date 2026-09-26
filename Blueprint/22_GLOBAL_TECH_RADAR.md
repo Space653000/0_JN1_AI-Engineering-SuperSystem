@@ -271,6 +271,43 @@ Sources: [Best LLM Knowledge Base Tools in 2026 (Atlan)](https://atlan.com/know/
 
 ---
 
+## 雷達條目 #15：G-04 深挖 — 具體開源獨立驗證實作範例
+
+**檢索日期**：2026-09-26　**對照對象**：雷達 #10 的延伸——上次只找到「LLM Judge 不可靠」的警示，這次找具體可參考的實作。
+
+### 外部現況
+- **N0 Verify**（GitHub `HmZ9874/n0-verify-ai-code-verification`）：開源 CLI + GitHub Action，專門做「獨立驗證 AI 寫的程式碼與其證據」，內建專案偵測與確定性指令，涵蓋 JS/TS、Python、Go、Rust。
+- **Behavioral Equivalence Harness**：先記錄原始程式碼的**實際行為**，再拿 AI 改寫後的版本重放比對，證明行為沒變——**驗證器本身是確定性的，裡面沒有模型**。
+- **Contract-Driven Adversarial Verification**：一個 agent 依編譯過的合約做實作，另一個 agent 依同一份合約寫測試、**看不到實作內容**；獨立性是結構性強制的——分開的 agent、分開的 job payload、分開的執行佇列、不共用對話歷史。
+- **Verification-First Multi-Agent Harness**（`wenxiangyuan611-hash/verification-first-harness`）：有 VerifierRegistry 跟 bounded CommandVerifierPlugin，對「canonical claim envelope」做確定性外部檢查。
+
+Sources: [n0-verify-ai-code-verification (GitHub)](https://github.com/HmZ9874/n0-verify-ai-code-verification) · [verification-first-harness (GitHub)](https://github.com/wenxiangyuan611-hash/verification-first-harness) · [Meta-Engineering Harnesses for AI-Native Software Production (arXiv 2605.25665)](https://arxiv.org/pdf/2605.25665)
+
+### 🟢 建議評估（給 Stephen 設計 G-04 時的具體起手式）
+這次找到的都印證雷達 #10 的警示——2026 年真正被認可的做法是**「驗證器本身不含模型、只做確定性比對」**（Behavioral Equivalence Harness）或**「結構性隔離兩個 agent，一個依合約寫、另一個依合約測，互相看不到對方」**（Contract-Driven Adversarial Verification）。這兩個模式可以直接對應到 SPARK-AGAVE-4 驗證 SPARK-AGAVE-3 的設計：
+1. SPARK-AGAVE-3（FAST）的輸出應該先被轉成「行為紀錄」（做了什麼、產出什麼），而不是直接把它的推理過程交給 SPARK-AGAVE-4。
+2. SPARK-AGAVE-4（DEEP）的驗證邏輯應該優先用**確定性重放/比對**，只有比對不出來的部分才用 LLM 輔助判斷。
+3. 兩台機器的網路隔離（現有 SuperBrain 設計就有：Spark 之間互不連線，只能連 ULTRA-MAERA-2）剛好天生符合「結構性隔離」的要求，這是 SuperBrain 現有架構的優勢，值得在 G-04 設計時明確保留。
+
+---
+
+## 雷達條目 #16：SLSA 落地細節 — 給 AIECP 的具體實作路徑（延伸雷達 #5）
+
+**檢索日期**：2026-09-26
+
+### 外部現況
+- **SLSA Level 2 vs 3 的關鍵差異**：Level 2 只要求「建置產生證明」；Level 3 要求「證明由建置本身無法影響的可信元件產生」——具體對應：一個你不直接操作的 CI 平台、一個從建置內部無法竄改的簽章身分、一個每次執行都重置的建置環境。
+- **如果用 GitHub Actions，直接跳去做 Level 3**：主要工具是 `slsa-framework/slsa-github-generator`，跑在獨立的 reusable workflow，其身分無法被受駭的建置步驟冒用。
+- **簽章機制**：整合 Sigstore 三件套——**Cosign**（簽章請求/簽署/儲存）、**Fulcio CA**（用 GitHub Actions OIDC 身分核發短效憑證）、**Rekor**（不可竄改的公開透明日誌記錄簽章事件）。
+- **更輕量的新選項**：**GitHub Artifact Attestations**——只要幾行 YAML，不用自己管理密鑰或額外基礎設施，就能幫建置產物加上可驗證的建置歷程證明。
+
+Sources: [slsa-github-generator (GitHub)](https://github.com/slsa-framework/slsa-github-generator) · [Achieving SLSA 3 Compliance with GitHub Actions and Sigstore (GitHub Blog)](https://github.blog/security/supply-chain-security/slsa-3-compliance-with-github-actions/) · [Enhance build security and reach SLSA Level 3 with GitHub Artifact Attestations (GitHub Blog)](https://github.blog/enterprise-software/devsecops/enhance-build-security-and-reach-slsa-level-3-with-github-artifact-attestations/) · [How to Implement SLSA Level 3 Practically (2026)](https://safeguard.sh/resources/blog/how-to-implement-slsa-level-3-practical-guide)
+
+### 🟢 建議評估
+AIECP 若要落地雷達 #5 的建議（對齊 SLSA Level 2/3），最低成本的路徑是**先上 GitHub Artifact Attestations**（幾行 YAML，不用管密鑰）替現有的 SHA256SUMS + RELEASE_PROVENANCE.json 加上官方可驗證的建置證明；如果要衝 Level 3，`slsa-github-generator` 這個現成工具鏈可以直接用，不用自己重新發明簽章機制——這剛好也回答了雷達 #13（憑證管理）的「短效、broker 簽發」原則，因為 Fulcio 核發的就是短效憑證。
+
+---
+
 ## 下一批建議雷達方向（尚未執行檢索，供 Stephen 排序）
 
 - SPARK-AGAVE-3/4 真實機型確認後（見雷達 #7），重跑一次精確對照。
