@@ -35,6 +35,8 @@
 
 | 2026-09-26（第四輪） | 完成三個新深挖主題（見 [Blueprint/26](26_VISION_DRIVEN_FRONTIER_RADAR.md) §13-15）：JN1-UOA×Assurance Case（GSN/CAE/DO-178C等）方法論、SuperBrain小規模艦隊管理與Bastion Host隔離節點模式、AERIS Local Implementation可重現工程模擬（RO-Crate/W3C PROV/位元級可重現）；同步更新 [Blueprint/23](23_TECH_RADAR_SUMMARY_REPORT.md) 四欄比較 | 延續 2026-09-27 已接受的四條深挖建議之外，Stephen 要求的第二批深挖主題，聚焦在「文件/監控存在」與「實際結果」之間如何結構化連結的方法論 |
 
+| 2026-09-27 | Stephen 接受 §13-15（JN1-UOA×GSN保證論證、SuperBrain堡壘主機模式確認、AERIS可重現模擬容器化）三條深挖建議 | 記錄為已接受方向，實際落地仍是各專案自己的施工 |
+
 ## 尚待 Stephen 決策的事項（本 repo 整理，不代為決定）
 
 1. 是否要推進 AIECP ↔ AERIS/MEGIS ↔ SuperBrain 的整合，以及優先順序（見 [16](16_ROADMAP_AND_ACCEPTANCE.md)）。
