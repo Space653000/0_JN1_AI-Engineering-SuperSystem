@@ -395,6 +395,61 @@ Sources: [Anthropic's Transparency Hub](https://www.anthropic.com/transparency) 
 
 ---
 
+## 18. G-04 深挖：GSN 形狀的驗證報告參考範例（非協定設計）
+
+> **先講清楚本節的邊界**：[17_RISK_GAP_CONFLICT_REGISTER.md](17_RISK_GAP_CONFLICT_REGISTER.md) G-04（SPARK-AGAVE-4 獨立驗證 SPARK-AGAVE-3 的協議）已於 2026-09-25 由 Stephen 正式認領，明確表示「將自行設計」（見 [Blueprint/18_DECISION_LOG.md](18_DECISION_LOG.md) 2026-09-25 條）。依 CLAUDE.md house rule #5「保持各專案自治」，**本節完全不設計 G-04 的核准邏輯、驗證流程或觸發條件**——這些是 Stephen 自己的設計權。本節唯一的工作，是把 §13 已經找到的 GSN 方法論再往下挖一層，具體找出「2026 年有沒有人已經把 GSN 套用在 AI 系統輸出的驗證報告上」，如果找到，就把那個範例的**形狀**（不是內容）畫給 Stephen 看，讓他有一個可以參考、可以修改、可以整個丟掉的起點，而不是一張白紙。以下所有「若套用在 G-04」的段落，都是「這是借用的形狀長什麼樣子」，不是「這是 G-04 該怎麼做」。
+
+### 願景摘要
+延續 §13 的核心發現：GSN 用 Goal→Strategy→Solution 三種節點把籠統主張逐層拆解到具體證據，這個結構本身就是為了不讓「文件存在」跟「證據成立」混為一談（引用細節見 §13，此處不重複）。§13 當時只找到 GSN 在自動列車、通用保證論證領域的應用；本節要問更窄的問題：**2026 年有沒有人具體把 GSN 套用在「AI 系統的輸出是否正確/可信」這個問題上**，而不是泛用的「這個系統夠不夠安全」。
+
+### 前沿檢索（2026-09-26）
+
+- **找到一個具體、公開、2026 年的範例，且領域正好貼近「驗證 AI 元件的工作產出」**：SAFECOMP 2026 兩篇論文的補充材料（milinpatel07/Assurance-Gaps-in-an-Integrated-Safety-and-Cybersecurity-Case，公開 GitHub repo）用 GSN 畫出一個「AI-based LiDAR 感知元件的驗證與確認是否足夠」的完整論證案例，延伸自 ISO/PAS 8800 Annex B 的九目標模式（nine-goal pattern）。這個案例的具體形狀是：
+  - **頂層 Goal**：一句話主張「這個 AI 感知元件的驗證與確認是足夠的」。
+  - **Strategy 分解**：往下用四套標準各自的要求做分解——ISO 26262（功能安全）、ISO 21448（非預期功能危害/SOTIF）、ISO/SAE 21434（資安）、ISO/PAS 8800（AI 安全）——每套標準各自負責論證的一部分。
+  - **關鍵匯聚節點 G5**：四條分支最後匯聚到一個叫 **G5** 的節點，這個節點必須同時消化四種完全不同量綱的證據——結構覆蓋率（非 AI 程式碼的驗證）、場景覆蓋率（觸發條件是否測全）、統計不確定性分數（AI 輸出的可靠度指標）、攻擊成功率（資安抵抗力）。
+  - **這個案例最誠實、最值得 Stephen 直接參考的一句話**：作者明確寫「沒有任何標準告訴你怎麼把這四種證據合併成一個判斷；一個工程師可以完成每一項被要求的活動，卻仍然無法斷言『這些證據加起來到底夠不夠』」——這正好點出 GSN 這個工具本身解決不了的問題：GSN 能強迫你把主張拆到每一個子項都連到證據，但**「多個獨立的子證據要如何合併成一個最終判斷」這件事，GSN 本身不提供答案，這是留給人（或未來 G-04 的設計者）自己決定的判斷題**。
+- **同一批 2026 年研究也在探索「用 LLM 自動審查 GSN 論證案例的結構完整性」**：《LLMs as Judges: Toward The Automatic Review of GSN-compliant Assurance Cases》（arXiv 2511.02203 / ScienceDirect 2026）明確指出：LLM 自動生成的論證案例「可能結構上看起來成立，但缺乏邏輯連貫性，或遺漏關鍵的證據連結」——這是一個重要的誠實提醒：**GSN 的樹狀結構本身不保證推理正確，只保證「每個主張都被要求連到證據」這個格式紀律**，如果 SPARK-AGAVE-4 未來也用 LLM 協助產生 GSN 式報告，仍然需要獨立檢查每個 Strategy 節點的推理是否真的站得住腳，不能只檢查「格式有沒有填滿」。
+- **另一個相關方向：Compliance-by-Construction Argument Graphs**（arXiv 2604.04103, 2026）探討用生成式 AI 產出「證據直接連結的正式論證圖」，作為「認證等級可問責性」的做法——這代表 2026 年的前沿確實正在往「AI 系統驗證報告該長什麼樣」這個方向聚焦，但仍是研究階段，沒有一個可以直接安裝的產品。
+
+Sources: [Assurance Gaps in an Integrated Safety and Cybersecurity Case for an AI-Based Perception Component in Highly Automated Driving (GitHub, SAFECOMP 2026 supplementary material)](https://github.com/milinpatel07/Assurance-Gaps-in-an-Integrated-Safety-and-Cybersecurity-Case) · [G5 acceptance playground（互動式範例）](https://milinpatel07.github.io/Assurance-Gaps-in-an-Integrated-Safety-and-Cybersecurity-Case/g5_playground.html) · [LLMs as Judges: Toward The Automatic Review of GSN-compliant Assurance Cases (arXiv 2511.02203)](https://arxiv.org/pdf/2511.02203) · [LLMs as judges: Toward the LLM-assisted review of GSN-compliant assurance cases (ScienceDirect, 2026)](https://www.sciencedirect.com/science/article/pii/S0164121226002694) · [Compliance-by-Construction Argument Graphs: Using Generative AI to Produce Evidence-Linked Formal Arguments for Certification-Grade Accountability (arXiv 2604.04103)](https://arxiv.org/html/2604.04103) · [Evaluating Assurance Cases as Text-Attributed Graphs for Structure and Provenance Analysis (arXiv 2604.20577)](https://arxiv.org/html/2604.20577v1)
+
+### 一個「借來的形狀」草圖——僅供 Stephen 參考反應，不是 G-04 的設計
+
+> 再強調一次：以下純粹是把上面 SAFECOMP 2026 案例的**骨架**，換上「SPARK-AGAVE-4 驗證 SPARK-AGAVE-3 一次工作產出」這個場景的標籤，示範「一份 GSN 形狀的驗證報告長什麼樣子」。**節點的實際判準、什麼算通過、誰核准、什麼時候觸發驗證——這些全部留白，因為那是 Stephen 要設計的部分**。這裡沒有任何一個節點寫了具體的驗收標準數字。
+
+- **頂層 Goal（範例標籤）**：「SPARK-AGAVE-3 這次交付的工作產出，其正確性與安全性有充分證據支持」
+- **Strategy（範例標籤，只是「怎麼拆」的示範，不是真的判準）**：可以參考 SAFECOMP 案例「按不同性質的關切點分別拆解」的做法，例如拆成「功能是否符合原始任務要求」「有沒有產生任務範圍外的副作用」「有沒有違反既有的權限/資源邊界」「產出物本身是否可被獨立重現」這幾條分支——**這只是借用 GSN「按性質分解，而非隨便列清單」的精神，實際要拆成幾條、拆的依據是什麼，是 G-04 設計時該決定的事**。
+- **Solution（範例標籤，示範「證據要具體指向什麼」而非規定要用哪些證據）**：每條分支最底層對應到具體的證據引用，例如「這次任務的執行日誌」「輸入輸出的 diff」「資源使用量記錄」——呼應 §13 已經指出的 DO-178C 判準精神：每個 Solution 節點引用的證據，必須「支撐它被引用的那項主張本身（而不只是沾得上邊）」。
+- **一個匯聚節點的誠實提醒（借用 SAFECOMP 案例的 G5 教訓）**：如果 G-04 最終也需要一個「把多條分支的證據合起來做最終判斷」的節點，SAFECOMP 案例已經誠實示範了這個節點會遇到的真實困難——不同性質的證據（例如「功能對不對」跟「有沒有超出權限」）本質上是不同量綱,沒有一套通用公式可以自動合併,這個「怎麼合併」的判斷邏輯，正是 Stephen 自行設計 G-04 時最需要花心思的地方，而不是套一個現成公式就能解決。
+
+### 🟢 建議評估
+本節找到一個具體、可以直接拿給 Stephen 看的參考範例，而不是停留在 §13 的抽象方法論層次：**SAFECOMP 2026 的 GSN 案例證明「用 GSN 結構化『這個 AI 元件的驗證是否足夠』」這件事已經有真實的公開範例，不是本 repo 憑空想像的類比**，而且該案例最誠實的教訓（G5 節點：多種證據無法自動合併成一個判斷）直接預告了 G-04 未來會遇到的真正難題，值得 Stephen 設計前先看過。**再次強調本節的定位**：上面「借來的形狀」草圖只提供節點的骨架與標籤示範，完全不涉及「什麼算通過」「誰核准」「何時觸發」這些屬於 G-04 協定本身的設計決策——那些留給 Stephen 之後自己設計，本 repo 只在他要開始畫的時候，遞給他一張「別人已經畫過類似的圖、長這樣、有這個教訓」的參考草圖。誠實揭露：LLM 自動生成 GSN 論證案例目前的已知風險是「結構完整但邏輯不連貫」，如果未來 G-04 的報告要用 LLM（SPARK-AGAVE-4）協助產生，這個風險本身也該被 Stephen 納入設計考量,而不是假設「格式對了就代表推理對了」。
+
+---
+
+## 19. R-01 深挖：單一連網閘道的實際風險與對策
+
+### 願景摘要
+延續 §14 已確認的核心發現：SuperBrain「Laptop 唯一連網 Gateway、Spark 隔離不連網」的架構本身正是資安界行之有年的 Bastion Host 模式，規模完全不是問題（引用細節見 §14，此處不重複）。但 [17_RISK_GAP_CONFLICT_REGISTER.md](17_RISK_GAP_CONFLICT_REGISTER.md) R-01 與 [14_FAILURE_RECOVERY_AND_RESILIENCE.md](14_FAILURE_RECOVERY_AND_RESILIENCE.md) 都還留著一個沒回答的問題：**如果這台唯一的 Gateway（ULTRA-MAERA-2）故障或斷線，會發生什麼事、值不值得花錢/花工夫做備援**？本節在 §14 已確認的「架構本身沒錯」基礎上，具體檢索 2026 年小規模（不是企業級 HA/failover clustering）場景下，這個問題的務實答案是什麼。
+
+### 前沿檢索（2026-09-26）
+
+- **家用/small-scale 場景下，「單一 ISP 連線」本來就被業界公認是幾乎每個家用網路都有的正常單點故障，2026 年的標準對策是低成本的雙 WAN + 行動網路備援，不是企業級 HA**：2026 年 home-lab 社群的共識是「每個網路都有單點故障，而且幾乎永遠是 ISP 本身」；對策是**用一支 USB 行動網路數據機（cellular modem）或專用 LTE/5G 路由器當第二條 WAN**，多數現代路由器可以設定「主線斷線後 30-60 秒內自動切換到行動網路」——這條路徑成本低（一支數據機 + SIM 卡月租，遠低於企業級雙線專線），且**技術上要留意「橋接模式（bridge mode）」設定**：行動數據機若不設成橋接模式，會自己做一層 NAT/DHCP，跟主路由器的設定衝突，變成 double NAT。手機熱點可以應急，但業界評價是「熱點撐得過一次緊急狀況，但『網路在你發現之前就已經自動處理好了』和『我先將就撐著』是兩種完全不同的體感」，代表**如果要做正式備援，一支專用的 USB 行動網路數據機比手機熱點更可靠，但手機熱點作為零成本的「已經有」的應急方案，仍然聊勝於無**。
+- **偵測「Gateway 掛了」不需要蓋第二台 Gateway，市面上已經有專門為「單一節點場景」設計的獨立告警裝置**：MySpool 這類「電源/網路斷線偵測器」本身完全獨立於被監控的網路運作（不透過同一個 Gateway 回報），斷線後 1-3 分鐘內就能推播告警到手機——這正好回答 §14 提出的「如果 ULTRA-MAERA-2 故障，有沒有辦法至少讓 Stephen 第一時間知道」這個問題，而且**完全不需要第二台完整的 Gateway 機器**。
+- **但這裡有一個更重要、比買什麼設備都關鍵的教訓，來自 2026 年 Uptime Kuma 社群自己的操作經驗**：「最大的操作陷阱是把監控工具跟它要監控的基礎設施部署在同一台機器上——如果 Uptime Kuma 跑在跟你的正式服務同一台 VPS 上，一次會打垮正式服務的故障，同時也會打垮你的告警系統本身」，社群給的標準對策是「用一台不同供應商的便宜獨立第二台小主機做監控」。**這句話直接點出 R-01 目前設計裡一個沒被明說的邏輯漏洞**：如果 Stephen 未來想用「在 ULTRA-MAERA-2 上跑一個監控服務」的方式偵測自己是否故障，這個做法在邏輯上是自相矛盾的——監控者跟被監控者是同一台機器，機器掛了監控也跟著掛了。**真正能回答「Gateway 掛了」這個問題的告警機制，必須是一個完全獨立於 Gateway 本身的第三方（例如 MySpool 這類獨立硬體、或雲端的 UptimeRobot 這類從外部主動探測 Gateway 是否還在線的服務），而不是裝在 Gateway 自己身上的軟體**。
+- **回到 Stephen 本輪提出的關鍵問題——把「雲端協作路徑中斷」跟「本地工作停止」分開看，R-01 的風險確實比登錄表面上寫的小**：兩台 Spark 節點本來就設計成「盡量不連網、只跑本地 AI」（§5、§14 已引用 `0_JN1_2AGAVE128-1MAERA64/.ai/BLUEPRINT.md`），這代表 Laptop 斷線的當下，Spark 節點的**穩態行為本來就是「沒有網路」**，不是從「有網路」意外掉到「沒網路」的降級狀態——換句話說，Spark 節點在 Laptop 斷線期間「無法動用雲端 AI」不是新增的風險，而是它們設計上本來每天都在承受的正常狀態的延伸。真正因為 Laptop 斷線而**新增**的影響範圍，只有「Stephen 沒辦法從外部下指令給 Laptop/透過 Laptop 中轉指令給 Spark」跟「Laptop 上如果同時跑著需要連網的服務（例如 AIECP 的 ChatGPT Web Safe Bridge，見 [Blueprint/14](14_FAILURE_RECOVERY_AND_RESILIENCE.md) 使用者問題17）會暫停」這兩件事——這是一個明確、有限、可以用低成本告警（不是備援 Gateway）處理的風險範圍，不是「整個系統停擺」。
+
+Sources: [Dual WAN Failover for Your Homelab: Automatic Internet Redundancy (HomeLab Starter, 2026)](https://homelabstarter.com/homelab-dual-wan-failover/) · [Internet Failover With a 5G or LTE Backup Modem (homelabrouter.com)](https://homelabrouter.com/internet-failover-5g-lte-backup-modem/) · [8 Best LTE 5G Backup Routers for Home Internet Redundancy (September 2026 Reviews)](https://www.kiddofspeed.com/best-lte-5g-backup-routers-for-home-internet-redundancy-with-multiple/) · [Homelab backup LTE connection (blog.davidv.dev)](https://blog.davidv.dev/posts/homelab-backup-lte-connection/) · [Dual-WAN and cellular failover: keeping the internet up when your ISP goes down (Keystone Integration, 2026)](https://keystoneintegration.us/blog/dual-wan-cellular-failover/) · [Power Failure and Internet Outage Detector (MySpool)](https://myspool.com/content/power-failure-and-internet-outage-detector) · [2026 network outage report and internet health check (Network World)](https://www.networkworld.com/article/4113326/2026-network-outage-report-and-internet-health-check.html) · [The Sysadmin's Dashboard: Integrating Uptime Kuma with Your Alerting Stack (DoHost, 2026-06)](https://dohost.us/index.php/2026/06/05/the-sysadmins-dashboard-integrating-uptime-kuma-with-your-alerting-stack/) · [A Complete Guide to Monitoring With Uptime Kuma (Better Stack Community)](https://betterstack.com/community/guides/monitoring/uptime-kuma-guide/)
+
+### 🟢 建議評估
+這輪檢索的結論是本輪任務裡最接近「風險比登錄表面上寫的小」這種誠實下修判斷的一條，呼應 §14 對艦隊管理規模的下修，但這裡要**分兩半**看，不能一概而論：
+1. **「Spark 節點在 Laptop 斷線時無法連雲端 AI」這一半，本來就是它們的穩態設計，不是新增風險** ——兩台 Spark 本來就設計成盡量不連網，Laptop 斷線不會讓它們從「有網路」墜落到「沒網路」，而是它們原本每天的正常狀態多持續一段時間而已。這一半**不需要任何工程投入**，因為它本來就是使用者自己選的目標架構,不是意外的降級。
+2. **「Stephen 無法從外部下指令、以及 Laptop 上任何依賴連網的服務會暫停」這一半，才是 R-01 真正該關心的風險，而且對策比登錄表面上暗示的「需要備援 Gateway」輕量得多**：不需要蓋第二台完整的 Gateway 機器（那對兩台隔離運算節點的規模確實是過度工程化，Stephen 提出的直覺是對的），2026 年小規模場景的務實做法是三層低成本組合——(a) 一支 USB 行動網路數據機當備援 WAN（設定橋接模式，斷線後自動切換，成本是一次性裝置加每月 SIM 卡費）；(b) 一個完全獨立於 Laptop 本身的告警機制（獨立硬體如 MySpool，或雲端主動探測服務），**切記不能把監控工具裝在 Laptop 自己身上**——這是 Uptime Kuma 社群自己點名的操作陷阱，監控者跟被監控者不能是同一台故障單位；(c) 手機熱點作為零成本、馬上就有的應急選項,不必等其他方案到位才能用。
+**具體建議**：R-01 的嚴重度可以誠實地從「中高」下修一級的認知——不是因為問題不存在，而是因為「問題的真正範圍」比登錄摘要暗示的「整個雲端協作路徑中斷」小很多,而且對策是幾支便宜裝置加一個習慣調整,不是重新設計架構或加一台備援 Gateway。標記 🟢：這是一條有具體、低成本、可以馬上執行的對策清單的風險項目，值得列入下一輪 SuperBrain/Laptop 安全設計的具體檢查項（可以直接跟 §14 的 Bastion Host 資安慣例建議合併成同一份檢查清單）。
+
+---
+
 ## 交叉引用索引
 
 | 本節 | 對應既有雷達(#1-41) | 對應風險登錄 |
@@ -416,5 +471,7 @@ Sources: [Anthropic's Transparency Hub](https://www.anthropic.com/transparency) 
 | §15 AERIS Local Implementation 深挖：可重現工程模擬 | 延續 §6（同一問題，換聲學模擬領域角度往下挖） | — |
 | §16 跨領域介面深挖：G-01/G-02/G-03 具體協定參照 | [#26](22_GLOBAL_TECH_RADAR.md)（A2A/AGENTS.md，本節逐欄位深挖）、延續 §10（同問題換機械工程原生標準角度） | [17](17_RISK_GAP_CONFLICT_REGISTER.md) G-01/G-02/G-03；[20_PROPOSED_INTERFACE_CONTRACTS.md](20_PROPOSED_INTERFACE_CONTRACTS.md) |
 | §17 Public Portal 深挖：安全公開投影的前沿 | 無直接對應（全新主題） | [17](17_RISK_GAP_CONFLICT_REGISTER.md) G-05；[15_PUBLIC_PORTAL_ARCHITECTURE.md](15_PUBLIC_PORTAL_ARCHITECTURE.md) |
+| §18 G-04 深挖：GSN 形狀的驗證報告參考範例（非協定設計） | 延續 §13（同一 GSN 方法論，往下挖具體 AI 驗證應用範例） | [17](17_RISK_GAP_CONFLICT_REGISTER.md) G-04（Stephen 已認領，本節僅供參考） |
+| §19 R-01 深挖：單一連網閘道的實際風險與對策 | 延續 §5/§14（同一 SuperBrain 規模與 Bastion Host 架構，往下挖故障情境的具體對策） | [14_FAILURE_RECOVERY_AND_RESILIENCE.md](14_FAILURE_RECOVERY_AND_RESILIENCE.md)、[17](17_RISK_GAP_CONFLICT_REGISTER.md) R-01 |
 
 要跑哪個專案的更深一層前沿檢索，或針對某個 🟡 項目重新檢索確認是否已有落地產品，直接跟 Claude 說「跑願景雷達：XX」即可。
