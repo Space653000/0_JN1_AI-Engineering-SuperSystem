@@ -330,6 +330,71 @@ Sources: [Recording provenance of workflow runs with RO-Crate (arXiv 2312.07852)
 
 ---
 
+## 16. 跨領域介面深挖：G-01/G-02/G-03 的具體協定參照
+
+### 願景摘要
+延續 [Blueprint/20_PROPOSED_INTERFACE_CONTRACTS.md](20_PROPOSED_INTERFACE_CONTRACTS.md) 全文（本 repo 自己對 G-01/G-02/G-03 的建議草案：檔案掉落交接、`aecp.task/v1`/`aecp.result/v1` Command Card/Result Capsule schema）與 [17_RISK_GAP_CONFLICT_REGISTER.md](17_RISK_GAP_CONFLICT_REGISTER.md) G-01/G-02/G-03（三個介面在來源 repo 中完全缺失）。第 10 節已找到 MDO（多學科設計優化）作為「AIECP 協調 MEGIS/AERIS 該用什麼詞彙思考」的**概念層**參照。本節問一個更機械（mechanical，字面意義）的問題：2026 年有沒有一個**實際的、有欄位定義的、可以拿來逐欄位對照**的協定或 schema 標準，處理「一個協調者派發任務給不同領域的專家、再收回附證據的結果」這種模式？
+
+### 前沿檢索（2026-09-26）
+
+**A. Agent2Agent（A2A）協定——軟體/LLM agent 世界的實際 wire schema**
+A2A 是 Google 於 2025 年提出、2026 年正式升到 v1.0、交由 Linux Foundation 治理的開放協定（既有雷達 [#26](22_GLOBAL_TECH_RADAR.md) 已略提，本節做逐欄位深挖）。核心物件與 AIECP 的 `aecp.task/v1`/`aecp.result/v1` 逐欄位對照如下：
+
+| A2A 欄位 | AIECP `aecp.task/v1`/`aecp.result/v1` 對應欄位 | 落差備註 |
+|---|---|---|
+| `Task.id`、`Task.context_id` | Command Card 檔名裡的 `<task-uuid>` + `voiceMeta.sessionId` | AIECP 目前把 id 藏在檔名跟 metadata 裡，A2A 把 `id`/`context_id` 當一級欄位明確分開（`id`=這次任務、`context_id`=跨多輪任務的對話/工作階段） |
+| `Task.status.state`（enum：`submitted`/`working`/`input-required`/`auth-required`/`completed`/`failed`/`canceled`/`rejected`） | Result Capsule 的 `status`（目前只看到 `PASS`/`FAIL`/`REJECTED`/`WAITING_APPROVAL` 幾種，散見 Blueprint/20 全文，非正式 enum） | A2A 把「暫停等輸入」（`input-required`）跟「暫停等認證」（`auth-required`）明確拆成兩種狀態，AIECP 目前的 `WAITING_APPROVAL` 沒有區分「等使用者補資訊」跟「等使用者核准」這兩種本質不同的暫停——這是一個具體可以借用的欄位設計 |
+| `Task.artifacts[]`（每個 Artifact 由 `Part` 組成：`TextPart`/`FilePart`/`DataPart`） | Result Capsule 的 `evidenceRef`（單一路徑字串，例如指向 `Results.xlsx`） | AIECP 目前的證據引用是「一個路徑字串」，A2A 把輸出結構化成「可以有多個、可以是文字/檔案/結構化資料混合」的 Artifact 陣列——如果 AERIS 一次回傳同時要有 `Results.xlsx` + `Report.pptx` + 一段文字摘要，A2A 的 `artifacts[]` + 多種 `Part` 類型比 AIECP 現在的單一 `evidenceRef` 欄位更適合 |
+| `Task.history[]`（`Message` 陣列） | Voice Agent 側的 `confirmationTranscript`（單一逐字稿字串，Blueprint/20 第72行） | A2A 把整個往返對話當結構化歷史保留在 Task 物件上；AIECP 目前的做法是把逐字稿塞進 metadata 附帶欄位，沒有跟 Task 生命週期綁在一起 |
+| `Task.metadata`（自由 key/value） | `voiceMeta`（自由物件，Blueprint/20 第47-52行） | 概念幾乎一樣：兩邊都用一個「不受信任、不可繞過權限檢查」的自由欄位放來源端附加資訊，AIECP 這條設計已經跟 A2A 對齊 |
+| **AIECP 有、A2A 標準本身沒有的欄位** | `permissions[]`、`verification.type`/`verification.expected`/`verification.expectedGate` | 這是本節最重要的發現：**A2A 的核心 schema 本身不強制要求「驗收標準是什麼」跟「權限範圍是什麼」這兩個欄位**——這兩者要嘛留給 `metadata` 自由塞，要嘛完全靠上層應用自己定義。AIECP 的 `aecp.task/v1` 在這兩點上已經比 A2A 標準規格更嚴謹（呼應 AIECP 產品不可退讓原則「證據優於自我宣稱」「人類權威」），這代表**AIECP 不需要為了對齊 A2A 而放棄自己已經更嚴格的欄位設計**，只需要挑 A2A 裡 AIECP 目前缺的欄位（結構化 `artifacts[]`、`input-required` vs `auth-required` 的狀態區分、`context_id` 跨多輪任務追蹤）來補強。
+
+**B. AGENTS.md——尚不是本節要找的答案，但要誠實記錄為什麼不是**
+AGENTS.md 到 2026 年已被 60,000+ 專案採用，被 Claude Code、Codex CLI、Cursor、Devin、Gemini CLI 等原生讀取，但它的規格明確定義為「沒有必填欄位的純 Markdown 慣例」——沒有一個標準化的 schema 可以描述「這個 agent 可以被要求做什麼、怎麼回報結果」。它解決的問題是「人類/agent 讀取一份專案的建置/測試/風格慣例」，跟 G-01（Voice Agent 呼叫 AIECP 執行一個結構化任務並拿回結構化結果）是不同層次的問題——**AGENTS.md 比較像是可以放在 AIECP repo 根目錄、讓任何來訪的 AI agent（包含 Voice Agent 未來若也用 LLM 驅動）快速讀懂「這個 workspace 能做什麼」的靜態說明文件，不能取代 G-01 需要的雙向任務/結果 wire 協定**，這點跟既有雷達 [#26](22_GLOBAL_TECH_RADAR.md) 一起提及 A2A/AGENTS.md 容易讓人誤以為兩者是同類方案，這裡特別澄清角色不同。
+
+**C. 機械工程原生的協定——STEP AP242 / OSLC，誠實的落差**
+- **STEP AP242**（ISO 10303-242）是 CAD/PLM 領域「模型基礎 3D 產品資料交換」的國際標準，涵蓋幾何、PMI（Product Manufacturing Information，例如 GD&T 標註）、組裝結構、生命週期屬性；業界對它定義的「handoff」概念是「生產者讓消費者可以取用一個或多個物件，消費者驗證這些物件滿足介面/語意/組態/版本要求才算完成交接」，驗收證據來自工具檢查或人工審查，並靠 provenance/版本 metadata 判定證據是否真的對應到交付的物件與執行環境——**這段定義本身，字面上幾乎就是 G-02（AIECP↔MEGIS/AERIS）想要的「任務+驗收標準+證據」語意**，但 AP242 是為「CAD 幾何資料格式」設計的檔案交換標準，不是「任務指派」協定，沒有欄位可以表示「請你做 XXX 這件事」，只有欄位可以表示「這是做完之後的幾何/PMI 資料長什麼樣子」。
+- **OSLC（Open Services for Lifecycle Collaboration）** 是 IBM 於 2009 年發起、後移交 OASIS 治理的規格，用 REST + W3C RDF/Linked Data 做「跨工具鏈結資料，不複製資料」的整合（例如需求管理工具跟品質管理工具互相連結追溯，而不是把資料匯出匯入）——它的核心資產是「OSLC resource shape」（用 RDF vocabulary 定義的資源形狀），可以想像成「用 URI 連結而不是用檔案掉落」的替代設計哲學。OSLC 對 G-02 的具體參考價值在於「追溯性（traceability）」這個面向：MEGIS 的 `artifacts/<gate>-<item>/verification.json` 若未來要被 AERIS 或 AIECP 用 URI 直接連結引用（而不是像 Blueprint/20 現在建議的「複製路徑當 evidenceRef 字串」），OSLC 的 resource shape 概念提供一個「怎麼設計可鏈結、可追溯資源」的成熟參照，但**本次檢索沒有找到 OSLC 定義任何「任務指派+驗收標準」的具體 message schema**，它解決的是「兩個既有系統的資料互相鏈結」，不是「一方請另一方做一件新工作」。
+- **本節最誠實的結論**：G-02 想要的「工程領域 A 派工給工程領域 B、附驗收標準、拿回附證據的結果」這個**確切形狀**，2026 年在 PLM/OSLC/SysML v2 這幾個機械工程原生的標準世界裡，**沒有找到一個現成、可以直接拿來逐欄位套用的協定**——這些標準解決的是「資料格式怎麼互通」跟「模型/需求怎麼互相追溯連結」，不是「任務指派」本身。真正逐欄位吻合 G-02 問題形狀的，反而是軟體/LLM agent 世界的 A2A（見上方 A 段），只是 A2A 本身不懂機械工程領域語意（不知道什麼是 Gate、什麼是 Capability Contract），需要 AIECP 自己在 A2A 的通用欄位骨架上，疊加 MEGIS/AERIS 的領域專屬 payload（這正是 Blueprint/20 `action.domain`/`action.capabilityRef`/`action.gateRef` 已經在做的事）。
+
+**D. 一篇比 A2A 本身更貼近「工程領域交接」語意的新論文——EDA（電子設計自動化）的 Handoff Perspective**
+2026-06 一篇論文《Agentic Electronic Design Automation: A Handoff Perspective》（香港中文大學團隊）雖然領域是晶片電子設計自動化（EDA），但它面對的結構性問題跟 G-01/G-02/G-03 幾乎一模一樣：「設計產出物、流程腳本、工程決策跨越工具、session、組織邊界」，每一次轉手都帶著「可能沒有被單一階段檢查完整涵蓋」的顯性與隱性要求，一旦 LLM agent 的輸出會影響下游工程決策，這個「被轉手的物件」就必須滿足一份**交接契約（handoff contract）**、並符合下一個接手者的假設。這篇論文提出的分類法可以直接套用在 G-01/G-02/G-03 的落差分析上：
+  - **Stage-Bound systems**（單一階段內有效）——類比：AIECP 自己內部單一 Worker 的一次呼叫。
+  - **Flow-Bound systems**（跨階段但仍在同一個工作流程狀態裡保留有效性）——類比：AIECP 一個 Task 從 `submitted` 走到 `completed` 的整個生命週期，狀態機仍是同一套。
+  - **Organization-Bound systems**（跨組織邊界，必須維持來源可追溯性與 provenance）——**這正是 G-01（Voice Agent repo ↔ AIECP repo）、G-02（AIECP repo ↔ AERIS/MEGIS repo）的準確分類**：三個系統各自是獨立治理的 repo（呼應 CLAUDE.md「保持各專案自治」精神），Blueprint/20 選擇「檔案掉落、不共用程式碼」正是這篇論文所說 Organization-Bound 場景下必須額外承擔的 provenance 負擔（不能像 Flow-Bound 系統那樣依賴同一個 runtime 的記憶體狀態）。
+
+Sources: [Agent2Agent (A2A) Protocol Official Specification v0.3.0](https://a2a-protocol.org/v0.3.0/specification/) · [A2A Protocol Specification（最新版）](https://a2a-protocol.org/latest/specification/) · [A2A Task 概念說明（agent2agent.info）](https://agent2agent.info/docs/concepts/task/) · [A survey of AI Agent Protocols (arXiv 2504.16736)](https://arxiv.org/pdf/2504.16736) · [Security Threat Modeling for Emerging AI-Agent Protocols: MCP, A2A, Agora, ANP (arXiv 2602.11327)](https://arxiv.org/pdf/2602.11327) · [AGENTS.md Complete Guide for Engineering Teams 2026 (BuildBetter)](https://blog.buildbetter.ai/agents-md-complete-guide-for-engineering-teams-in-2026/) · [AGENTS.md Spec 2026 (Morph)](https://www.morphllm.com/agents-md-guide) · [STEP AP242 — PLM Glossary (DemystifyingPLM)](https://www.demystifyingplm.com/glossary/step-ap242) · [Agentic Electronic Design Automation: A Handoff Perspective (arXiv 2606.19795)](https://arxiv.org/pdf/2606.19795) · [Open Services for Lifecycle Collaboration (Wikipedia)](https://en.wikipedia.org/wiki/Open_Services_for_Lifecycle_Collaboration) · [OSLC: Linking Engineering Tools Without Data Duplication (SodiusWillert)](https://www.sodiuswillert.com/en/blog/open-services-lifecycle-collaboration-standard) · [SysML v2 for modern systems engineering: A practical guide (Siemens Teamcenter)](https://blogs.sw.siemens.com/teamcenter/sysml-v2-guide/)
+
+### 🟢 建議評估
+本節找到本輪任務最具體、可逐欄位比對的成果：**A2A 協定的 `Task`/`Artifact`/`Message` schema 可以跟 Blueprint/20 的 `aecp.task/v1`/`aecp.result/v1` 逐欄位對照**（見上表），而且對照結果對 AIECP 是一個令人安心的發現——**AIECP 現有草案在「驗收標準」跟「權限範圍」這兩個欄位上，已經比 A2A 國際標準規格本身更嚴謹**，不需要因為「A2A 是 Linux Foundation 治理的標準」就照單全收。具體建議三點：(1) AIECP 未來設計 G-01/G-02/G-03 正式 schema 時，可以直接借用 A2A 的 `input-required` vs `auth-required` 狀態區分（AIECP 目前的 `WAITING_APPROVAL` 沒有分開「缺資訊」跟「缺核准」）；(2) 借用 A2A 的 `artifacts[]`（多個、多類型 Part）取代目前 Result Capsule 的單一 `evidenceRef` 字串，方便 AERIS 一次回傳多份證據檔案；(3) AGENTS.md 不是 G-01 的答案，但可以額外考慮放一份在 AIECP repo 根目錄，作為「任何來訪 AI agent 快速讀懂這個 workspace」的補充說明文件，跟 G-01 的正式 wire 協定並存、不互相取代。誠實揭露：機械工程原生的 STEP AP242/OSLC 世界裡，沒有找到現成的「任務指派+驗收標準」wire schema，這代表 G-02 目前必須繼續走「借用軟體世界的 A2A 骨架、疊加工程領域專屬 payload」這條路，而不是等一個機械工程界自己的現成標準出現。EDA Handoff Perspective 論文的 Stage/Flow/Organization-Bound 分類法，值得直接寫進未來 G-01/G-02/G-03 正式設計文件的開場，用來說明「為什麼這三個介面必須用檔案掉落+完整 provenance，而不能用更輕量的記憶體內呼叫」。
+
+---
+
+## 17. Public Portal 深挖：安全公開投影的前沿
+
+### 願景摘要
+延續 [Blueprint/15_PUBLIC_PORTAL_ARCHITECTURE.md](15_PUBLIC_PORTAL_ARCHITECTURE.md) 全文——目前只有「唯讀投影、絕不暴露本機控制或私有資料」「與既有 `aeris.space653000.workers.dev` 明確區隔」兩條使用者要求，以及「只投影明確標記 `SHAREABLE` 的資料」等建議設計原則，本身標註「未來、本輪不建」（第1、8、18-23行）。[Blueprint/17](17_RISK_GAP_CONFLICT_REGISTER.md) G-05 標記為低優先級。本節依 Stephen 指示，即使是低優先項目，也把「世界前沿長什麼樣子」先偵察清楚。
+
+### 前沿檢索（2026-09-26）
+
+**A. AI 實驗室自己的「內部系統安全公開摘要」實踐——Model/System Card 與 Transparency Hub**
+Anthropic 於 2026-02-17 推出 **Transparency Hub**，把 model card、system card、safeguards（安全措施）、model release notes（模型發布說明）、capability overview（能力總覽）集中在同一個公開入口。2026-09-01 發布的《Claude Fable 5.1 & Claude Mythos 5.1 System Card》被形容為「244 頁的系統卡片，標誌著 Anthropic 治理優先的前沿方向」——這代表 2026 年最前沿的 AI 系統公開揭露實踐，是**針對單一發布版本，寫一份極度詳細、結構化、涵蓋能力/風險/安全措施的公開文件**，而不是即時的公開儀表板。但要誠實揭露一個限制：即使是這類詳盡的公開文件，**也被業界評論明確指出「model/system card 仍然只是治理的公開證據，不是治理紀錄本身——真正的法律文件、評估證據、問責安排通常更廣泛也更不公開」**（Hoeijmakers 2026 評論），這句話直接呼應本 repo CLAUDE.md 規則四「文件存在不構成完成證據」的同一種警示，只是這裡是套用在「公開文件」這個更特定的場景。
+**這對 SuperSystem Public Portal 的直接參考價值**：如果 Stephen 未來要建 Public Portal，「像 Anthropic Transparency Hub 一樣，針對每個重大變更/發布版本產出一份結構化的公開摘要文件（能力、已知限制、安全措施），而不是即時投影內部儀表板數據」是一個更保守、更可控的起手模式——寫一份公開摘要文件的審查成本，遠低於維護一個即時同步內部狀態的公開網站，而且完全不需要處理「即時投影會不會不小心投影出還沒審查完的內容」這個風險。
+
+**B. SRE/DevOps「公開狀態頁」的 2026 年業界共識——「什麼該講、什麼不該講」有明確清單**
+2026 年業界對公開狀態頁的具體共識已經很精確：**內部系統名稱不該出現，該用「資料庫」「搜尋」這種功能性稱呼取代；具體錯誤訊息（例如含內部 IP 的連線錯誤）不該顯示給使用者，因為那等於告訴攻擊者內部拓樸細節**。另一個重要提醒是「狀態頁本質上是政治文件（status pages are politics）」——大型組織普遍會維護一份「內部真實狀態頁」（給團隊自己協調用）跟一份「對外公開狀態頁」（給客戶看的、經過美化的版本），兩者刻意分開，不是同一份資料的兩種視圖。**這對本 repo 自己的 Blueprint/Audit 文件轉公開 Portal 是直接的提醒**：本 repo 現有的 Blueprint/17（風險登錄）、Audit/CONFLICT_ANALYSIS.md 這類文件是刻意誠實、包含未解決衝突與 `UNKNOWN` 標記的「內部真實狀態」，如果原封不動公開，等於把「內部協調用的誠實文件」跟「對外公開的安心文件」混為一談——2026 年業界共識是這兩者本來就該是刻意分開維護的兩份文件，不是同一份資料自動投影兩次。
+**具體可用的正面清單**（來自狀態頁最佳實踐）：值得公開的三類內容是「即時運作狀態（哪些服務正常/異常）」「公開路線圖（下一步方向，季度粒度即可，不需要精確日期）」「事故回顧存檔（每次事故的根因、時間軸、補救措施）」——這三類都是「已經發生/已經決定」的資訊，不涉及「還在內部討論、尚未拍板」的內容，這個篩選標準本身就可以直接套用在「SuperSystem Blueprint 文件哪些段落適合被公開摘要收錄」這個問題上。
+
+**C. 自動化「內部文件→公開安全版本」摘要/脫敏管線——2026 年的技術現況**
+2026 年這類管線的技術現況集中在 **PII/敏感資訊偵測與脫敏（redaction）**，而不是「摘要判斷哪些內容政治上/安全上適合公開」：業界做法普遍是三層偵測架構（正規表示式+checksum、NER 模型如 DeBERTa/Piranha、LLM-as-judge 三層疊加），再加上「可逆脫敏（reversible redaction）」——先把敏感內容換成佔位符送進 LLM 處理，處理完再換回原文，讓下游應用看到的是還原後的個人化內容，但 LLM 本身從未看過原始敏感資料。**這裡有一個對 Public Portal 很重要的誠實落差**：這整套 2026 年技術現況，處理的絕大多數是「PII（個人可識別資訊）」這種有明確格式可以偵測的敏感資料類型（姓名、Email、IP、信用卡號），**沒有找到一個成熟的、可以自動判斷「這段工程決策文字是否涉及尚未核准的架構方向、是否可能洩漏控制平面的內部設計細節」這種語意層級敏感度的現成工具**——後者更接近「一個懂得這個系統全貌的人做編輯判斷」，而不是「偵測到符合某個格式就遮蔽」這種模式匹配問題。這代表**「自動把本 repo 的 Blueprint/Audit 文件轉成公開 Portal 內容」這件事，2026 年並沒有一個可以直接安裝的現成管線**，PII 脫敏工具能處理的只是其中最容易自動化的一小部分（例如萬一文件裡不小心寫進了憑證、內部 IP、真實檔案路徑），真正的「這段內容政治上/架構決策上是否適合公開」判斷仍然需要人工審查或至少人工訂規則。
+
+Sources: [Anthropic's Transparency Hub](https://www.anthropic.com/transparency) · [Anthropic's Transparency Hub: Model Report](https://www.anthropic.com/transparency/model-report) · [Claude Mythos: 244-page system card signals Anthropic's governance-first frontier (Cryptonomist, 2026-04)](https://en.cryptonomist.ch/2026/04/12/claude-mythos-system-card/) · [Model Cards, System Cards and What They're Quietly Becoming (Hoeijmakers, 2026)](https://hoeijmakers.net/model-cards-system-cards/) · [Anthropic launches Transparency Hub to centralize model cards, safeguards, and release notes (Marvin-42 Insights)](https://insights.marvin-42.com/articles/anthropic-launches-transparency-hub-to-centralize-model-cards-safeguards-and-release-notes) · [How to Build a Status Page in 2026 (UptimeRobot)](https://uptimerobot.com/knowledge-hub/monitoring/guide-to-building-a-status-page/) · [Building a Public Status Page: What to Show and What to Hide (DEV Community)](https://dev.to/adarshshukla/building-a-public-status-page-what-to-show-and-what-to-hide-l17) · [Status Pages Are Politics (openstatus)](https://www.openstatus.dev/blog/status-pages-is-politics) · [Status Page Best Practices 2026 (Hosted Status Page)](https://statuspage.me/blog/monitoring/status-page-best-practices-2026) · [PII Redaction Pipeline for LLM Workloads: 2026 Architecture (AppScale Blog)](https://appscale.blog/en/blog/pii-redaction-pipeline-llm-presidio-ner-reversible-tokenisation-2026) · [The complete guide to PII detection and redaction tools for AI pipelines in regulated industries (PredictionGuard)](https://predictionguard.com/blog/pii-detection-redaction-llm-pipelines-regulated-industries)
+
+### 🟡 建議評估
+這輪檢索對 Public Portal（G-05，低優先）最重要的發現是：**2026 年沒有任何前沿實踐是「即時把內部真實系統狀態自動投影成公開頁面」——無論是 AI 實驗室自己的做法（Anthropic Transparency Hub 是針對重大版本手動產出的詳盡靜態文件，不是即時儀表板），還是 SRE/DevOps 業界共識（「內部真實狀態頁」與「對外公開狀態頁」本來就該刻意分開維護），都指向同一個方向：安全的公開投影，做法是「定期產出一份經過設計的靜態摘要」，不是「把內部資料源接一條管線直接對外」**。具體建議：(1) Public Portal 未來若真的要建，可以參考 Anthropic Transparency Hub 的模式——針對本 SuperSystem 的重大進展（例如某個 Gate 正式關閉、某個介面契約從 `MISSING` 變成 `EXISTS`）手動產出一份公開摘要文件，而不是即時投影 Blueprint/17 風險登錄或 Audit 文件本身；(2) 沿用狀態頁最佳實踐的三類正面清單（即時運作狀態、公開路線圖、事故回顧存檔）當作「哪些內容適合公開」的第一層篩選標準，`UNKNOWN`/`NOT VERIFIED`/尚在內部討論的架構方向，比照「內部真實狀態頁 vs 對外公開狀態頁本該分開」的共識，一律不進 Public Portal；(3) 誠實揭露：2026 年沒有現成的「自動判斷工程文件語意層級敏感度」管線可以直接安裝使用，PII 脫敏工具只能處理最容易格式化偵測的那一小部分（憑證、IP、路徑），真正的「這段決策是否適合公開」判斷仍然需要人工訂規則或人工審查——這代表即使 Stephen 未來真的要做 Public Portal，也不該期待「寫個腳本自動生成」，至少第一版需要人工設計哪些 Blueprint 段落可以被摘要收錄。標記 🟡：方向已經找到（定期靜態摘要優於即時投影），但這是低優先項目（G-05），現階段不需要投入實作，只需要記錄這個方向供未來參考。
+
+---
+
 ## 交叉引用索引
 
 | 本節 | 對應既有雷達(#1-41) | 對應風險登錄 |
@@ -349,5 +414,7 @@ Sources: [Recording provenance of workflow runs with RO-Crate (arXiv 2312.07852)
 | §13 JN1-UOA 深挖：Assurance Case 方法論 | 延續 §8（同一問題，往下挖具體方法論） | [10_SUPERVISION_AND_EVIDENCE.md](10_SUPERVISION_AND_EVIDENCE.md) |
 | §14 SuperBrain 深挖：小規模艦隊管理與隔離節點模式 | 延續 §5（同一規模落差，往下挖具體實務） | [14_FAILURE_RECOVERY_AND_RESILIENCE.md](14_FAILURE_RECOVERY_AND_RESILIENCE.md)、[17](17_RISK_GAP_CONFLICT_REGISTER.md) R-01 |
 | §15 AERIS Local Implementation 深挖：可重現工程模擬 | 延續 §6（同一問題，換聲學模擬領域角度往下挖） | — |
+| §16 跨領域介面深挖：G-01/G-02/G-03 具體協定參照 | [#26](22_GLOBAL_TECH_RADAR.md)（A2A/AGENTS.md，本節逐欄位深挖）、延續 §10（同問題換機械工程原生標準角度） | [17](17_RISK_GAP_CONFLICT_REGISTER.md) G-01/G-02/G-03；[20_PROPOSED_INTERFACE_CONTRACTS.md](20_PROPOSED_INTERFACE_CONTRACTS.md) |
+| §17 Public Portal 深挖：安全公開投影的前沿 | 無直接對應（全新主題） | [17](17_RISK_GAP_CONFLICT_REGISTER.md) G-05；[15_PUBLIC_PORTAL_ARCHITECTURE.md](15_PUBLIC_PORTAL_ARCHITECTURE.md) |
 
 要跑哪個專案的更深一層前沿檢索，或針對某個 🟡 項目重新檢索確認是否已有落地產品，直接跟 Claude 說「跑願景雷達：XX」即可。
